@@ -15,5 +15,17 @@
         <service id="BOW\Preishoheit\Entity\ErrorLog\ErrorLogDefinition">
             <tag name="shopware.entity.definition" entity="bow_preishoheit_error_log"/>
         </service>
+
+        <!-- API Services -->
+        <service id="BOW\Preishoheit\Service\PreishoheitApi\PreishoheitApiClient">
+            <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
+        </service>
+
+        <service id="BOW\Preishoheit\Service\PreishoheitApi\PriceUpdateService">
+            <argument type="service" id="BOW\Preishoheit\Service\PreishoheitApi\PreishoheitApiClient"/>
+            <argument type="service" id="product.repository"/>
+            <argument type="service" id="bow_preishoheit_price_history.repository"/>
+            <argument type="service" id="bow_preishoheit_error_log.repository"/>
+        </service>
     </services>
 </container>
