@@ -1,46 +1,16 @@
 {
     "bow-preishoheit": {
-        "general": {
-            "mainMenuItemGeneral": "Price Authority",
-            "descriptionTextModule": "Manage dynamic price adjustments"
-        },
-        "list": {
-            "titleSaveSuccess": "Success",
-            "messageSaveSuccess": "Configuration has been saved successfully.",
-            "buttonAddProduct": "Add Product",
-            "columnProductName": "Product Name",
-            "columnEan": "EAN",
-            "columnSurcharge": "Surcharge (%)",
-            "columnDiscount": "Discount (%)",
-            "columnLastUpdate": "Last Update"
-        },
-        "detail": {
-            "tabSettings": "Settings",
-            "tabHistory": "Price History",
-            "tabErrors": "Error Log",
-            "settingsTitle": "Product Settings",
-            "historyTitle": "Price History",
-            "errorsTitle": "Error Log",
-            "labelActive": "Active",
-            "labelSurcharge": "Surcharge (%)",
-            "labelDiscount": "Discount (%)",
-            "placeholderSurcharge": "Enter surcharge percentage",
-            "placeholderDiscount": "Enter discount percentage",
-            "columnEan": "EAN",
-            "columnOldPrice": "Old Price",
-            "columnNewPrice": "New Price",
-            "columnDate": "Date",
-            "columnErrorType": "Error Type",
-            "columnErrorMessage": "Error Message"
-        }
-    }
-}
-{
-    "bow-preishoheit": {
-        "list": {
-            "productSelectionTitle": "Product Selection",
-            "buttonAddProducts": "Add Products",
-            "messageSaveSuccess": "Products have been added successfully"
+        "apiConfig": {
+            "cardTitle": "API Configuration",
+            "apiKeyLabel": "API Key",
+            "apiKeyPlaceholder": "Enter your Preishoheit API key",
+            "buttonSave": "Save",
+            "buttonVerify": "Verify API Key",
+            "verificationSuccessTitle": "Success",
+            "verificationSuccessMessage": "API key verified successfully",
+            "verificationErrorTitle": "Error",
+            "verificationErrorMessage": "Could not verify API key",
+            "errorTitle": "Error saving configuration"
         }
     }
 }
