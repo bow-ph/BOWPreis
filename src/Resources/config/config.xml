@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/shopware/platform/trunk/src/Core/System/SystemConfig/Schema/config.xsd">
+    <card>
+        <title>API Configuration</title>
+        <title lang="de-DE">API-Konfiguration</title>
+        
+        <input-field type="password">
+            <name>apiKey</name>
+            <label>API Key</label>
+            <label lang="de-DE">API-Schlüssel</label>
+            <required>true</required>
+        </input-field>
+    </card>
+
+    <card>
+        <title>Update Settings</title>
+        <title lang="de-DE">Update-Einstellungen</title>
+
+        <input-field type="single-select">
+            <name>updateInterval</name>
+            <label>Price Update Interval</label>
+            <label lang="de-DE">Preis-Update-Intervall</label>
+            <options>
+                <option>
+                    <id>60</id>
+                    <name>1 Minute</name>
+                </option>
+                <option>
+                    <id>120</id>
+                    <name>2 Minutes</name>
+                </option>
+                <option>
+                    <id>300</id>
+                    <name>5 Minutes</name>
+                </option>
+                <option>
+                    <id>900</id>
+                    <name>15 Minutes</name>
+                </option>
+                <option>
+                    <id>1800</id>
+                    <name>30 Minutes</name>
+                </option>
+                <option>
+                    <id>3600</id>
+                    <name>1 Hour</name>
+                </option>
+                <option>
+                    <id>7200</id>
+                    <name>2 Hours</name>
+                </option>
+                <option>
+                    <id>10800</id>
+                    <name>3 Hours</name>
+                </option>
+                <option>
+                    <id>28800</id>
+                    <name>8 Hours</name>
+                </option>
+                <option>
+                    <id>43200</id>
+                    <name>12 Hours</name>
+                </option>
+                <option>
+                    <id>86400</id>
+                    <name>24 Hours</name>
+                </option>
+            </options>
+            <defaultValue>900</defaultValue>
+        </input-field>
+    </card>
+</config>

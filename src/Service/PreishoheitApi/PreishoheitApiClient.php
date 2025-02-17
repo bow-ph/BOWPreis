@@ -2,10 +2,13 @@
 
 namespace BOW\Preishoheit\Service\PreishoheitApi;
 
+
 use BOW\Preishoheit\Service\ErrorHandling\ErrorHandler;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Shopware\Core\Framework\Context;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use Shopware\Core\System\SystemConfig\SystemConfigService;
 
 class PreishoheitApiClient
@@ -21,6 +24,13 @@ class PreishoheitApiClient
     ) {
         $this->apiKey = $systemConfigService->getString('BOWPreishoheit.config.apiKey');
         $this->errorHandler = $errorHandler;
+
+
+    public function __construct(
+        SystemConfigService $systemConfigService
+    ) {
+        $this->apiKey = $systemConfigService->getString('BOWPreishoheit.config.apiKey');
+
         $this->client = new Client([
             'base_uri' => self::API_BASE_URL,
             'headers' => [
@@ -31,6 +41,7 @@ class PreishoheitApiClient
     }
 
     public function createJob(string $platform, array $identifiers, string $productId, Context $context): array
+
     {
         try {
             $response = $this->client->post('/jobs', [
@@ -39,6 +50,7 @@ class PreishoheitApiClient
                     'data' => implode("\n", $identifiers)
                 ]
             ]);
+
 
             $result = json_decode($response->getBody()->getContents(), true);
             
@@ -60,11 +72,14 @@ class PreishoheitApiClient
                 'Failed to create job: ' . $e->getMessage(),
                 $context
             );
+
             throw new PreishoheitApiException('Failed to create job: ' . $e->getMessage());
         }
     }
 
+
     public function getJobStatus(string $jobId, string $productId, Context $context): array
+
     {
         try {
             $response = $this->client->get("/jobs/{$jobId}");
@@ -76,6 +91,7 @@ class PreishoheitApiClient
                 'Failed to get job status: ' . $e->getMessage(),
                 $context
             );
+
             throw new PreishoheitApiException('Failed to get job status: ' . $e->getMessage());
         }
     }
@@ -104,6 +120,7 @@ class PreishoheitApiClient
                 'Failed to download job result: ' . $e->getMessage(),
                 $context
             );
+
             throw new PreishoheitApiException('Failed to download job result: ' . $e->getMessage());
         }
     }

@@ -10,12 +10,53 @@
 
         <service id="BOW\Preishoheit\Service\Validation\PriceValidator">
             <argument type="service" id="BOW\Preishoheit\Service\ErrorHandling\ErrorHandler"/>
+
+        <!-- Entity Definitions -->
+        <service id="BOW\Preishoheit\Entity\Product\PreishoheitProductDefinition">
+            <tag name="shopware.entity.definition" entity="bow_preishoheit_product"/>
+        </service>
+
+        <service id="BOW\Preishoheit\Entity\PriceHistory\PriceHistoryDefinition">
+            <tag name="shopware.entity.definition" entity="bow_preishoheit_price_history"/>
+        </service>
+
+        <service id="BOW\Preishoheit\Entity\ErrorLog\ErrorLogDefinition">
+            <tag name="shopware.entity.definition" entity="bow_preishoheit_error_log"/>
         </service>
 
         <!-- API Services -->
         <service id="BOW\Preishoheit\Service\PreishoheitApi\PreishoheitApiClient">
             <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
+
             <argument type="service" id="BOW\Preishoheit\Service\ErrorHandling\ErrorHandler"/>
+
+        </service>
+
+        <service id="BOW\Preishoheit\Service\PreishoheitApi\PriceUpdateService">
+            <argument type="service" id="BOW\Preishoheit\Service\PreishoheitApi\PreishoheitApiClient"/>
+            <argument type="service" id="product.repository"/>
+            <argument type="service" id="bow_preishoheit_price_history.repository"/>
+            <argument type="service" id="bow_preishoheit_error_log.repository"/>
+        </service>
+
+        <!-- Commands -->
+        <service id="BOW\Preishoheit\Command\UpdatePricesCommand">
+            <argument type="service" id="BOW\Preishoheit\Service\PreishoheitApi\PriceUpdateService"/>
+            <argument type="service" id="bow_preishoheit_product.repository"/>
+            <tag name="console.command"/>
+        </service>
+
+        <!-- Scheduled Tasks -->
+        <service id="BOW\Preishoheit\ScheduledTask\PriceUpdateTask">
+            <tag name="shopware.scheduled.task" />
+        </service>
+
+        <service id="BOW\Preishoheit\ScheduledTask\PriceUpdateTaskHandler">
+            <argument type="service" id="scheduled_task.repository"/>
+            <argument type="service" id="BOW\Preishoheit\Service\PreishoheitApi\PriceUpdateService"/>
+            <argument type="service" id="bow_preishoheit_product.repository"/>
+            <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
+            <tag name="messenger.message_handler"/>
         </service>
     </services>
 </container>
