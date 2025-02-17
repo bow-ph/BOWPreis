@@ -1,0 +1,16 @@
+{% block bow_preishoheit_errors %}
+    <div class="bow-preishoheit-errors">
+        <sw-card :title="$tc('bow-preishoheit.detail.errorsTitle')" :isLoading="isLoading">
+            <sw-data-grid
+                :dataSource="errorLogs"
+                :columns="errorLogColumns"
+                :showSettings="true"
+                :showSelection="false"
+                :allowInlineEdit="false"
+                :allowColumnEdit="false"
+                :isLoading="isLoading"
+                @page-change="onPageChange">
+            </sw-data-grid>
+        </sw-card>
+    </div>
+{% endblock %}

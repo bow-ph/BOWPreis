@@ -13,6 +13,25 @@
             "columnSurcharge": "Surcharge (%)",
             "columnDiscount": "Discount (%)",
             "columnLastUpdate": "Last Update"
+        },
+        "detail": {
+            "tabSettings": "Settings",
+            "tabHistory": "Price History",
+            "tabErrors": "Error Log",
+            "settingsTitle": "Product Settings",
+            "historyTitle": "Price History",
+            "errorsTitle": "Error Log",
+            "labelActive": "Active",
+            "labelSurcharge": "Surcharge (%)",
+            "labelDiscount": "Discount (%)",
+            "placeholderSurcharge": "Enter surcharge percentage",
+            "placeholderDiscount": "Enter discount percentage",
+            "columnEan": "EAN",
+            "columnOldPrice": "Old Price",
+            "columnNewPrice": "New Price",
+            "columnDate": "Date",
+            "columnErrorType": "Error Type",
+            "columnErrorMessage": "Error Message"
         }
     }
 }

@@ -1,0 +1,31 @@
+{% block bow_preishoheit_settings %}
+    <div class="bow-preishoheit-settings">
+        <sw-card :title="$tc('bow-preishoheit.detail.settingsTitle')" :isLoading="isLoading">
+            <sw-container columns="2fr 2fr" gap="0px 30px">
+                <sw-field
+                    type="switch"
+                    :label="$tc('bow-preishoheit.detail.labelActive')"
+                    v-model="product.active">
+                </sw-field>
+            </sw-container>
+
+            <sw-container columns="2fr 2fr" gap="0px 30px">
+                <sw-field
+                    type="number"
+                    :label="$tc('bow-preishoheit.detail.labelSurcharge')"
+                    v-model="product.surchargePercentage"
+                    :placeholder="$tc('bow-preishoheit.detail.placeholderSurcharge')"
+                    :suffix="'%'">
+                </sw-field>
+
+                <sw-field
+                    type="number"
+                    :label="$tc('bow-preishoheit.detail.labelDiscount')"
+                    v-model="product.discountPercentage"
+                    :placeholder="$tc('bow-preishoheit.detail.placeholderDiscount')"
+                    :suffix="'%'">
+                </sw-field>
+            </sw-container>
+        </sw-card>
+    </div>
+{% endblock %}

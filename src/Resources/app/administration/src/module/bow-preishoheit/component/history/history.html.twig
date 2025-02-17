@@ -1,0 +1,16 @@
+{% block bow_preishoheit_history %}
+    <div class="bow-preishoheit-history">
+        <sw-card :title="$tc('bow-preishoheit.detail.historyTitle')" :isLoading="isLoading">
+            <sw-data-grid
+                :dataSource="priceHistory"
+                :columns="priceHistoryColumns"
+                :showSettings="true"
+                :showSelection="false"
+                :allowInlineEdit="false"
+                :allowColumnEdit="false"
+                :isLoading="isLoading"
+                @page-change="onPageChange">
+            </sw-data-grid>
+        </sw-card>
+    </div>
+{% endblock %}

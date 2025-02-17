@@ -1,8 +1,8 @@
 import './page/bow-preishoheit-list';
 import './page/bow-preishoheit-detail';
-import './component/bow-preishoheit-product-grid';
-import './component/bow-preishoheit-price-history';
-import './component/bow-preishoheit-error-log';
+import './component/settings';
+import './component/history';
+import './component/errors';
 
 Shopware.Module.register('bow-preishoheit', {
     type: 'plugin',
@@ -29,6 +29,29 @@ Shopware.Module.register('bow-preishoheit', {
             props: {
                 default(route) {
                     return { productId: route.params.id };
+                }
+            },
+            children: {
+                settings: {
+                    component: 'bow-preishoheit-settings',
+                    path: 'settings',
+                    meta: {
+                        parentPath: 'bow.preishoheit.detail'
+                    }
+                },
+                history: {
+                    component: 'bow-preishoheit-history',
+                    path: 'history',
+                    meta: {
+                        parentPath: 'bow.preishoheit.detail'
+                    }
+                },
+                errors: {
+                    component: 'bow-preishoheit-errors',
+                    path: 'errors',
+                    meta: {
+                        parentPath: 'bow.preishoheit.detail'
+                    }
                 }
             }
         }
