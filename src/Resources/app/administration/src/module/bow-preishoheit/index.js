@@ -3,6 +3,7 @@ import './page/bow-preishoheit-detail';
 import './component/settings';
 import './component/history';
 import './component/errors';
+import './component/product-grid';
 
 Shopware.Module.register('bow-preishoheit', {
     type: 'plugin',

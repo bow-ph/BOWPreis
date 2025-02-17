@@ -35,3 +35,12 @@
         }
     }
 }
+{
+    "bow-preishoheit": {
+        "list": {
+            "productSelectionTitle": "Product Selection",
+            "buttonAddProducts": "Add Products",
+            "messageSaveSuccess": "Products have been added successfully"
+        }
+    }
+}

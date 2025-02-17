@@ -1,0 +1,26 @@
+{% block bow_preishoheit_product_grid %}
+    <div class="bow-preishoheit-product-grid">
+        <sw-card :title="$tc('bow-preishoheit.list.productSelectionTitle')" :isLoading="isLoading">
+            <template #grid>
+                <sw-data-grid
+                    :dataSource="availableProducts"
+                    :columns="columns"
+                    :showSettings="true"
+                    :showSelection="true"
+                    :isLoading="isLoading"
+                    @selection-change="onSelectionChange">
+                </sw-data-grid>
+            </template>
+
+            <template #footer>
+                <sw-button-process
+                    :isLoading="isLoading"
+                    variant="primary"
+                    :disabled="!selectedProducts.length"
+                    @click="onAddProducts">
+                    {{ $tc('bow-preishoheit.list.buttonAddProducts') }}
+                </sw-button-process>
+            </template>
+        </sw-card>
+    </div>
+{% endblock %}
