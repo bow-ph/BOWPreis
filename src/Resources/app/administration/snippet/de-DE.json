@@ -1,46 +1,16 @@
 {
     "bow-preishoheit": {
-        "general": {
-            "mainMenuItemGeneral": "Preishoheit",
-            "descriptionTextModule": "Verwalten Sie dynamische Preisanpassungen"
-        },
-        "list": {
-            "titleSaveSuccess": "Erfolg",
-            "messageSaveSuccess": "Die Konfiguration wurde erfolgreich gespeichert.",
-            "buttonAddProduct": "Produkt hinzufügen",
-            "columnProductName": "Produktname",
-            "columnEan": "EAN",
-            "columnSurcharge": "Aufschlag (%)",
-            "columnDiscount": "Rabatt (%)",
-            "columnLastUpdate": "Letztes Update"
-        },
-        "detail": {
-            "tabSettings": "Einstellungen",
-            "tabHistory": "Preisverlauf",
-            "tabErrors": "Fehlerprotokoll",
-            "settingsTitle": "Produkteinstellungen",
-            "historyTitle": "Preisverlauf",
-            "errorsTitle": "Fehlerprotokoll",
-            "labelActive": "Aktiv",
-            "labelSurcharge": "Aufschlag (%)",
-            "labelDiscount": "Rabatt (%)",
-            "placeholderSurcharge": "Geben Sie den Aufschlag in Prozent ein",
-            "placeholderDiscount": "Geben Sie den Rabatt in Prozent ein",
-            "columnEan": "EAN",
-            "columnOldPrice": "Alter Preis",
-            "columnNewPrice": "Neuer Preis",
-            "columnDate": "Datum",
-            "columnErrorType": "Fehlertyp",
-            "columnErrorMessage": "Fehlermeldung"
-        }
-    }
-}
-{
-    "bow-preishoheit": {
-        "list": {
-            "productSelectionTitle": "Produktauswahl",
-            "buttonAddProducts": "Produkte hinzufügen",
-            "messageSaveSuccess": "Produkte wurden erfolgreich hinzugefügt"
+        "apiConfig": {
+            "cardTitle": "API-Konfiguration",
+            "apiKeyLabel": "API-Schlüssel",
+            "apiKeyPlaceholder": "Geben Sie Ihren Preishoheit API-Schlüssel ein",
+            "buttonSave": "Speichern",
+            "buttonVerify": "API-Schlüssel überprüfen",
+            "verificationSuccessTitle": "Erfolg",
+            "verificationSuccessMessage": "API-Schlüssel wurde erfolgreich verifiziert",
+            "verificationErrorTitle": "Fehler",
+            "verificationErrorMessage": "API-Schlüssel konnte nicht verifiziert werden",
+            "errorTitle": "Fehler beim Speichern"
         }
     }
 }

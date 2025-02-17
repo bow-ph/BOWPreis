@@ -4,6 +4,7 @@ import './component/settings';
 import './component/history';
 import './component/errors';
 import './component/product-grid';
+import './component/api-config';
 
 Shopware.Module.register('bow-preishoheit', {
     type: 'plugin',
@@ -50,6 +51,13 @@ Shopware.Module.register('bow-preishoheit', {
                 errors: {
                     component: 'bow-preishoheit-errors',
                     path: 'errors',
+                    meta: {
+                        parentPath: 'bow.preishoheit.detail'
+                    }
+                },
+                apiConfig: {
+                    component: 'bow-preishoheit-api-config',
+                    path: 'api-config',
                     meta: {
                         parentPath: 'bow.preishoheit.detail'
                     }

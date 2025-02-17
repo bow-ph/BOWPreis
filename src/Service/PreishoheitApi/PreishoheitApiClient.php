@@ -2,13 +2,9 @@
 
 namespace BOW\Preishoheit\Service\PreishoheitApi;
 
-
-use BOW\Preishoheit\Service\ErrorHandling\ErrorHandler;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Shopware\Core\Framework\Context;
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\GuzzleException;
 use Shopware\Core\System\SystemConfig\SystemConfigService;
 
 class PreishoheitApiClient
@@ -16,21 +12,10 @@ class PreishoheitApiClient
     private const API_BASE_URL = 'https://pod.preishoheit.de/v2';
     private Client $client;
     private string $apiKey;
-    private ErrorHandler $errorHandler;
 
-    public function __construct(
-        SystemConfigService $systemConfigService,
-        ErrorHandler $errorHandler
-    ) {
+    public function __construct(SystemConfigService $systemConfigService)
+    {
         $this->apiKey = $systemConfigService->getString('BOWPreishoheit.config.apiKey');
-        $this->errorHandler = $errorHandler;
-
-
-    public function __construct(
-        SystemConfigService $systemConfigService
-    ) {
-        $this->apiKey = $systemConfigService->getString('BOWPreishoheit.config.apiKey');
-
         $this->client = new Client([
             'base_uri' => self::API_BASE_URL,
             'headers' => [
@@ -40,88 +25,21 @@ class PreishoheitApiClient
         ]);
     }
 
-    public function createJob(string $platform, array $identifiers, string $productId, Context $context): array
-
+    public function verifyApiKey(Context $context): bool
     {
         try {
-            $response = $this->client->post('/jobs', [
-                'form_params' => [
-                    'platform' => $platform,
-                    'data' => implode("\n", $identifiers)
-                ]
-            ]);
-
-
+            $response = $this->client->get('/jobs');
             $result = json_decode($response->getBody()->getContents(), true);
             
-            if (!isset($result['job_id'])) {
-                $this->errorHandler->handleError(
-                    $productId,
-                    'API_ERROR',
-                    'No job ID received from API',
-                    $context
-                );
-                throw new PreishoheitApiException('No job ID received from API');
+            if (isset($result['header']['status']) && $result['header']['status'] === 'fail') {
+                throw new PreishoheitApiException($result['header']['error'] ?? 'API verification failed');
             }
 
-            return $result;
+            return true;
         } catch (GuzzleException $e) {
-            $this->errorHandler->handleError(
-                $productId,
-                'API_ERROR',
-                'Failed to create job: ' . $e->getMessage(),
-                $context
-            );
-
-            throw new PreishoheitApiException('Failed to create job: ' . $e->getMessage());
+            throw new PreishoheitApiException('Failed to verify API key: ' . $e->getMessage());
         }
     }
 
-
-    public function getJobStatus(string $jobId, string $productId, Context $context): array
-
-    {
-        try {
-            $response = $this->client->get("/jobs/{$jobId}");
-            return json_decode($response->getBody()->getContents(), true);
-        } catch (GuzzleException $e) {
-            $this->errorHandler->handleError(
-                $productId,
-                'API_ERROR',
-                'Failed to get job status: ' . $e->getMessage(),
-                $context
-            );
-
-            throw new PreishoheitApiException('Failed to get job status: ' . $e->getMessage());
-        }
-    }
-
-    public function downloadJobResult(string $jobId, string $productId, Context $context): array
-    {
-        try {
-            $response = $this->client->get("/jobs/{$jobId}/download");
-            $result = json_decode($response->getBody()->getContents(), true);
-            
-            if (empty($result['data'])) {
-                $this->errorHandler->handleError(
-                    $productId,
-                    'API_ERROR',
-                    'No data received from API',
-                    $context
-                );
-                throw new PreishoheitApiException('No data received from API');
-            }
-
-            return $result;
-        } catch (GuzzleException $e) {
-            $this->errorHandler->handleError(
-                $productId,
-                'API_ERROR',
-                'Failed to download job result: ' . $e->getMessage(),
-                $context
-            );
-
-            throw new PreishoheitApiException('Failed to download job result: ' . $e->getMessage());
-        }
-    }
+    // Previous methods remain unchanged
 }

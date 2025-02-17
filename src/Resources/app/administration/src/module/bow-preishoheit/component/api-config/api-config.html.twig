@@ -1,0 +1,29 @@
+{% block bow_preishoheit_api_config %}
+    <div class="bow-preishoheit-api-config">
+        <sw-card :title="$tc('bow-preishoheit.apiConfig.cardTitle')" :isLoading="isLoading">
+            <sw-password-field
+                :label="$tc('bow-preishoheit.apiConfig.apiKeyLabel')"
+                :placeholder="$tc('bow-preishoheit.apiConfig.apiKeyPlaceholder')"
+                v-model="config['BOWPreishoheit.config.apiKey']"
+            ></sw-password-field>
+
+            <sw-button-group>
+                <sw-button-process
+                    :isLoading="isLoading"
+                    :processSuccess="isSaveSuccessful"
+                    variant="primary"
+                    @process-finish="saveFinish"
+                    @click="saveConfig">
+                    {{ $tc('bow-preishoheit.apiConfig.buttonSave') }}
+                </sw-button-process>
+
+                <sw-button
+                    :isLoading="isVerifying"
+                    variant="ghost"
+                    @click="verifyApiKey">
+                    {{ $tc('bow-preishoheit.apiConfig.buttonVerify') }}
+                </sw-button>
+            </sw-button-group>
+        </sw-card>
+    </div>
+{% endblock %}
