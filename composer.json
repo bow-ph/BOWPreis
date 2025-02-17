@@ -1,0 +1,32 @@
+{
+    "name": "bow-ph/preishoheit",
+    "description": "Dynamic price adjustments for Shopware products based on Preishoheit API",
+    "version": "1.0.0",
+    "type": "shopware-platform-plugin",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "BOW"
+        }
+    ],
+    "require": {
+        "shopware/core": "~6.6.0",
+        "shopware/administration": "~6.6.0"
+    },
+    "extra": {
+        "shopware-plugin-class": "BOW\\Preishoheit\\BOWPreishoheit",
+        "label": {
+            "de-DE": "BOW Preishoheit",
+            "en-GB": "BOW Price Authority"
+        },
+        "description": {
+            "de-DE": "Dynamische Preisanpassungen für Shopware-Produkte basierend auf der Preishoheit API",
+            "en-GB": "Dynamic price adjustments for Shopware products based on Preishoheit API"
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "BOW\\Preishoheit\\": "src/"
+        }
+    }
+}
