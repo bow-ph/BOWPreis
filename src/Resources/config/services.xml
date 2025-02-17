@@ -3,6 +3,14 @@
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
+        <!-- Error Handling Services -->
+        <service id="BOW\Preishoheit\Service\ErrorHandling\ErrorHandler">
+            <argument type="service" id="bow_preishoheit_error_log.repository"/>
+        </service>
+
+        <service id="BOW\Preishoheit\Service\Validation\PriceValidator">
+            <argument type="service" id="BOW\Preishoheit\Service\ErrorHandling\ErrorHandler"/>
+
         <!-- Entity Definitions -->
         <service id="BOW\Preishoheit\Entity\Product\PreishoheitProductDefinition">
             <tag name="shopware.entity.definition" entity="bow_preishoheit_product"/>
@@ -19,6 +27,9 @@
         <!-- API Services -->
         <service id="BOW\Preishoheit\Service\PreishoheitApi\PreishoheitApiClient">
             <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
+
+            <argument type="service" id="BOW\Preishoheit\Service\ErrorHandling\ErrorHandler"/>
+
         </service>
 
         <service id="BOW\Preishoheit\Service\PreishoheitApi\PriceUpdateService">
