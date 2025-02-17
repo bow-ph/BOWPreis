@@ -3,6 +3,17 @@
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
-        <!-- Services will be added here -->
+        <!-- Entity Definitions -->
+        <service id="BOW\Preishoheit\Entity\Product\PreishoheitProductDefinition">
+            <tag name="shopware.entity.definition" entity="bow_preishoheit_product"/>
+        </service>
+
+        <service id="BOW\Preishoheit\Entity\PriceHistory\PriceHistoryDefinition">
+            <tag name="shopware.entity.definition" entity="bow_preishoheit_price_history"/>
+        </service>
+
+        <service id="BOW\Preishoheit\Entity\ErrorLog\ErrorLogDefinition">
+            <tag name="shopware.entity.definition" entity="bow_preishoheit_error_log"/>
+        </service>
     </services>
 </container>
