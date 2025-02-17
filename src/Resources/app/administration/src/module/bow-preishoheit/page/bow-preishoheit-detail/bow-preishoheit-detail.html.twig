@@ -1,0 +1,49 @@
+{% block bow_preishoheit_detail %}
+    <sw-page class="bow-preishoheit-detail">
+        {% block bow_preishoheit_detail_smart_bar_header %}
+            <template slot="smart-bar-header">
+                <h2>{{ product.product.name }}</h2>
+            </template>
+        {% endblock %}
+
+        {% block bow_preishoheit_detail_smart_bar_actions %}
+            <template slot="smart-bar-actions">
+                <sw-button-process
+                    :isLoading="isLoading"
+                    :processSuccess="isSaveSuccessful"
+                    variant="primary"
+                    @process-finish="saveFinish"
+                    @click="onSave">
+                    {{ $tc('global.default.save') }}
+                </sw-button-process>
+            </template>
+        {% endblock %}
+
+        {% block bow_preishoheit_detail_content %}
+            <template slot="content">
+                <sw-card-view>
+                    {% block bow_preishoheit_detail_content_tabs %}
+                        <sw-tabs class="bow-preishoheit-detail-tabs">
+                            <sw-tabs-item :route="{ name: 'bow.preishoheit.detail.settings', params: { id: productId } }"
+                                         :title="$tc('bow-preishoheit.detail.tabSettings')">
+                                {{ $tc('bow-preishoheit.detail.tabSettings') }}
+                            </sw-tabs-item>
+                            <sw-tabs-item :route="{ name: 'bow.preishoheit.detail.history', params: { id: productId } }"
+                                         :title="$tc('bow-preishoheit.detail.tabHistory')">
+                                {{ $tc('bow-preishoheit.detail.tabHistory') }}
+                            </sw-tabs-item>
+                            <sw-tabs-item :route="{ name: 'bow.preishoheit.detail.errors', params: { id: productId } }"
+                                         :title="$tc('bow-preishoheit.detail.tabErrors')">
+                                {{ $tc('bow-preishoheit.detail.tabErrors') }}
+                            </sw-tabs-item>
+                        </sw-tabs>
+                    {% endblock %}
+
+                    {% block bow_preishoheit_detail_content_view %}
+                        <router-view :product="product"></router-view>
+                    {% endblock %}
+                </sw-card-view>
+            </template>
+        {% endblock %}
+    </sw-page>
+{% endblock %}

@@ -1,0 +1,18 @@
+{
+    "bow-preishoheit": {
+        "general": {
+            "mainMenuItemGeneral": "Price Authority",
+            "descriptionTextModule": "Manage dynamic price adjustments"
+        },
+        "list": {
+            "titleSaveSuccess": "Success",
+            "messageSaveSuccess": "Configuration has been saved successfully.",
+            "buttonAddProduct": "Add Product",
+            "columnProductName": "Product Name",
+            "columnEan": "EAN",
+            "columnSurcharge": "Surcharge (%)",
+            "columnDiscount": "Discount (%)",
+            "columnLastUpdate": "Last Update"
+        }
+    }
+}

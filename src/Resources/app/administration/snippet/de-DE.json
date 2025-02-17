@@ -1,0 +1,18 @@
+{
+    "bow-preishoheit": {
+        "general": {
+            "mainMenuItemGeneral": "Preishoheit",
+            "descriptionTextModule": "Verwalten Sie dynamische Preisanpassungen"
+        },
+        "list": {
+            "titleSaveSuccess": "Erfolg",
+            "messageSaveSuccess": "Die Konfiguration wurde erfolgreich gespeichert.",
+            "buttonAddProduct": "Produkt hinzufügen",
+            "columnProductName": "Produktname",
+            "columnEan": "EAN",
+            "columnSurcharge": "Aufschlag (%)",
+            "columnDiscount": "Rabatt (%)",
+            "columnLastUpdate": "Letztes Update"
+        }
+    }
+}
