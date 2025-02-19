@@ -6,6 +6,7 @@ use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\RangeFilter;
+use Shopware\Core\Framework\Routing\Annotation\Acl;
 use Shopware\Core\Framework\Routing\Annotation\RouteScope;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -27,6 +28,7 @@ class ExportController extends AbstractController
 
     /**
      * @Route("/api/_action/bow-preishoheit/export-history", name="api.action.bow.preishoheit.export.history", methods={"POST"})
+     * @Acl({"bow_preishoheit.viewer"})
      */
     public function exportHistory(Request $request, Context $context): Response
     {
