@@ -58,4 +58,18 @@
             <defaultValue>900</defaultValue>
         </input-field>
     </card>
+
+    <card>
+        <title>Notification Settings</title>
+        <title lang="de-DE">Benachrichtigungseinstellungen</title>
+
+        <input-field type="text">
+            <name>adminEmail</name>
+            <label>Admin Email</label>
+            <label lang="de-DE">Admin E-Mail</label>
+            <helpText>Email address for receiving error notifications</helpText>
+            <helpText lang="de-DE">E-Mail-Adresse für Fehlerbenachrichtigungen</helpText>
+            <required>true</required>
+        </input-field>
+    </card>
 </config>
