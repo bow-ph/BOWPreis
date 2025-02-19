@@ -21,7 +21,11 @@
             "columnNewPrice": "Neuer Preis",
             "columnDateTime": "Datum/Uhrzeit",
             "errorTitle": "Fehler beim Laden des Preisverlaufs",
-            "errorMessage": "Preisverlauf konnte nicht geladen werden"
+            "errorMessage": "Preisverlauf konnte nicht geladen werden",
+            "startDate": "Startdatum",
+            "endDate": "Enddatum",
+            "startDatePlaceholder": "Startdatum auswählen",
+            "endDatePlaceholder": "Enddatum auswählen"
         }
     }
 }

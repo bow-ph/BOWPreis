@@ -1,5 +1,21 @@
 {% block bow_preishoheit_price_history %}
     <sw-card>
+        <template #toolbar>
+            <div class="sw-card-filter">
+                <sw-datepicker
+                    v-model="dateRange.start"
+                    :label="$tc('bow-preishoheit.history.startDate')"
+                    :placeholder="$tc('bow-preishoheit.history.startDatePlaceholder')"
+                    @change="onDateRangeChange">
+                </sw-datepicker>
+                <sw-datepicker
+                    v-model="dateRange.end"
+                    :label="$tc('bow-preishoheit.history.endDate')"
+                    :placeholder="$tc('bow-preishoheit.history.endDatePlaceholder')"
+                    @change="onDateRangeChange">
+                </sw-datepicker>
+            </div>
+        </template>
         <sw-data-grid
             :dataSource="history"
             :columns="columns"

@@ -21,7 +21,11 @@
             "columnNewPrice": "New price",
             "columnDateTime": "Date/Time",
             "errorTitle": "Error loading price history",
-            "errorMessage": "Could not load price history"
+            "errorMessage": "Could not load price history",
+            "startDate": "Start Date",
+            "endDate": "End Date",
+            "startDatePlaceholder": "Select start date",
+            "endDatePlaceholder": "Select end date"
         }
     }
 }

@@ -24,6 +24,10 @@ Component.register('bow-preishoheit-price-history', {
             total: 0,
             sortBy: 'createdAt',
             sortDirection: 'DESC',
+            dateRange: {
+                start: null,
+                end: null
+            },
             columns: [
                 {
                     property: 'ean',
@@ -70,7 +74,21 @@ Component.register('bow-preishoheit-price-history', {
         loadHistory() {
             this.isLoading = true;
 
-            return this.priceHistoryRepository.search(this.priceHistoryCriteria)
+            const criteria = this.priceHistoryCriteria;
+            
+            if (this.dateRange.start) {
+                criteria.addFilter(Criteria.range('createdAt', {
+                    gte: this.dateRange.start
+                }));
+            }
+            
+            if (this.dateRange.end) {
+                criteria.addFilter(Criteria.range('createdAt', {
+                    lte: this.dateRange.end
+                }));
+            }
+
+            return this.priceHistoryRepository.search(criteria)
                 .then((result) => {
                     this.history = result.items;
                     this.total = result.total;
@@ -95,6 +113,10 @@ Component.register('bow-preishoheit-price-history', {
         onSort({ sortBy, sortDirection }) {
             this.sortBy = sortBy;
             this.sortDirection = sortDirection;
+            this.loadHistory();
+        },
+
+        onDateRangeChange() {
             this.loadHistory();
         },
 
