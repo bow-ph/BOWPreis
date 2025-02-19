@@ -23,5 +23,10 @@
             <argument type="service" id="bow_preishoheit_price_history.repository"/>
             <tag name="controller.service_arguments"/>
         </service>
+
+        <!-- Validation -->
+        <service id="BOW\Preishoheit\Service\Validation\BulkEditValidator" public="true">
+            <argument type="service" id="product.repository"/>
+        </service>
     </services>
 </container>

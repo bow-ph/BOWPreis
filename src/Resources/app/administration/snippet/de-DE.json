@@ -34,6 +34,29 @@
             "exportSuccessMessage": "Preisverlauf erfolgreich exportiert",
             "exportErrorTitle": "Fehler",
             "exportError": "Preisverlauf konnte nicht exportiert werden"
+        },
+        "bulk": {
+            "editSelected": "{0} ausgewählte Produkte bearbeiten",
+            "clearSelection": "Auswahl aufheben",
+            "modalTitle": "Massenbearbeitung von Produkten",
+            "adjustmentType": "Anpassungsart",
+            "adjustmentValue": "Anpassungswert",
+            "adjustmentTypePercentage": "Prozentual",
+            "adjustmentTypeFixed": "Fester Betrag",
+            "save": "Änderungen speichern",
+            "columnName": "Produktname",
+            "columnProductNumber": "Artikelnummer",
+            "columnPrice": "Preis",
+            "columnSurcharge": "Aufschlag (%)",
+            "successTitle": "Erfolg",
+            "successMessage": "Produkte erfolgreich aktualisiert",
+            "errorTitle": "Fehler",
+            "errorMessage": "Produkte konnten nicht aktualisiert werden",
+            "processingStatus": "Verarbeite {processed}/{total} Produkte ({success} erfolgreich, {failed} fehlgeschlagen)",
+            "itemErrorTitle": "Fehler beim Aktualisieren von {productName}",
+            "warningTitle": "Warnung",
+            "warningMessage": "{failed} von {total} Produkten konnten nicht aktualisiert werden",
+            "successMessage": "{success} von {total} Produkten erfolgreich aktualisiert"
         }
     }
 }
