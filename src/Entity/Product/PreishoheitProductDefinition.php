@@ -37,7 +37,7 @@ class PreishoheitProductDefinition extends EntityDefinition
     {
         return new FieldCollection([
             (new IdField('id', 'id'))->addFlags(new Required(), new PrimaryKey()),
-            (new BoolField('active', 'active')),
+            (new BoolField('active', 'active'))->addFlags(new Required()),
             (new FloatField('surcharge_percentage', 'surchargePercentage')),
             (new FloatField('discount_percentage', 'discountPercentage')),
             
@@ -50,6 +50,8 @@ class PreishoheitProductDefinition extends EntityDefinition
                 ProductDefinition::class,
                 'id'
             ),
+            new CreatedAtField(),
+            new UpdatedAtField(),
         ]);
     }
 }
