@@ -5,7 +5,13 @@
                 :label="$tc('bow-preishoheit.apiConfig.apiKeyLabel')"
                 :placeholder="$tc('bow-preishoheit.apiConfig.apiKeyPlaceholder')"
                 v-model="config['BOWPreishoheit.config.apiKey']"
+                :error="validationError"
+                required
             ></sw-password-field>
+            
+            <sw-alert v-if="validationError" variant="error" appearance="notification">
+                {{ validationError }}
+            </sw-alert>
 
             <sw-button-group>
                 <sw-button-process

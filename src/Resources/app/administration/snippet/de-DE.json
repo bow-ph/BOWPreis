@@ -10,7 +10,8 @@
             "verificationSuccessMessage": "API-Schlüssel wurde erfolgreich verifiziert",
             "verificationErrorTitle": "Fehler",
             "verificationErrorMessage": "API-Schlüssel konnte nicht verifiziert werden",
-            "errorTitle": "Fehler beim Speichern"
+            "errorTitle": "Fehler beim Speichern",
+            "apiKeyRequired": "Bitte geben Sie einen API-Schlüssel ein"
         }
     }
 }
