@@ -1,0 +1,14 @@
+{% block bow_preishoheit_price_history %}
+    <sw-card>
+        <sw-data-grid
+            :dataSource="history"
+            :columns="columns"
+            :isLoading="isLoading"
+            :showSettings="true"
+            :showSelection="false"
+            :allowColumnSort="true"
+            @page-change="onPageChange"
+            @sort-change="onSort">
+        </sw-data-grid>
+    </sw-card>
+{% endblock %}

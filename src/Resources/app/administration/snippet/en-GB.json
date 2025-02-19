@@ -12,6 +12,16 @@
             "verificationErrorMessage": "Could not verify API key",
             "errorTitle": "Error saving configuration",
             "apiKeyRequired": "Please enter an API key"
+        },
+        "history": {
+            "cardTitle": "Price History",
+            "columnEan": "EAN/GTIN",
+            "columnProductName": "Product name",
+            "columnOldPrice": "Old price",
+            "columnNewPrice": "New price",
+            "columnDateTime": "Date/Time",
+            "errorTitle": "Error loading price history",
+            "errorMessage": "Could not load price history"
         }
     }
 }
