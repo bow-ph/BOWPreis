@@ -10,25 +10,38 @@ use Shopware\Core\System\SystemConfig\SystemConfigService;
 class PreishoheitApiClient
 {
     private const API_BASE_URL = 'https://pod.preishoheit.de/v2';
-    private Client $client;
-    private string $apiKey;
+    private ?Client $client = null;
+    private SystemConfigService $systemConfigService;
 
     public function __construct(SystemConfigService $systemConfigService)
     {
-        $this->apiKey = $systemConfigService->getString('BOWPreishoheit.config.apiKey');
-        $this->client = new Client([
-            'base_uri' => self::API_BASE_URL,
-            'headers' => [
-                'Accept' => 'application/json',
-                'X-API-Key' => $this->apiKey
-            ]
-        ]);
+        $this->systemConfigService = $systemConfigService;
+    }
+
+    private function getClient(): Client
+    {
+        if ($this->client === null) {
+            $apiKey = $this->systemConfigService->getString('BOWPreishoheit.config.apiKey');
+            if (empty($apiKey)) {
+                throw new PreishoheitApiException('API key is required');
+            }
+            
+            $this->client = new Client([
+                'base_uri' => self::API_BASE_URL,
+                'headers' => [
+                    'Accept' => 'application/json',
+                    'X-API-Key' => $apiKey
+                ]
+            ]);
+        }
+
+        return $this->client;
     }
 
     public function verifyApiKey(Context $context): bool
     {
         try {
-            $response = $this->client->get('/jobs');
+            $response = $this->getClient()->get('/jobs');
             $result = json_decode($response->getBody()->getContents(), true);
             
             if (isset($result['header']['status']) && $result['header']['status'] === 'fail') {
@@ -40,6 +53,4 @@ class PreishoheitApiClient
             throw new PreishoheitApiException('Failed to verify API key: ' . $e->getMessage());
         }
     }
-
-    // Previous methods remain unchanged
 }
