@@ -12,6 +12,28 @@
             "verificationErrorMessage": "Could not verify API key",
             "errorTitle": "Error saving configuration",
             "apiKeyRequired": "Please enter an API key"
+        },
+        "history": {
+            "cardTitle": "Price History",
+            "columnEan": "EAN/GTIN",
+            "columnProductName": "Product name",
+            "columnOldPrice": "Old price",
+            "columnNewPrice": "New price",
+            "columnDateTime": "Date/Time",
+            "errorTitle": "Error loading price history",
+            "errorMessage": "Could not load price history",
+            "startDate": "Start Date",
+            "endDate": "End Date",
+            "startDatePlaceholder": "Select start date",
+            "endDatePlaceholder": "Select end date",
+            "export": "Export",
+            "exportTitle": "Export Price History",
+            "exportConfirm": "Do you want to export the price history?",
+            "confirmExport": "Export",
+            "exportSuccessTitle": "Success",
+            "exportSuccessMessage": "Price history exported successfully",
+            "exportErrorTitle": "Error",
+            "exportError": "Could not export price history"
         }
     }
 }

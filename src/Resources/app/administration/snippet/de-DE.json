@@ -12,6 +12,28 @@
             "verificationErrorMessage": "API-Schlüssel konnte nicht verifiziert werden",
             "errorTitle": "Fehler beim Speichern",
             "apiKeyRequired": "Bitte geben Sie einen API-Schlüssel ein"
+        },
+        "history": {
+            "cardTitle": "Preisverlauf",
+            "columnEan": "EAN/GTIN",
+            "columnProductName": "Produktname",
+            "columnOldPrice": "Alter Preis",
+            "columnNewPrice": "Neuer Preis",
+            "columnDateTime": "Datum/Uhrzeit",
+            "errorTitle": "Fehler beim Laden des Preisverlaufs",
+            "errorMessage": "Preisverlauf konnte nicht geladen werden",
+            "startDate": "Startdatum",
+            "endDate": "Enddatum",
+            "startDatePlaceholder": "Startdatum auswählen",
+            "endDatePlaceholder": "Enddatum auswählen",
+            "export": "Exportieren",
+            "exportTitle": "Preisverlauf exportieren",
+            "exportConfirm": "Möchten Sie den Preisverlauf exportieren?",
+            "confirmExport": "Exportieren",
+            "exportSuccessTitle": "Erfolg",
+            "exportSuccessMessage": "Preisverlauf erfolgreich exportiert",
+            "exportErrorTitle": "Fehler",
+            "exportError": "Preisverlauf konnte nicht exportiert werden"
         }
     }
 }
