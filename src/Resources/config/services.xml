@@ -16,6 +16,16 @@
             <tag name="shopware.entity.definition" entity="bow_preishoheit_error_log" />
         </service>
 
+        <!-- Core Services -->
+        <service id="BOW\Preishoheit\Service\ErrorHandling\ErrorLogger">
+            <argument type="service" id="logger"/>
+            <tag name="monolog.logger" channel="bow_preishoheit"/>
+        </service>
+
+        <service id="BOW\Preishoheit\Service\Validation\BulkEditValidator">
+            <argument type="service" id="product.repository"/>
+        </service>
+
         <!-- API Services -->
         <service id="BOW\Preishoheit\Service\PreishoheitApi\PreishoheitApiClient">
             <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
@@ -28,8 +38,15 @@
             <argument type="service" id="bow_preishoheit_error_log.repository"/>
         </service>
 
+        <!-- Mail Services -->
+        <service id="BOW\Preishoheit\Service\Mail\FailedUpdateMailService">
+            <argument type="service" id="bow_preishoheit_error_log.repository"/>
+            <argument type="service" id="Shopware\Core\Content\Mail\Service\MailService"/>
+            <argument>%env(SHOPWARE_ADMIN_EMAIL_PLUGINS)%</argument>
+        </service>
+
         <!-- Controllers -->
-        <service id="BOW\Preishoheit\Controller\ApiVerificationController">
+        <service id="BOW\Preishoheit\Controller\ApiVerificationController" public="true">
             <argument type="service" id="BOW\Preishoheit\Service\PreishoheitApi\PreishoheitApiClient"/>
             <argument type="service" id="logger"/>
             <tag name="controller.service_arguments"/>
@@ -38,27 +55,11 @@
             <tag name="shopware.route_scope" scopes="api"/>
         </service>
 
-        <service id="BOW\Preishoheit\Controller\ExportController">
+        <service id="BOW\Preishoheit\Controller\ExportController" public="true">
             <argument type="service" id="bow_preishoheit_price_history.repository"/>
             <tag name="controller.service_arguments"/>
             <tag name="controller.service_subscriber"/>
             <tag name="shopware.route_scope" scopes="api"/>
-        </service>
-
-        <!-- Services -->
-        <service id="BOW\Preishoheit\Service\ErrorHandling\ErrorLogger">
-            <argument type="service" id="logger"/>
-            <tag name="monolog.logger" channel="bow_preishoheit"/>
-        </service>
-
-        <service id="BOW\Preishoheit\Service\Validation\BulkEditValidator">
-            <argument type="service" id="product.repository"/>
-        </service>
-
-        <service id="BOW\Preishoheit\Service\Mail\FailedUpdateMailService">
-            <argument type="service" id="bow_preishoheit_error_log.repository"/>
-            <argument type="service" id="Shopware\Core\Content\Mail\Service\MailService"/>
-            <argument>%env(SHOPWARE_ADMIN_EMAIL_PLUGINS)%</argument>
         </service>
 
         <!-- Scheduled Tasks -->
