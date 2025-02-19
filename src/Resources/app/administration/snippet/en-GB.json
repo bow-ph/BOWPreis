@@ -1,5 +1,18 @@
 {
     "bow-preishoheit": {
+        "grid": {
+            "columnProduct": "Product",
+            "columnProductNumber": "Product number",
+            "columnEan": "EAN/GTIN",
+            "columnPrice": "Price",
+            "columnSurcharge": "Surcharge (%)",
+            "columnActive": "Active",
+            "errorTitle": "Error",
+            "successTitle": "Success",
+            "successMessage": "Changes saved successfully",
+            "buttonAddProducts": "Add selected products",
+            "productSelectionTitle": "Product Selection"
+        },
         "apiConfig": {
             "cardTitle": "API Configuration",
             "apiKeyLabel": "API Key",
