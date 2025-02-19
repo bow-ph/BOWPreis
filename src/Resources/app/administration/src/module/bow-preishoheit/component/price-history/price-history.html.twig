@@ -14,8 +14,37 @@
                     :placeholder="$tc('bow-preishoheit.history.endDatePlaceholder')"
                     @change="onDateRangeChange">
                 </sw-datepicker>
+                <sw-button
+                    variant="primary"
+                    size="small"
+                    :isLoading="isExporting"
+                    @click="onExportClick">
+                    {{ $tc('bow-preishoheit.history.export') }}
+                </sw-button>
             </div>
         </template>
+
+        <sw-modal
+            v-if="showExportModal"
+            :title="$tc('bow-preishoheit.history.exportTitle')"
+            @modal-close="onCloseExportModal">
+            <p>{{ $tc('bow-preishoheit.history.exportConfirm') }}</p>
+
+            <template #modal-footer>
+                <sw-button
+                    @click="onCloseExportModal"
+                    size="small">
+                    {{ $tc('bow-preishoheit.general.cancel') }}
+                </sw-button>
+                <sw-button
+                    variant="primary"
+                    size="small"
+                    :disabled="isExporting"
+                    @click="onConfirmExport">
+                    {{ $tc('bow-preishoheit.history.confirmExport') }}
+                </sw-button>
+            </template>
+        </sw-modal>
         <sw-data-grid
             :dataSource="history"
             :columns="columns"

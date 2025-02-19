@@ -18,5 +18,10 @@
             <argument type="service" id="logger"/>
             <tag name="monolog.logger" channel="bow_preishoheit"/>
         </service>
+        <!-- Export Controller -->
+        <service id="BOW\Preishoheit\Controller\ExportController" public="true">
+            <argument type="service" id="bow_preishoheit_price_history.repository"/>
+            <tag name="controller.service_arguments"/>
+        </service>
     </services>
 </container>

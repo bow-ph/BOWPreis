@@ -28,6 +28,8 @@ Component.register('bow-preishoheit-price-history', {
                 start: null,
                 end: null
             },
+            isExporting: false,
+            showExportModal: false,
             columns: [
                 {
                     property: 'ean',
@@ -128,6 +130,52 @@ Component.register('bow-preishoheit-price-history', {
                 return 'price--warning';
             }
             return '';
+        },
+
+        onExportClick() {
+            this.showExportModal = true;
+        },
+
+        onCloseExportModal() {
+            this.showExportModal = false;
+            this.isExporting = false;
+        },
+
+        async onConfirmExport() {
+            this.isExporting = true;
+
+            try {
+                const response = await this.$http.post(
+                    `${this.getApplicationRootPath()}/api/_action/bow-preishoheit/export-history`,
+                    {
+                        dateRange: this.dateRange
+                    },
+                    {
+                        responseType: 'blob'
+                    }
+                );
+
+                const url = window.URL.createObjectURL(new Blob([response.data]));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', 'price-history.csv');
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+
+                this.createNotificationSuccess({
+                    title: this.$tc('bow-preishoheit.history.exportSuccessTitle'),
+                    message: this.$tc('bow-preishoheit.history.exportSuccessMessage')
+                });
+            } catch (error) {
+                this.createNotificationError({
+                    title: this.$tc('bow-preishoheit.history.exportErrorTitle'),
+                    message: error.response?.data?.message || this.$tc('bow-preishoheit.history.exportError')
+                });
+            } finally {
+                this.isExporting = false;
+                this.showExportModal = false;
+            }
         }
     }
 });

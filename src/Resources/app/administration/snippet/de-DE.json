@@ -25,7 +25,15 @@
             "startDate": "Startdatum",
             "endDate": "Enddatum",
             "startDatePlaceholder": "Startdatum auswählen",
-            "endDatePlaceholder": "Enddatum auswählen"
+            "endDatePlaceholder": "Enddatum auswählen",
+            "export": "Exportieren",
+            "exportTitle": "Preisverlauf exportieren",
+            "exportConfirm": "Möchten Sie den Preisverlauf exportieren?",
+            "confirmExport": "Exportieren",
+            "exportSuccessTitle": "Erfolg",
+            "exportSuccessMessage": "Preisverlauf erfolgreich exportiert",
+            "exportErrorTitle": "Fehler",
+            "exportError": "Preisverlauf konnte nicht exportiert werden"
         }
     }
 }
