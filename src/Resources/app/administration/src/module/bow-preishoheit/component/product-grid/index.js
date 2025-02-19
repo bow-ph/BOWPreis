@@ -1,13 +1,19 @@
 import template from './product-grid.html.twig';
 
-const { Component } = Shopware;
+const { Component, Mixin } = Shopware;
 const { Criteria } = Shopware.Data;
+const { Uuid } = Shopware.Utils;
 
 export default {
     template,
 
     inject: [
-        'repositoryFactory'
+        'repositoryFactory',
+        'acl'
+    ],
+
+    mixins: [
+        Mixin.getByName('notification')
     ],
 
     data() {
@@ -15,16 +21,31 @@ export default {
             isLoading: false,
             selectedProducts: [],
             availableProducts: [],
+            page: 1,
+            limit: 25,
+            total: 0,
+            sortBy: 'name',
+            sortDirection: 'ASC',
+            term: '',
             columns: [{
                 property: 'name',
-                label: 'Name',
-                primary: true
+                label: this.$tc('bow-preishoheit.grid.columnProduct'),
+                primary: true,
+                routerLink: 'sw.product.detail'
             }, {
                 property: 'productNumber',
-                label: 'Product Number'
+                label: this.$tc('bow-preishoheit.grid.columnProductNumber')
             }, {
                 property: 'ean',
-                label: 'EAN'
+                label: this.$tc('bow-preishoheit.grid.columnEan')
+            }, {
+                property: 'preishoheitProduct.surchargePercentage',
+                label: this.$tc('bow-preishoheit.grid.columnSurcharge'),
+                inlineEdit: 'number'
+            }, {
+                property: 'preishoheitProduct.active',
+                label: this.$tc('bow-preishoheit.grid.columnActive'),
+                inlineEdit: 'boolean'
             }]
         };
     },
@@ -47,23 +68,82 @@ export default {
         loadProducts() {
             this.isLoading = true;
 
-            const criteria = new Criteria();
+            const criteria = new Criteria(this.page, this.limit);
             criteria.addAssociation('preishoheitProduct');
-            criteria.addFilter(Criteria.not('AND', [
-                Criteria.equals('preishoheitProduct.id', null)
-            ]));
+            
+            if (this.term) {
+                criteria.setTerm(this.term);
+            }
+
+            criteria.addSorting(Criteria.sort(this.sortBy, this.sortDirection));
 
             return this.productRepository.search(criteria)
-                .then(({ items }) => {
-                    this.availableProducts = items;
+                .then((result) => {
+                    this.availableProducts = result.items;
+                    this.total = result.total;
+                })
+                .catch((error) => {
+                    this.createNotificationError({
+                        title: this.$tc('bow-preishoheit.grid.errorTitle'),
+                        message: error.message
+                    });
                 })
                 .finally(() => {
                     this.isLoading = false;
                 });
         },
 
+        onPageChange({ page, limit }) {
+            this.page = page;
+            this.limit = limit;
+            this.loadProducts();
+        },
+
+        onSearch(term) {
+            this.term = term;
+            this.page = 1;
+            this.loadProducts();
+        },
+
+        onSort({ sortBy, sortDirection }) {
+            this.sortBy = sortBy;
+            this.sortDirection = sortDirection;
+            this.loadProducts();
+        },
+
+        async onInlineEditSave(product) {
+            try {
+                if (!product.preishoheitProduct) {
+                    await this.createPreishoheitProduct(product);
+                } else {
+                    await this.preishoheitProductRepository.save(product.preishoheitProduct);
+                }
+
+                this.createNotificationSuccess({
+                    title: this.$tc('bow-preishoheit.grid.successTitle'),
+                    message: this.$tc('bow-preishoheit.grid.successMessage')
+                });
+            } catch (error) {
+                this.createNotificationError({
+                    title: this.$tc('bow-preishoheit.grid.errorTitle'),
+                    message: error.message
+                });
+            }
+        },
+
         onSelectionChange(selection) {
             this.selectedProducts = Object.values(selection);
+        },
+
+        async createPreishoheitProduct(product) {
+            const preishoheitProduct = this.preishoheitProductRepository.create();
+            preishoheitProduct.id = Uuid.randomHex();
+            preishoheitProduct.productId = product.id;
+            preishoheitProduct.active = true;
+            preishoheitProduct.surchargePercentage = 0;
+            
+            await this.preishoheitProductRepository.save(preishoheitProduct);
+            await this.loadProducts();
         },
 
         onAddProducts() {
@@ -73,11 +153,10 @@ export default {
 
             const newProducts = this.selectedProducts.map(product => {
                 return {
-                    id: Shopware.Utils.createId(),
+                    id: Uuid.randomHex(),
                     productId: product.id,
                     active: true,
-                    surchargePercentage: 0,
-                    discountPercentage: 0
+                    surchargePercentage: 0
                 };
             });
 
@@ -85,12 +164,14 @@ export default {
             return this.preishoheitProductRepository.sync(newProducts)
                 .then(() => {
                     this.createNotificationSuccess({
-                        message: this.$tc('bow-preishoheit.list.messageSaveSuccess')
+                        title: this.$tc('bow-preishoheit.grid.successTitle'),
+                        message: this.$tc('bow-preishoheit.grid.successMessage')
                     });
                     this.loadProducts();
                 })
                 .catch((error) => {
                     this.createNotificationError({
+                        title: this.$tc('bow-preishoheit.grid.errorTitle'),
                         message: error.message
                     });
                 })
