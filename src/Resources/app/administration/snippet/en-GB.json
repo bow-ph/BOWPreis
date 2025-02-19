@@ -34,6 +34,24 @@
             "exportSuccessMessage": "Price history exported successfully",
             "exportErrorTitle": "Error",
             "exportError": "Could not export price history"
+        },
+        "bulk": {
+            "editSelected": "Edit {0} selected items",
+            "clearSelection": "Clear selection",
+            "modalTitle": "Bulk Edit Products",
+            "adjustmentType": "Adjustment Type",
+            "adjustmentValue": "Adjustment Value",
+            "adjustmentTypePercentage": "Percentage",
+            "adjustmentTypeFixed": "Fixed Amount",
+            "save": "Save Changes",
+            "columnName": "Product Name",
+            "columnProductNumber": "Product Number",
+            "columnPrice": "Price",
+            "columnSurcharge": "Surcharge (%)",
+            "successTitle": "Success",
+            "successMessage": "Products updated successfully",
+            "errorTitle": "Error",
+            "errorMessage": "Could not update products"
         }
     }
 }
