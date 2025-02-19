@@ -1,0 +1,8 @@
+{
+    "bow-preishoheit": {
+        "general": {
+            "mainMenuItemGeneral": "Price Authority",
+            "descriptionTextModule": "Dynamic price adjustments for Shopware products"
+        }
+    }
+}
