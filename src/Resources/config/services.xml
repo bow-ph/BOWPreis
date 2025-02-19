@@ -18,5 +18,10 @@
             <argument type="service" id="logger"/>
             <tag name="monolog.logger" channel="bow_preishoheit"/>
         </service>
+
+        <!-- Price Services -->
+        <service id="BOW\Preishoheit\Service\Price\PriceAdjustmentService" public="true">
+            <argument type="service" id="BOW\Preishoheit\Service\ErrorHandling\ErrorLogger"/>
+        </service>
     </services>
 </container>
