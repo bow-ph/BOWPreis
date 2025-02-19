@@ -75,7 +75,7 @@
             <argument type="service" id="BOW\Preishoheit\Service\PreishoheitApi\PriceUpdateService"/>
             <argument type="service" id="bow_preishoheit_product.repository"/>
             <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
-            <argument type="service" id="BOW\Preishoheit\Service\ErrorHandling\ErrorLogger"/>
+            <argument type="service" id="monolog.logger.bow_preishoheit"/>
             <tag name="messenger.message_handler"/>
         </service>
 
