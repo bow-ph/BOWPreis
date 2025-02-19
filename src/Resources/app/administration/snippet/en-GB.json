@@ -10,7 +10,8 @@
             "verificationSuccessMessage": "API key verified successfully",
             "verificationErrorTitle": "Error",
             "verificationErrorMessage": "Could not verify API key",
-            "errorTitle": "Error saving configuration"
+            "errorTitle": "Error saving configuration",
+            "apiKeyRequired": "Please enter an API key"
         }
     }
 }

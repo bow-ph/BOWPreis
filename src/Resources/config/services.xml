@@ -8,7 +8,15 @@
         <!-- API Verification Controller -->
         <service id="BOW\Preishoheit\Controller\ApiVerificationController" public="true">
             <argument type="service" id="BOW\Preishoheit\Service\PreishoheitApi\PreishoheitApiClient"/>
+            <argument type="service" id="logger"/>
             <tag name="controller.service_arguments"/>
+            <tag name="monolog.logger" channel="bow_preishoheit"/>
+        </service>
+
+        <!-- Error Handling -->
+        <service id="BOW\Preishoheit\Service\ErrorHandling\ErrorLogger" public="true">
+            <argument type="service" id="logger"/>
+            <tag name="monolog.logger" channel="bow_preishoheit"/>
         </service>
     </services>
 </container>
