@@ -151,21 +151,55 @@ Component.register('bow-preishoheit-bulk-edit', {
             }
 
             this.isSaving = true;
+            this.processingStatus = {
+                total: this.selectedItems.length,
+                processed: 0,
+                success: 0,
+                failed: 0
+            };
 
             try {
-                const updates = this.selectedItems.map(item => ({
-                    id: item.id,
-                    surchargePercentage: this.bulkEditData.adjustmentType === 'percentage'
-                        ? this.bulkEditData.value
-                        : this.calculatePercentageFromFixed(item.price, this.bulkEditData.value)
-                }));
+                for (const item of this.selectedItems) {
+                    try {
+                        const update = {
+                            id: item.id,
+                            surchargePercentage: this.bulkEditData.adjustmentType === 'percentage'
+                                ? this.bulkEditData.value
+                                : this.calculatePercentageFromFixed(item.price, this.bulkEditData.value)
+                        };
 
-                await this.productRepository.saveAll(updates);
+                        await this.productRepository.save(update, Shopware.Context.api);
+                        this.processingStatus.success++;
+                    } catch (itemError) {
+                        this.processingStatus.failed++;
+                        this.createNotificationError({
+                            title: this.$tc('bow-preishoheit.bulk.itemErrorTitle', 0, { productName: item.name }),
+                            message: itemError.message
+                        });
+                    } finally {
+                        this.processingStatus.processed++;
+                    }
+                }
 
-                this.createNotificationSuccess({
-                    title: this.$tc('bow-preishoheit.bulk.successTitle'),
-                    message: this.$tc('bow-preishoheit.bulk.successMessage')
-                });
+                if (this.processingStatus.success > 0) {
+                    this.createNotificationSuccess({
+                        title: this.$tc('bow-preishoheit.bulk.successTitle'),
+                        message: this.$tc('bow-preishoheit.bulk.successMessage', 0, {
+                            success: this.processingStatus.success,
+                            total: this.processingStatus.total
+                        })
+                    });
+                }
+
+                if (this.processingStatus.failed > 0) {
+                    this.createNotificationWarning({
+                        title: this.$tc('bow-preishoheit.bulk.warningTitle'),
+                        message: this.$tc('bow-preishoheit.bulk.warningMessage', 0, {
+                            failed: this.processingStatus.failed,
+                            total: this.processingStatus.total
+                        })
+                    });
+                }
 
                 this.onCloseBulkEditModal();
                 this.loadProducts();

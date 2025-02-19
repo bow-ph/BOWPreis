@@ -52,7 +52,11 @@
             "successMessage": "Produkte erfolgreich aktualisiert",
             "errorTitle": "Fehler",
             "errorMessage": "Produkte konnten nicht aktualisiert werden",
-            "processingStatus": "Verarbeite {processed}/{total} Produkte ({success} erfolgreich, {failed} fehlgeschlagen)"
+            "processingStatus": "Verarbeite {processed}/{total} Produkte ({success} erfolgreich, {failed} fehlgeschlagen)",
+            "itemErrorTitle": "Fehler beim Aktualisieren von {productName}",
+            "warningTitle": "Warnung",
+            "warningMessage": "{failed} von {total} Produkten konnten nicht aktualisiert werden",
+            "successMessage": "{success} von {total} Produkten erfolgreich aktualisiert"
         }
     }
 }

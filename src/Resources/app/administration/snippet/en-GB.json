@@ -52,7 +52,11 @@
             "successMessage": "Products updated successfully",
             "errorTitle": "Error",
             "errorMessage": "Could not update products",
-            "processingStatus": "Processing {processed}/{total} products ({success} successful, {failed} failed)"
+            "processingStatus": "Processing {processed}/{total} products ({success} successful, {failed} failed)",
+            "itemErrorTitle": "Error updating {productName}",
+            "warningTitle": "Warning",
+            "warningMessage": "{failed} out of {total} products failed to update",
+            "successMessage": "Successfully updated {success} out of {total} products"
         }
     }
 }
