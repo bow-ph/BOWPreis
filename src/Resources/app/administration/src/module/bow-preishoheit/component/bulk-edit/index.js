@@ -22,6 +22,12 @@ Component.register('bow-preishoheit-bulk-edit', {
             isLoading: false,
             isSaving: false,
             showBulkEditModal: false,
+            processingStatus: {
+                total: 0,
+                processed: 0,
+                success: 0,
+                failed: 0
+            },
             page: 1,
             limit: 25,
             total: 0,

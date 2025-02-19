@@ -10,6 +10,15 @@
         margin-bottom: 16px;
     }
 
+    .bulk-processing-status {
+        padding: 24px;
+        text-align: center;
+
+        .sw-progress-bar {
+            margin-bottom: 16px;
+        }
+    }
+
     .bulk-edit-form {
         max-width: 600px;
         margin: 0 auto;

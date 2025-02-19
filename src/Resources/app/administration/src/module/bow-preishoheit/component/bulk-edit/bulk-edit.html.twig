@@ -43,7 +43,18 @@
             v-if="showBulkEditModal"
             :title="$tc('bow-preishoheit.bulk.modalTitle')"
             @modal-close="onCloseBulkEditModal">
-            <div class="bulk-edit-form">
+            <div v-if="isSaving" class="bulk-processing-status">
+                <sw-progress-bar
+                    :value="(processingStatus.processed / processingStatus.total) * 100"
+                    :text="$tc('bow-preishoheit.bulk.processingStatus', 0, { 
+                        processed: processingStatus.processed,
+                        total: processingStatus.total,
+                        success: processingStatus.success,
+                        failed: processingStatus.failed
+                    })">
+                </sw-progress-bar>
+            </div>
+            <div v-else class="bulk-edit-form">
                 <sw-select-field
                     v-model="bulkEditData.adjustmentType"
                     :label="$tc('bow-preishoheit.bulk.adjustmentType')"

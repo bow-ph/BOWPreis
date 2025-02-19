@@ -51,7 +51,8 @@
             "successTitle": "Success",
             "successMessage": "Products updated successfully",
             "errorTitle": "Error",
-            "errorMessage": "Could not update products"
+            "errorMessage": "Could not update products",
+            "processingStatus": "Processing {processed}/{total} products ({success} successful, {failed} failed)"
         }
     }
 }

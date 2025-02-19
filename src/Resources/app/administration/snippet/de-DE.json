@@ -51,7 +51,8 @@
             "successTitle": "Erfolg",
             "successMessage": "Produkte erfolgreich aktualisiert",
             "errorTitle": "Fehler",
-            "errorMessage": "Produkte konnten nicht aktualisiert werden"
+            "errorMessage": "Produkte konnten nicht aktualisiert werden",
+            "processingStatus": "Verarbeite {processed}/{total} Produkte ({success} erfolgreich, {failed} fehlgeschlagen)"
         }
     }
 }
