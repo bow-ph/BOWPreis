@@ -12,5 +12,11 @@
             <tag name="controller.service_arguments"/>
             <tag name="monolog.logger" channel="bow_preishoheit"/>
         </service>
+
+        <!-- Error Handling -->
+        <service id="BOW\Preishoheit\Service\ErrorHandling\ErrorLogger" public="true">
+            <argument type="service" id="logger"/>
+            <tag name="monolog.logger" channel="bow_preishoheit"/>
+        </service>
     </services>
 </container>
