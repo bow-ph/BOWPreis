@@ -23,5 +23,14 @@
         <service id="BOW\Preishoheit\Service\Price\PriceAdjustmentService" public="true">
             <argument type="service" id="BOW\Preishoheit\Service\ErrorHandling\ErrorLogger"/>
         </service>
+
+        <!-- Price Update Service -->
+        <service id="BOW\Preishoheit\Service\PreishoheitApi\PriceUpdateService" public="true">
+            <argument type="service" id="BOW\Preishoheit\Service\PreishoheitApi\PreishoheitApiClient"/>
+            <argument type="service" id="product.repository"/>
+            <argument type="service" id="bow_preishoheit_price_history.repository"/>
+            <argument type="service" id="bow_preishoheit_error_log.repository"/>
+            <argument type="service" id="BOW\Preishoheit\Service\Price\PriceAdjustmentService"/>
+        </service>
     </services>
 </container>

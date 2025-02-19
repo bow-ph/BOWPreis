@@ -14,17 +14,20 @@ class PriceUpdateService
     private EntityRepository $productRepository;
     private EntityRepository $priceHistoryRepository;
     private EntityRepository $errorLogRepository;
+    private PriceAdjustmentService $priceAdjustmentService;
 
     public function __construct(
         PreishoheitApiClient $apiClient,
         EntityRepository $productRepository,
         EntityRepository $priceHistoryRepository,
-        EntityRepository $errorLogRepository
+        EntityRepository $errorLogRepository,
+        PriceAdjustmentService $priceAdjustmentService
     ) {
         $this->apiClient = $apiClient;
         $this->productRepository = $productRepository;
         $this->priceHistoryRepository = $priceHistoryRepository;
         $this->errorLogRepository = $errorLogRepository;
+        $this->priceAdjustmentService = $priceAdjustmentService;
     }
 
     public function updatePrices(array $products, Context $context): void
@@ -66,7 +69,48 @@ class PriceUpdateService
 
     private function processPriceUpdate(array $priceData, Context $context): void
     {
-        // Implementation will handle price updates and history logging
+        try {
+            if (!isset($priceData['ean'], $priceData['price'])) {
+                throw new PreishoheitApiException('Invalid price data received');
+            }
+
+            $criteria = new Criteria();
+            $criteria->addFilter(new EqualsFilter('product.ean', $priceData['ean']));
+            $preishoheitProduct = $this->productRepository->search($criteria, $context)->first();
+
+            if (!$preishoheitProduct) {
+                throw new PreishoheitApiException('Product not found for EAN: ' . $priceData['ean']);
+            }
+
+            $oldPrice = $preishoheitProduct->getProduct()->getPrice()->getGross();
+            $newPrice = $this->priceAdjustmentService->calculateAdjustedPrice(
+                $priceData['price'],
+                $preishoheitProduct->getSurchargePercentage()
+            );
+
+            // Update product price
+            $this->productRepository->update([
+                [
+                    'id' => $preishoheitProduct->getId(),
+                    'price' => [['gross' => $newPrice, 'net' => $newPrice / 1.19]], // Assuming 19% VAT
+                ]
+            ], $context);
+
+            // Log price history
+            $this->priceHistoryRepository->create([
+                [
+                    'id' => Uuid::randomHex(),
+                    'ean' => $priceData['ean'],
+                    'productName' => $preishoheitProduct->getProduct()->getName(),
+                    'oldPrice' => $oldPrice,
+                    'newPrice' => $newPrice,
+                ]
+            ], $context);
+
+        } catch (\Exception $e) {
+            $this->logError('PRICE_UPDATE', $e->getMessage(), $context);
+            throw $e;
+        }
     }
 
     private function logError(string $type, string $message, Context $context): void
