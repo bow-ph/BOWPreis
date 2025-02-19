@@ -16,10 +16,14 @@
             <tag name="shopware.entity.definition" entity="bow_preishoheit_error_log" />
         </service>
 
+        <!-- Logger Service -->
+        <service id="monolog.logger.bow_preishoheit" parent="monolog.logger.channel_prototype">
+            <argument>bow_preishoheit</argument>
+        </service>
+
         <!-- Core Services -->
         <service id="BOW\Preishoheit\Service\ErrorHandling\ErrorLogger">
-            <argument type="service" id="logger"/>
-            <tag name="monolog.logger" channel="bow_preishoheit"/>
+            <argument type="service" id="monolog.logger.bow_preishoheit"/>
         </service>
 
         <service id="BOW\Preishoheit\Service\Validation\BulkEditValidator">
@@ -48,10 +52,9 @@
         <!-- Controllers -->
         <service id="BOW\Preishoheit\Controller\ApiVerificationController" public="true">
             <argument type="service" id="BOW\Preishoheit\Service\PreishoheitApi\PreishoheitApiClient"/>
-            <argument type="service" id="logger"/>
+            <argument type="service" id="monolog.logger.bow_preishoheit"/>
             <tag name="controller.service_arguments"/>
             <tag name="controller.service_subscriber"/>
-            <tag name="monolog.logger" channel="bow_preishoheit"/>
             <tag name="shopware.route_scope" scopes="api"/>
         </service>
 
