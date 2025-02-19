@@ -8,4 +8,14 @@
             text-align: right;
         }
     }
+
+    .price {
+        &--warning {
+            color: #ff9800;
+        }
+
+        &--error {
+            color: #de294c;
+        }
+    }
 }

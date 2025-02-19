@@ -9,6 +9,11 @@
             :allowColumnSort="true"
             @page-change="onPageChange"
             @sort-change="onSort">
+            <template #column-newPrice="{ item }">
+                <span :class="getPriceClass(item)">
+                    {{ item.newPrice | currency }}
+                </span>
+            </template>
         </sw-data-grid>
     </sw-card>
 {% endblock %}

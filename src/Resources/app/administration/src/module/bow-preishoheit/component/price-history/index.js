@@ -96,6 +96,16 @@ Component.register('bow-preishoheit-price-history', {
             this.sortBy = sortBy;
             this.sortDirection = sortDirection;
             this.loadHistory();
+        },
+
+        getPriceClass(item) {
+            if (item.newPrice <= 0) {
+                return 'price--error';
+            }
+            if (item.newPrice < item.oldPrice * 0.5) {
+                return 'price--warning';
+            }
+            return '';
         }
     }
 });
