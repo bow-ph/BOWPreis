@@ -5,6 +5,13 @@
     <services>
         <!-- Previous services remain unchanged -->
 
+        <!-- API Client -->
+        <service id="BOW\Preishoheit\Service\PreishoheitApi\PreishoheitApiClient" public="true">
+            <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
+            <argument type="service" id="logger"/>
+            <tag name="monolog.logger" channel="bow_preishoheit"/>
+        </service>
+
         <!-- API Verification Controller -->
         <service id="BOW\Preishoheit\Controller\ApiVerificationController" public="true">
             <argument type="service" id="BOW\Preishoheit\Service\PreishoheitApi\PreishoheitApiClient"/>
