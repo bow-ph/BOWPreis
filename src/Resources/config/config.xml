@@ -21,50 +21,38 @@
             <name>updateInterval</name>
             <label>Price Update Interval</label>
             <label lang="de-DE">Preis-Update-Intervall</label>
+            <helpText>Select how often prices should be updated automatically</helpText>
+            <helpText lang="de-DE">Wählen Sie aus, wie oft die Preise automatisch aktualisiert werden sollen</helpText>
             <options>
                 <option>
-                    <id>60</id>
-                    <name>1 Minute</name>
-                </option>
-                <option>
-                    <id>120</id>
-                    <name>2 Minutes</name>
-                </option>
-                <option>
                     <id>300</id>
-                    <name>5 Minutes</name>
+                    <name>Every 5 minutes - For shops with highly volatile prices</name>
+                    <name lang="de-DE">Alle 5 Minuten - Für Shops mit stark schwankenden Preisen</name>
                 </option>
                 <option>
                     <id>900</id>
-                    <name>15 Minutes</name>
+                    <name>Every 15 minutes - Recommended for dynamic pricing</name>
+                    <name lang="de-DE">Alle 15 Minuten - Empfohlen für Shops mit dynamischer Preisgestaltung</name>
                 </option>
                 <option>
                     <id>1800</id>
-                    <name>30 Minutes</name>
+                    <name>Every 30 minutes - For shops with frequent price changes</name>
+                    <name lang="de-DE">Alle 30 Minuten - Für Shops mit häufigen Preisänderungen</name>
                 </option>
                 <option>
                     <id>3600</id>
-                    <name>1 Hour</name>
-                </option>
-                <option>
-                    <id>7200</id>
-                    <name>2 Hours</name>
-                </option>
-                <option>
-                    <id>10800</id>
-                    <name>3 Hours</name>
-                </option>
-                <option>
-                    <id>28800</id>
-                    <name>8 Hours</name>
+                    <name>Every hour - For medium-sized shops</name>
+                    <name lang="de-DE">Jede Stunde - Für mittelgroße Shops</name>
                 </option>
                 <option>
                     <id>43200</id>
-                    <name>12 Hours</name>
+                    <name>Twice daily - Morning and evening price sync</name>
+                    <name lang="de-DE">Zweimal täglich - Morgens und abends ein Preisabgleich</name>
                 </option>
                 <option>
                     <id>86400</id>
-                    <name>24 Hours</name>
+                    <name>Once daily - For daily price updates</name>
+                    <name lang="de-DE">Einmal täglich - Falls Preise nur einmal pro Tag aktualisiert werden müssen</name>
                 </option>
             </options>
             <defaultValue>900</defaultValue>
