@@ -1,0 +1,31 @@
+{% block bow_preishoheit_price_history %}
+    <div class="bow-preishoheit-price-history">
+        <sw-card :title="$tc('bow-preishoheit.history.cardTitle')" :isLoading="isLoading">
+            <template #grid>
+                <sw-data-grid
+                    :dataSource="history"
+                    :columns="columns"
+                    :showSettings="true"
+                    :showSelection="false"
+                    :isLoading="isLoading"
+                    :sortBy="sortBy"
+                    :sortDirection="sortDirection"
+                    :page="page"
+                    :limit="limit"
+                    :total="total"
+                    @page-change="onPageChange"
+                    @sort-column="onSort">
+                    <template #column-oldPrice="{ item }">
+                        {{ item.oldPrice | currency }}
+                    </template>
+                    <template #column-newPrice="{ item }">
+                        {{ item.newPrice | currency }}
+                    </template>
+                    <template #column-createdAt="{ item }">
+                        {{ item.createdAt | date }}
+                    </template>
+                </sw-data-grid>
+            </template>
+        </sw-card>
+    </div>
+{% endblock %}

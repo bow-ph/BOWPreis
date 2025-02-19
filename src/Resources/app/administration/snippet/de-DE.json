@@ -1,5 +1,15 @@
 {
     "bow-preishoheit": {
+        "history": {
+            "cardTitle": "Preisverlauf",
+            "columnEan": "EAN/GTIN",
+            "columnProductName": "Produktname",
+            "columnOldPrice": "Alter Preis",
+            "columnNewPrice": "Neuer Preis",
+            "columnDateTime": "Datum/Uhrzeit",
+            "errorTitle": "Fehler",
+            "errorMessage": "Preisverlauf konnte nicht geladen werden"
+        },
         "grid": {
             "columnProduct": "Produkt",
             "columnProductNumber": "Artikelnummer",
