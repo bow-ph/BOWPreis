@@ -1,5 +1,13 @@
 {
     "bow-preishoheit": {
+        "settings": {
+            "cardTitle": "Preisaktualisierung Einstellungen",
+            "buttonManualUpdate": "Preise jetzt aktualisieren",
+            "successTitle": "Erfolg",
+            "updateSuccess": "Preisaktualisierung erfolgreich gestartet",
+            "errorTitle": "Fehler",
+            "updateError": "Preisaktualisierung konnte nicht gestartet werden"
+        },
         "history": {
             "cardTitle": "Preisverlauf",
             "columnEan": "EAN/GTIN",

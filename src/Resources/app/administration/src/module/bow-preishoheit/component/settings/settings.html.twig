@@ -1,6 +1,6 @@
 {% block bow_preishoheit_settings %}
     <div class="bow-preishoheit-settings">
-        <sw-card :title="$tc('bow-preishoheit.detail.settingsTitle')" :isLoading="isLoading">
+        <sw-card :title="$tc('bow-preishoheit.settings.cardTitle')" :isLoading="isLoading">
             <sw-container columns="2fr 2fr" gap="0px 30px">
                 <sw-field
                     type="switch"
@@ -17,14 +17,15 @@
                     :placeholder="$tc('bow-preishoheit.detail.placeholderSurcharge')"
                     :suffix="'%'">
                 </sw-field>
+            </sw-container>
 
-                <sw-field
-                    type="number"
-                    :label="$tc('bow-preishoheit.detail.labelDiscount')"
-                    v-model="product.discountPercentage"
-                    :placeholder="$tc('bow-preishoheit.detail.placeholderDiscount')"
-                    :suffix="'%'">
-                </sw-field>
+            <sw-container class="bow-preishoheit-settings__actions">
+                <sw-button-process
+                    :isLoading="isUpdating"
+                    variant="primary"
+                    @click="onManualUpdate">
+                    {{ $tc('bow-preishoheit.settings.buttonManualUpdate') }}
+                </sw-button-process>
             </sw-container>
         </sw-card>
     </div>
