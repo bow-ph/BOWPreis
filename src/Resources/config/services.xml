@@ -8,6 +8,40 @@
             <tag name="shopware.entity.definition" entity="bow_preishoheit_product" />
         </service>
 
+        <!-- Repositories -->
+        <service id="bow_preishoheit_price_history.repository" class="Shopware\Core\Framework\DataAbstractionLayer\EntityRepository">
+            <argument>BOW\Preishoheit\Entity\PriceHistory\PriceHistoryDefinition</argument>
+            <argument type="service" id="Shopware\Core\Framework\DataAbstractionLayer\Read\EntityReaderInterface"/>
+            <argument type="service" id="Shopware\Core\Framework\DataAbstractionLayer\VersionManager"/>
+            <argument type="service" id="Shopware\Core\Framework\DataAbstractionLayer\Search\EntitySearcherInterface"/>
+            <argument type="service" id="Shopware\Core\Framework\DataAbstractionLayer\Search\EntityAggregatorInterface"/>
+            <argument type="service" id="event_dispatcher"/>
+        </service>
+
+        <service id="bow_preishoheit_error_log.repository" class="Shopware\Core\Framework\DataAbstractionLayer\EntityRepository">
+            <argument>BOW\Preishoheit\Entity\ErrorLog\ErrorLogDefinition</argument>
+            <argument type="service" id="Shopware\Core\Framework\DataAbstractionLayer\Read\EntityReaderInterface"/>
+            <argument type="service" id="Shopware\Core\Framework\DataAbstractionLayer\VersionManager"/>
+            <argument type="service" id="Shopware\Core\Framework\DataAbstractionLayer\Search\EntitySearcherInterface"/>
+            <argument type="service" id="Shopware\Core\Framework\DataAbstractionLayer\Search\EntityAggregatorInterface"/>
+            <argument type="service" id="event_dispatcher"/>
+        </service>
+
+        <!-- API Client -->
+        <service id="BOW\Preishoheit\Service\PreishoheitApi\PreishoheitApiClient" public="true">
+            <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
+            <argument type="service" id="monolog.logger.bow_preishoheit"/>
+        </service>
+
+        <!-- API Verification Controller -->
+        <service id="BOW\Preishoheit\Controller\ApiVerificationController" public="true">
+            <argument type="service" id="BOW\Preishoheit\Service\PreishoheitApi\PreishoheitApiClient"/>
+            <argument type="service" id="monolog.logger.bow_preishoheit"/>
+            <tag name="controller.service_arguments"/>
+            <tag name="controller.service_subscriber"/>
+            <tag name="shopware.route_scope" scopes="api"/>
+        </service>
+
         <service id="BOW\Preishoheit\Entity\PriceHistory\PriceHistoryDefinition">
             <tag name="shopware.entity.definition" entity="bow_preishoheit_price_history" />
         </service>
@@ -87,6 +121,20 @@
             <argument type="service" id="scheduled_task.repository"/>
             <argument type="service" id="BOW\Preishoheit\Service\Mail\FailedUpdateMailService"/>
             <tag name="messenger.message_handler"/>
+        </service>
+
+        <!-- Price Services -->
+        <service id="BOW\Preishoheit\Service\Price\PriceAdjustmentService" public="true">
+            <argument type="service" id="BOW\Preishoheit\Service\ErrorHandling\ErrorLogger"/>
+        </service>
+
+        <!-- Price Update Service -->
+        <service id="BOW\Preishoheit\Service\PreishoheitApi\PriceUpdateService" public="true">
+            <argument type="service" id="BOW\Preishoheit\Service\PreishoheitApi\PreishoheitApiClient"/>
+            <argument type="service" id="product.repository"/>
+            <argument type="service" id="bow_preishoheit_price_history.repository"/>
+            <argument type="service" id="bow_preishoheit_error_log.repository"/>
+            <argument type="service" id="BOW\Preishoheit\Service\Price\PriceAdjustmentService"/>
         </service>
     </services>
 </container>

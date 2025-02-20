@@ -1,5 +1,36 @@
 {
     "bow-preishoheit": {
+        "settings": {
+            "cardTitle": "Preisaktualisierung Einstellungen",
+            "buttonManualUpdate": "Preise jetzt aktualisieren",
+            "successTitle": "Erfolg",
+            "updateSuccess": "Preisaktualisierung erfolgreich gestartet",
+            "errorTitle": "Fehler",
+            "updateError": "Preisaktualisierung konnte nicht gestartet werden"
+        },
+        "history": {
+            "cardTitle": "Preisverlauf",
+            "columnEan": "EAN/GTIN",
+            "columnProductName": "Produktname",
+            "columnOldPrice": "Alter Preis",
+            "columnNewPrice": "Neuer Preis",
+            "columnDateTime": "Datum/Uhrzeit",
+            "errorTitle": "Fehler",
+            "errorMessage": "Preisverlauf konnte nicht geladen werden"
+        },
+        "grid": {
+            "columnProduct": "Produkt",
+            "columnProductNumber": "Artikelnummer",
+            "columnEan": "EAN/GTIN",
+            "columnPrice": "Preis",
+            "columnSurcharge": "Aufschlag (%)",
+            "columnActive": "Aktiv",
+            "errorTitle": "Fehler",
+            "successTitle": "Erfolg",
+            "successMessage": "Änderungen erfolgreich gespeichert",
+            "buttonAddProducts": "Ausgewählte Produkte hinzufügen",
+            "productSelectionTitle": "Produktauswahl"
+        },
         "apiConfig": {
             "cardTitle": "API-Konfiguration",
             "apiKeyLabel": "API-Schlüssel",

@@ -5,12 +5,14 @@ namespace BOW\Preishoheit\Entity\Product;
 use Shopware\Core\Content\Product\ProductDefinition;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityDefinition;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\BoolField;
+use Shopware\Core\Framework\DataAbstractionLayer\Field\CreatedAtField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\FloatField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\Flag\PrimaryKey;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\Flag\Required;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\IdField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\ManyToOneAssociationField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\ReferenceVersionField;
+use Shopware\Core\Framework\DataAbstractionLayer\Field\UpdatedAtField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\FkField;
 use Shopware\Core\Framework\DataAbstractionLayer\FieldCollection;
 
@@ -37,7 +39,7 @@ class PreishoheitProductDefinition extends EntityDefinition
     {
         return new FieldCollection([
             (new IdField('id', 'id'))->addFlags(new Required(), new PrimaryKey()),
-            (new BoolField('active', 'active')),
+            (new BoolField('active', 'active'))->addFlags(new Required()),
             (new FloatField('surcharge_percentage', 'surchargePercentage')),
             (new FloatField('discount_percentage', 'discountPercentage')),
             
@@ -50,6 +52,8 @@ class PreishoheitProductDefinition extends EntityDefinition
                 ProductDefinition::class,
                 'id'
             ),
+            new CreatedAtField(),
+            new UpdatedAtField(),
         ]);
     }
 }
