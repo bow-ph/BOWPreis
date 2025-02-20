@@ -5,9 +5,12 @@ namespace BOW\Preishoheit;
 use Shopware\Core\Framework\Plugin;
 use Shopware\Core\Framework\Plugin\Context\InstallContext;
 use Shopware\Core\Framework\Plugin\Context\UninstallContext;
-// ADD THESE IMPORTS
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\Config\Loader\DelegatingLoader;
+use Symfony\Component\Config\Loader\LoaderResolver;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Loader\DirectoryLoader;
+use Symfony\Component\DependencyInjection\Loader\GlobFileLoader;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
 class BOWPreishoheit extends Plugin
@@ -16,11 +19,25 @@ class BOWPreishoheit extends Plugin
     {
         parent::build($container);
 
-        // Adjust the path if your monolog.yaml is in a different location.
-        // For example: __DIR__ . '/Resources/config/packages' must point 
-        // to the exact folder containing monolog.yaml
-        $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/Resources/config/packages'));
-        $loader->load('monolog.yaml');
+        // Create a FileLocator that knows where to look for config files
+        $locator = new FileLocator('Resources/config');
+
+        // Create a LoaderResolver that can handle YAML, glob patterns, and directories
+        $resolver = new LoaderResolver([
+            new YamlFileLoader($container, $locator),
+            new GlobFileLoader($container, $locator),
+            new DirectoryLoader($container, $locator),
+        ]);
+
+        // Wrap them into one DelegatingLoader that tries each loader in turn
+        $configLoader = new DelegatingLoader($resolver);
+
+        // Construct the path to "Resources/config" within our plugin
+        $confDir = rtrim($this->getPath(), '/') . '/Resources/config';
+
+        // Load all .yaml files from the "packages" subfolder in Resources/config
+        // e.g. "Resources/config/packages/*.yaml"
+        $configLoader->load($confDir . '/{packages}/*.yaml', 'glob');
     }
 
     public function install(InstallContext $installContext): void

@@ -17,9 +17,9 @@
         </service>
 
         <!-- Logger Service -->
-        <!-- <service id="monolog.logger.bow_preishoheit" parent="monolog.logger.channel_prototype">
+        <service id="monolog.logger.bow_preishoheit" parent="monolog.logger.channel_prototype">
             <argument>bow_preishoheit</argument>
-        </service> -->
+        </service>
 
         <!-- Core Services -->
         <service id="BOW\Preishoheit\Service\ErrorHandling\ErrorLogger">

@@ -1,4 +1,4 @@
-# BOWPreishoheit/Resources/config/packages/monolog.yaml
+# BOWPreishoheit/src/Resources/config/packages/monolog.yaml
 
 monolog:
   channels: ["bow_preishoheit"]
@@ -7,5 +7,5 @@ monolog:
     bow_preishoheit:
       type: stream
       path: "%kernel.logs_dir%/bow_preishoheit.log"
-      level: info
+      level: error
       channels: ["bow_preishoheit"]
