@@ -6,6 +6,7 @@ use BOW\Preishoheit\Service\PreishoheitApi\PreishoheitApiClient;
 use BOW\Preishoheit\Exception\ApiVerificationException;
 use Psr\Log\LoggerInterface;
 use Shopware\Core\Framework\Context;
+use Shopware\Core\Framework\Routing\Annotation\Acl;
 use Shopware\Core\Framework\Routing\Annotation\RouteScope;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -31,6 +32,7 @@ class ApiVerificationController extends AbstractController
 
     /**
      * @Route("/api/_action/bow-preishoheit/verify-api-key", name="api.action.bow.preishoheit.verify.api.key", methods={"POST"})
+     * @Acl({"bow_preishoheit.editor"})
      */
     public function verifyApiKey(Request $request, Context $context): JsonResponse
     {

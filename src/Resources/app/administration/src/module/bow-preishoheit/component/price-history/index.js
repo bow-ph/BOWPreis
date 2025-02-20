@@ -24,6 +24,12 @@ Component.register('bow-preishoheit-price-history', {
             total: 0,
             sortBy: 'createdAt',
             sortDirection: 'DESC',
+            dateRange: {
+                start: null,
+                end: null
+            },
+            isExporting: false,
+            showExportModal: false,
             columns: [
                 {
                     property: 'ean',
@@ -57,9 +63,7 @@ Component.register('bow-preishoheit-price-history', {
 
         priceHistoryCriteria() {
             const criteria = new Criteria(this.page, this.limit);
-
             criteria.addSorting(Criteria.sort(this.sortBy, this.sortDirection));
-
             return criteria;
         }
     },
@@ -72,7 +76,21 @@ Component.register('bow-preishoheit-price-history', {
         loadHistory() {
             this.isLoading = true;
 
-            return this.priceHistoryRepository.search(this.priceHistoryCriteria)
+            const criteria = this.priceHistoryCriteria;
+            
+            if (this.dateRange.start) {
+                criteria.addFilter(Criteria.range('createdAt', {
+                    gte: this.dateRange.start
+                }));
+            }
+            
+            if (this.dateRange.end) {
+                criteria.addFilter(Criteria.range('createdAt', {
+                    lte: this.dateRange.end
+                }));
+            }
+
+            return this.priceHistoryRepository.search(criteria)
                 .then((result) => {
                     this.history = result.items;
                     this.total = result.total;
@@ -98,6 +116,66 @@ Component.register('bow-preishoheit-price-history', {
             this.sortBy = sortBy;
             this.sortDirection = sortDirection;
             this.loadHistory();
+        },
+
+        onDateRangeChange() {
+            this.loadHistory();
+        },
+
+        getPriceClass(item) {
+            if (item.newPrice <= 0) {
+                return 'price--error';
+            }
+            if (item.newPrice < item.oldPrice * 0.5) {
+                return 'price--warning';
+            }
+            return '';
+        },
+
+        onExportClick() {
+            this.showExportModal = true;
+        },
+
+        onCloseExportModal() {
+            this.showExportModal = false;
+            this.isExporting = false;
+        },
+
+        async onConfirmExport() {
+            this.isExporting = true;
+
+            try {
+                const response = await this.$http.post(
+                    `${this.getApplicationRootPath()}/api/_action/bow-preishoheit/export-history`,
+                    {
+                        dateRange: this.dateRange
+                    },
+                    {
+                        responseType: 'blob'
+                    }
+                );
+
+                const url = window.URL.createObjectURL(new Blob([response.data]));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', 'price-history.csv');
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+
+                this.createNotificationSuccess({
+                    title: this.$tc('bow-preishoheit.history.exportSuccessTitle'),
+                    message: this.$tc('bow-preishoheit.history.exportSuccessMessage')
+                });
+            } catch (error) {
+                this.createNotificationError({
+                    title: this.$tc('bow-preishoheit.history.exportErrorTitle'),
+                    message: error.response?.data?.message || this.$tc('bow-preishoheit.history.exportError')
+                });
+            } finally {
+                this.isExporting = false;
+                this.showExportModal = false;
+            }
         }
     }
 });

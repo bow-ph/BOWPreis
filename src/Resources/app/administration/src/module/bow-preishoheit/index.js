@@ -19,14 +19,16 @@ Shopware.Module.register('bow-preishoheit', {
             component: 'bow-preishoheit-list',
             path: 'list',
             meta: {
-                parentPath: 'sw.catalogue.index'
+                parentPath: 'sw.catalogue.index',
+                privilege: 'bow_preishoheit.viewer'
             }
         },
         detail: {
             component: 'bow-preishoheit-detail',
             path: 'detail/:id',
             meta: {
-                parentPath: 'bow.preishoheit.list'
+                parentPath: 'bow.preishoheit.list',
+                privilege: 'bow_preishoheit.viewer'
             },
             props: {
                 default(route) {
@@ -38,31 +40,57 @@ Shopware.Module.register('bow-preishoheit', {
                     component: 'bow-preishoheit-settings',
                     path: 'settings',
                     meta: {
-                        parentPath: 'bow.preishoheit.detail'
+                        parentPath: 'bow.preishoheit.detail',
+                        privilege: 'bow_preishoheit.editor'
                     }
                 },
                 history: {
                     component: 'bow-preishoheit-history',
                     path: 'history',
                     meta: {
-                        parentPath: 'bow.preishoheit.detail'
+                        parentPath: 'bow.preishoheit.detail',
+                        privilege: 'bow_preishoheit.viewer'
                     }
                 },
                 errors: {
                     component: 'bow-preishoheit-errors',
                     path: 'errors',
                     meta: {
-                        parentPath: 'bow.preishoheit.detail'
+                        parentPath: 'bow.preishoheit.detail',
+                        privilege: 'bow_preishoheit.viewer'
                     }
                 },
                 apiConfig: {
                     component: 'bow-preishoheit-api-config',
                     path: 'api-config',
                     meta: {
-                        parentPath: 'bow.preishoheit.detail'
+                        parentPath: 'bow.preishoheit.detail',
+                        privilege: 'bow_preishoheit.editor'
                     }
                 }
             }
+        }
+    },
+
+    acl: {
+        viewer: {
+            privileges: [
+                'product:read',
+                'bow_preishoheit_product:read',
+                'bow_preishoheit_price_history:read',
+                'bow_preishoheit_error_log:read'
+            ],
+            dependencies: []
+        },
+        editor: {
+            privileges: [
+                'product:update',
+                'bow_preishoheit_product:update',
+                'bow_preishoheit_product:create',
+                'system_config:read',
+                'system_config:update'
+            ],
+            dependencies: ['viewer']
         }
     },
 
@@ -72,6 +100,7 @@ Shopware.Module.register('bow-preishoheit', {
         path: 'bow.preishoheit.list',
         icon: 'regular-shopping-bag',
         parent: 'sw-catalogue',
-        position: 100
+        position: 100,
+        privilege: 'bow_preishoheit.viewer'
     }]
 });

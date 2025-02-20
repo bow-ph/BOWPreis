@@ -1,31 +1,64 @@
 {% block bow_preishoheit_price_history %}
-    <div class="bow-preishoheit-price-history">
-        <sw-card :title="$tc('bow-preishoheit.history.cardTitle')" :isLoading="isLoading">
-            <template #grid>
-                <sw-data-grid
-                    :dataSource="history"
-                    :columns="columns"
-                    :showSettings="true"
-                    :showSelection="false"
-                    :isLoading="isLoading"
-                    :sortBy="sortBy"
-                    :sortDirection="sortDirection"
-                    :page="page"
-                    :limit="limit"
-                    :total="total"
-                    @page-change="onPageChange"
-                    @sort-column="onSort">
-                    <template #column-oldPrice="{ item }">
-                        {{ item.oldPrice | currency }}
-                    </template>
-                    <template #column-newPrice="{ item }">
-                        {{ item.newPrice | currency }}
-                    </template>
-                    <template #column-createdAt="{ item }">
-                        {{ item.createdAt | date }}
-                    </template>
-                </sw-data-grid>
+    <sw-card>
+        <template #toolbar>
+            <div class="sw-card-filter">
+                <sw-datepicker
+                    v-model="dateRange.start"
+                    :label="$tc('bow-preishoheit.history.startDate')"
+                    :placeholder="$tc('bow-preishoheit.history.startDatePlaceholder')"
+                    @change="onDateRangeChange">
+                </sw-datepicker>
+                <sw-datepicker
+                    v-model="dateRange.end"
+                    :label="$tc('bow-preishoheit.history.endDate')"
+                    :placeholder="$tc('bow-preishoheit.history.endDatePlaceholder')"
+                    @change="onDateRangeChange">
+                </sw-datepicker>
+                <sw-button
+                    variant="primary"
+                    size="small"
+                    :isLoading="isExporting"
+                    @click="onExportClick">
+                    {{ $tc('bow-preishoheit.history.export') }}
+                </sw-button>
+            </div>
+        </template>
+
+        <sw-modal
+            v-if="showExportModal"
+            :title="$tc('bow-preishoheit.history.exportTitle')"
+            @modal-close="onCloseExportModal">
+            <p>{{ $tc('bow-preishoheit.history.exportConfirm') }}</p>
+
+            <template #modal-footer>
+                <sw-button
+                    @click="onCloseExportModal"
+                    size="small">
+                    {{ $tc('bow-preishoheit.general.cancel') }}
+                </sw-button>
+                <sw-button
+                    variant="primary"
+                    size="small"
+                    :disabled="isExporting"
+                    @click="onConfirmExport">
+                    {{ $tc('bow-preishoheit.history.confirmExport') }}
+                </sw-button>
             </template>
-        </sw-card>
-    </div>
+        </sw-modal>
+        <sw-data-grid
+            :dataSource="history"
+            :columns="columns"
+            :isLoading="isLoading"
+            :showSettings="true"
+            :showSelection="false"
+            :allowColumnSort="true"
+            @page-change="onPageChange"
+            @sort-change="onSort">
+            <template #column-newPrice="{ item }">
+                <span :class="getPriceClass(item)">
+                    {{ item.newPrice | currency }}
+                </span>
+            </template>
+        </sw-data-grid>
+    </sw-card>
 {% endblock %}

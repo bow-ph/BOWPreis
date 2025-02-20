@@ -1,0 +1,8 @@
+{
+    "bow-preishoheit": {
+        "general": {
+            "mainMenuItemGeneral": "Preishoheit",
+            "descriptionTextModule": "Dynamische Preisanpassungen für Shopware-Produkte"
+        }
+    }
+}

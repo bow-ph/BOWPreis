@@ -1,11 +1,28 @@
 .bow-preishoheit-price-history {
     .sw-card {
         margin-bottom: 20px;
+
+        .sw-card-filter {
+            display: flex;
+            align-items: flex-end;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
     }
 
     .sw-data-grid {
         .sw-data-grid__cell--price {
             text-align: right;
+        }
+    }
+
+    .price {
+        &--warning {
+            color: #ff9800;
+        }
+
+        &--error {
+            color: #de294c;
         }
     }
 }
