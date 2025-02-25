@@ -14,9 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @RouteScope(scopes={"api"})
- */
+#[Route(defaults: ['_routeScope' => ['api', 'administration']], path: '/api/_action/bow-preishoheit')]
 class ApiVerificationController extends AbstractController
 {
     private PreishoheitApiClient $apiClient;
@@ -30,10 +28,8 @@ class ApiVerificationController extends AbstractController
         $this->logger = $logger;
     }
 
-    /**
-     * @Route("/api/_action/bow-preishoheit/verify-api-key", name="api.action.bow.preishoheit.verify.api.key", methods={"POST"})
-     * @Acl({"bow_preishoheit.editor"})
-     */
+    #[Route(path: '/verify-api-key', name: 'api.action.bow.preishoheit.verify.api.key', acl: 'bow_preishoheit.editor', methods: ['POST'])]
+
     public function verifyApiKey(Request $request, Context $context): JsonResponse
     {
         try {

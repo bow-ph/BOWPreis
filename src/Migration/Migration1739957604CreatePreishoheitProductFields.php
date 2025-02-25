@@ -16,10 +16,10 @@ class Migration1739957604CreatePreishoheitProductFields extends MigrationStep
     {
         $sql = <<<SQL
             ALTER TABLE `bow_preishoheit_product`
-            ADD COLUMN `surcharge_percentage` DECIMAL(10, 2) NULL,
-            ADD COLUMN `is_active` TINYINT(1) NOT NULL DEFAULT '0',
-            ADD COLUMN `created_at` DATETIME(3) NOT NULL,
-            ADD COLUMN `updated_at` DATETIME(3) NULL;
+            -- ADD COLUMN `surcharge_percentage` DECIMAL(10, 2) NULL,
+            ADD COLUMN `is_active` TINYINT(1) NOT NULL DEFAULT '0';
+            /* ADD COLUMN `created_at` DATETIME(3) NOT NULL,
+            ADD COLUMN `updated_at` DATETIME(3) NULL; */
         SQL;
 
         $connection->executeStatement($sql);

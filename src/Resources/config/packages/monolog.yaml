@@ -1,11 +1,12 @@
 # BOWPreishoheit/src/Resources/config/packages/monolog.yaml
 
 monolog:
-  channels: ["bow_preishoheit"]
+  channels: 
+    - 'bow_preishoheit'
 
   handlers:
-    bow_preishoheit:
-      type: stream
-      path: "%kernel.logs_dir%/bow_preishoheit.log"
+    bowPreishoheitLogHandler:
+      type: rotating_file
+      path: "%kernel.logs_dir%/bow_preishoheit_%kernel.environment%.log"
       level: error
       channels: ["bow_preishoheit"]

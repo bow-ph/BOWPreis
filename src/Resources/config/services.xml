@@ -1,8 +1,22 @@
-<?xml version="1.0" ?>
 <container xmlns="http://symfony.com/schema/dic/services"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
+
+        <!-- Logger Service -->
+        <service id="monolog.logger.bow_preishoheit" class="Monolog\Logger">
+            <argument>bow_preishoheit</argument>
+            <call method="pushHandler">
+                <argument type="service" id="monolog.handler.stream" />
+            </call>
+        </service>
+
+        <!-- Stream Handler -->
+        <service id="monolog.handler.stream" class="Monolog\Handler\StreamHandler">
+            <argument>%kernel.logs_dir%/bow_preishoheit.log</argument>
+            <argument>100</argument> <!-- Log level: DEBUG -->
+        </service>
+
         <!-- Entity Definitions -->
         <service id="BOW\Preishoheit\Entity\Product\PreishoheitProductDefinition">
             <tag name="shopware.entity.definition" entity="bow_preishoheit_product" />
@@ -11,15 +25,6 @@
         <!-- Repositories -->
         <service id="bow_preishoheit_price_history.repository" class="Shopware\Core\Framework\DataAbstractionLayer\EntityRepository">
             <argument>BOW\Preishoheit\Entity\PriceHistory\PriceHistoryDefinition</argument>
-            <argument type="service" id="Shopware\Core\Framework\DataAbstractionLayer\Read\EntityReaderInterface"/>
-            <argument type="service" id="Shopware\Core\Framework\DataAbstractionLayer\VersionManager"/>
-            <argument type="service" id="Shopware\Core\Framework\DataAbstractionLayer\Search\EntitySearcherInterface"/>
-            <argument type="service" id="Shopware\Core\Framework\DataAbstractionLayer\Search\EntityAggregatorInterface"/>
-            <argument type="service" id="event_dispatcher"/>
-        </service>
-
-        <service id="bow_preishoheit_error_log.repository" class="Shopware\Core\Framework\DataAbstractionLayer\EntityRepository">
-            <argument>BOW\Preishoheit\Entity\ErrorLog\ErrorLogDefinition</argument>
             <argument type="service" id="Shopware\Core\Framework\DataAbstractionLayer\Read\EntityReaderInterface"/>
             <argument type="service" id="Shopware\Core\Framework\DataAbstractionLayer\VersionManager"/>
             <argument type="service" id="Shopware\Core\Framework\DataAbstractionLayer\Search\EntitySearcherInterface"/>
@@ -50,13 +55,8 @@
             <tag name="shopware.entity.definition" entity="bow_preishoheit_error_log" />
         </service>
 
-        <!-- Logger Service -->
-        <service id="monolog.logger.bow_preishoheit" parent="monolog.logger.channel_prototype">
-            <argument>bow_preishoheit</argument>
-        </service>
-
         <!-- Core Services -->
-        <service id="BOW\Preishoheit\Service\ErrorHandling\ErrorLogger">
+       <service id="BOW\Preishoheit\Service\ErrorHandling\ErrorLogger">
             <argument type="service" id="monolog.logger.bow_preishoheit"/>
         </service>
 
@@ -81,15 +81,6 @@
             <argument type="service" id="bow_preishoheit_error_log.repository"/>
             <argument type="service" id="Shopware\Core\Content\Mail\Service\MailService"/>
             <argument>%env(SHOPWARE_ADMIN_EMAIL_PLUGINS)%</argument>
-        </service>
-
-        <!-- Controllers -->
-        <service id="BOW\Preishoheit\Controller\ApiVerificationController" public="true">
-            <argument type="service" id="BOW\Preishoheit\Service\PreishoheitApi\PreishoheitApiClient"/>
-            <argument type="service" id="monolog.logger.bow_preishoheit"/>
-            <tag name="controller.service_arguments"/>
-            <tag name="controller.service_subscriber"/>
-            <tag name="shopware.route_scope" scopes="api"/>
         </service>
 
         <service id="BOW\Preishoheit\Controller\ExportController" public="true">
