@@ -127,5 +127,12 @@
             <argument type="service" id="bow_preishoheit_error_log.repository"/>
             <argument type="service" id="BOW\Preishoheit\Service\Price\PriceAdjustmentService"/>
         </service>
+
+        <!-- Price Update Command -->
+        <service id="BOW\Preishoheit\Command\PriceUpdateCommand" public="true">
+            <argument type="service" id="BOW\Preishoheit\Service\PreishoheitApi\PriceUpdateService"/>
+            <argument type="service" id="monolog.logger.bow_preishoheit"/>
+            <tag name="console.command"/>
+        </service>
     </services>
 </container>
