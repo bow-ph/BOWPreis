@@ -14,6 +14,14 @@ class BOWPreishoheitExtension extends Extension implements PrependExtensionInter
     {
         $configuration = new Configuration();
         $this->processConfiguration($configuration, $configs);
+
+        $loader = new YamlFileLoader(
+            $container,
+            new FileLocator(__DIR__ . '/../Resources/config')
+        );
+
+        $loader->load('services.xml');
+        $loader->load('config.xml');
     }
 
     public function prepend(ContainerBuilder $container): void
