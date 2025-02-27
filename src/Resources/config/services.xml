@@ -31,11 +31,14 @@
             <argument type="service" id="Shopware\Core\Framework\DataAbstractionLayer\Search\EntityAggregatorInterface"/>
             <argument type="service" id="event_dispatcher"/>
         </service>
-
-        <!-- API Client -->
-        <service id="BOW\Preishoheit\Service\PreishoheitApi\PreishoheitApiClient" public="true">
-            <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
-            <argument type="service" id="monolog.logger.bow_preishoheit"/>
+        
+        <service id="bow_preishoheit_error_log.repository" class="Shopware\Core\Framework\DataAbstractionLayer\EntityRepository">
+            <argument>BOW\Preishoheit\Entity\ErrorLog\ErrorLogDefinition</argument>
+            <argument type="service" id="Shopware\Core\Framework\DataAbstractionLayer\Read\EntityReaderInterface"/>
+            <argument type="service" id="Shopware\Core\Framework\DataAbstractionLayer\VersionManager"/>
+            <argument type="service" id="Shopware\Core\Framework\DataAbstractionLayer\Search\EntitySearcherInterface"/>
+            <argument type="service" id="Shopware\Core\Framework\DataAbstractionLayer\Search\EntityAggregatorInterface"/>
+            <argument type="service" id="event_dispatcher"/>
         </service>
 
         <!-- API Verification Controller -->
@@ -60,20 +63,22 @@
             <argument type="service" id="monolog.logger.bow_preishoheit"/>
         </service>
 
+        <service id="BOW\Preishoheit\Service\ErrorHandling\ErrorHandler">
+            <argument type="service" id="bow_preishoheit_error_log.repository"/>
+        </service>
+
+        <service id="BOW\Preishoheit\Service\Validation\PriceValidator">
+            <argument type="service" id="BOW\Preishoheit\Service\ErrorHandling\ErrorHandler"/>
+        </service>
+
         <service id="BOW\Preishoheit\Service\Validation\BulkEditValidator">
             <argument type="service" id="product.repository"/>
         </service>
 
         <!-- API Services -->
-        <service id="BOW\Preishoheit\Service\PreishoheitApi\PreishoheitApiClient">
+        <service id="BOW\Preishoheit\Service\PreishoheitApi\PreishoheitApiClient" public="true">
             <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
-        </service>
-        
-        <service id="BOW\Preishoheit\Service\PreishoheitApi\PriceUpdateService">
-            <argument type="service" id="BOW\Preishoheit\Service\PreishoheitApi\PreishoheitApiClient"/>
-            <argument type="service" id="bow_preishoheit_product.repository"/>
-            <argument type="service" id="bow_preishoheit_price_history.repository"/>
-            <argument type="service" id="bow_preishoheit_error_log.repository"/>
+            <argument type="service" id="monolog.logger.bow_preishoheit"/>
         </service>
 
         <!-- Mail Services -->
