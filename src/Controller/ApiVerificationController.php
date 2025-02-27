@@ -40,7 +40,7 @@ class ApiVerificationController extends AbstractController
                 throw new ApiVerificationException('API key is required');
             }
 
-            $this->apiClient->verifyApiKey($context);
+            $this->verifyApiKey($context);
             
             $this->logger->info('API key verification successful');
             return new JsonResponse(['success' => true]);
@@ -60,5 +60,10 @@ class ApiVerificationController extends AbstractController
                 'message' => 'An unexpected error occurred during verification'
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
+    }
+
+    private function verifyApiKey(Context $context): void
+    {
+        $this->apiClient->verifyApiKey($context);
     }
 }

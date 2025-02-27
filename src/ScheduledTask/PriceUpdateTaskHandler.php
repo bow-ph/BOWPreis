@@ -44,21 +44,20 @@ class PriceUpdateTaskHandler extends ScheduledTaskHandler
         $context = Context::createDefaultContext();
         
         try {
-            $criteria = new Criteria();
-            $criteria->addAssociation('product');
-            $criteria->addFilter(new EqualsFilter('active', true));
-            
-            $products = $this->preishoheitProductRepository->search($criteria, $context);
-            
-            if ($products->count() === 0) {
-                $this->errorLogger->info('No active products found for scheduled price update');
-                return;
-            }
+            $page = 1;
+            do {
+                $products = $this->getProducts($context, $page);
+                if ($products->count() === 0) {
+                    break;
+                }
+
+                $this->priceUpdateService->updatePrices($products->getElements(), $context);
+                $page++;
+            } while ($products->count() > 0);
 
             $interval = $this->systemConfigService->get('BOWPreishoheit.config.updateInterval') ?? PriceUpdateTask::getDefaultInterval();
             $this->updateNextExecutionTime($interval);
 
-            $this->priceUpdateService->updatePrices($products->getElements(), $context);
             $this->errorLogger->info('Scheduled price update completed successfully', [
                 'productCount' => $products->count(),
                 'interval' => $interval
@@ -70,6 +69,17 @@ class PriceUpdateTaskHandler extends ScheduledTaskHandler
             ]);
             throw $e;
         }
+    }
+
+    private function getProducts(Context $context, int $page): EntitySearchResult
+    {
+        $criteria = new Criteria();
+        $criteria->addAssociation('product');
+        $criteria->addFilter(new EqualsFilter('active', true));
+        $criteria->setLimit(20);
+        $criteria->setOffset(($page - 1) * 20);
+        
+        return $this->preishoheitProductRepository->search($criteria, $context);
     }
 
     private function updateNextExecutionTime(int $interval): void

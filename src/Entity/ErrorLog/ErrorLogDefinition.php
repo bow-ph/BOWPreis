@@ -9,6 +9,7 @@ use Shopware\Core\Framework\DataAbstractionLayer\Field\Flag\Required;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\IdField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\StringField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\LongTextField;
+use Shopware\Core\Framework\DataAbstractionLayer\Field\JsonField;
 use Shopware\Core\Framework\DataAbstractionLayer\FieldCollection;
 
 class ErrorLogDefinition extends EntityDefinition
@@ -38,6 +39,8 @@ class ErrorLogDefinition extends EntityDefinition
             (new StringField('error_type', 'errorType'))->addFlags(new Required()),
             (new LongTextField('error_message', 'errorMessage'))->addFlags(new Required()),
             new CreatedAtField(),
+            new JsonField('api_request_data', 'apiRequestData'),
+            new JsonField('api_response_data', 'apiResponseData'),
         ]);
     }
 }
