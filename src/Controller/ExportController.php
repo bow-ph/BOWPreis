@@ -12,11 +12,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
-/**
- * @RouteScope(scopes={"api"})
- */
+#[Route(defaults: ['_routeScope' => ['api']])]
 class ExportController extends AbstractController
 {
     private EntityRepository $priceHistoryRepository;
@@ -26,10 +24,8 @@ class ExportController extends AbstractController
         $this->priceHistoryRepository = $priceHistoryRepository;
     }
 
-    /**
-     * @Route("/api/_action/bow-preishoheit/export-history", name="api.action.bow.preishoheit.export.history", methods={"POST"})
-     * @Acl({"bow_preishoheit.viewer"})
-     */
+    #[Route(path: "/api/_action/bow-preishoheit/export-history", name: "api.action.bow.preishoheit.export.history", methods: ["POST"])]
+    #[Acl({"bow_preishoheit.viewer"})]
     public function exportHistory(Request $request, Context $context): Response
     {
         $criteria = new Criteria();
