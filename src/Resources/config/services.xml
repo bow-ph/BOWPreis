@@ -3,20 +3,6 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
 
-        <!-- Logger Service -->
-        <service id="monolog.logger.bow_preishoheit" class="Monolog\Logger">
-            <argument>bow_preishoheit</argument>
-            <call method="pushHandler">
-                <argument type="service" id="monolog.handler.stream" />
-            </call>
-        </service>
-
-        <!-- Stream Handler -->
-        <service id="monolog.handler.stream" class="Monolog\Handler\StreamHandler">
-            <argument>%kernel.logs_dir%/bow_preishoheit.log</argument>
-            <argument>100</argument> <!-- Log level: DEBUG -->
-        </service>
-
         <!-- Entity Definitions -->
         <service id="BOW\Preishoheit\Entity\Product\PreishoheitProductDefinition">
             <tag name="shopware.entity.definition" entity="bow_preishoheit_product" />
@@ -44,7 +30,7 @@
         <!-- API Verification Controller -->
         <service id="BOW\Preishoheit\Controller\ApiVerificationController" public="true">
             <argument type="service" id="BOW\Preishoheit\Service\PreishoheitApi\PreishoheitApiClient"/>
-            <argument type="service" id="monolog.logger.bow_preishoheit"/>
+            <argument type="service" id="logger"/>
             <tag name="controller.service_arguments"/>
             <tag name="controller.service_subscriber"/>
             <tag name="shopware.route_scope" scopes="api"/>
@@ -60,7 +46,7 @@
 
         <!-- Core Services -->
        <service id="BOW\Preishoheit\Service\ErrorHandling\ErrorLogger">
-            <argument type="service" id="monolog.logger.bow_preishoheit"/>
+            <argument type="service" id="logger"/>
         </service>
 
         <service id="BOW\Preishoheit\Service\ErrorHandling\ErrorHandler">
@@ -78,7 +64,7 @@
         <!-- API Services -->
         <service id="BOW\Preishoheit\Service\PreishoheitApi\PreishoheitApiClient" public="true">
             <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
-            <argument type="service" id="monolog.logger.bow_preishoheit"/>
+            <argument type="service" id="logger"/>
         </service>
 
         <!-- Mail Services -->
@@ -105,7 +91,7 @@
             <argument type="service" id="BOW\Preishoheit\Service\PreishoheitApi\PriceUpdateService"/>
             <argument type="service" id="bow_preishoheit_product.repository"/>
             <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
-            <argument type="service" id="monolog.logger.bow_preishoheit"/>
+            <argument type="service" id="logger"/>
             <tag name="messenger.message_handler"/>
         </service>
 
@@ -134,9 +120,9 @@
         </service>
 
         <!-- Price Update Command -->
-        <service id="BOW\Preishoheit\Command\PriceUpdateCommand" public="true">
+        <service id="BOW\Preishoheit\Command\UpdatePricesCommand" public="true">
             <argument type="service" id="BOW\Preishoheit\Service\PreishoheitApi\PriceUpdateService"/>
-            <argument type="service" id="monolog.logger.bow_preishoheit"/>
+            <argument type="service" id="logger"/>
             <tag name="console.command"/>
         </service>
     </services>
