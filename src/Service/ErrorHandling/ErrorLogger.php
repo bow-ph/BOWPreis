@@ -40,4 +40,14 @@ class ErrorLogger
             'trace' => $error->getTraceAsString(),
         ], $context));
     }
+
+    public function info(string $message, array $context = []): void
+    {
+        $this->logger->info($message, $context);
+    }
+
+    public function error(string $message, array $context = []): void
+    {
+        $this->logger->error($message, $context);
+    }
 }
