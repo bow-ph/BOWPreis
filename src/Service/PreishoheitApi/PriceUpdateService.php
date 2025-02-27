@@ -125,4 +125,37 @@ class PriceUpdateService
             ]
         ], $context);
     }
+
+    private function getProducts(Context $context, int $page): EntitySearchResult
+    {
+        $criteria = new Criteria();
+        $criteria->addAssociation('product');
+        $criteria->addFilter(new EqualsFilter('active', true));
+        $criteria->setLimit(20);
+        $criteria->setOffset(($page - 1) * 20);
+        
+        return $this->productRepository->search($criteria, $context);
+    }
+
+    private function logApiRequest(array $requestData, Context $context): void
+    {
+        $this->errorLogRepository->create([
+            [
+                'id' => Uuid::randomHex(),
+                'errorType' => 'API_REQUEST',
+                'errorMessage' => json_encode($requestData),
+            ]
+        ], $context);
+    }
+
+    private function logApiResponse(array $responseData, Context $context): void
+    {
+        $this->errorLogRepository->create([
+            [
+                'id' => Uuid::randomHex(),
+                'errorType' => 'API_RESPONSE',
+                'errorMessage' => json_encode($responseData),
+            ]
+        ], $context);
+    }
 }
