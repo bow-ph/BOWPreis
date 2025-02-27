@@ -134,11 +134,5 @@
             <argument type="service" id="monolog.logger.bow_preishoheit"/>
             <tag name="console.command"/>
         </service>
-
-        <service id="BOW\Preishoheit\DependencyInjection\TokenizerFixCompilerPass" class="BOW\Preishoheit\DependencyInjection\TokenizerFixCompilerPass">
-            <tag name="container.compiler_pass"/>
-        </service>
-
-
     </services>
 </container>
