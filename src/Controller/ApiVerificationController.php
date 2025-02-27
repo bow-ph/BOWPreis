@@ -29,19 +29,18 @@ class ApiVerificationController extends AbstractController
     }
 
     #[Route(path: '/verify-api-key', name: 'api.action.bow.preishoheit.verify.api.key', acl: 'bow_preishoheit.editor', methods: ['POST'])]
-
     public function verifyApiKey(Request $request, Context $context): JsonResponse
     {
         try {
             $this->logger->info('Starting API key verification');
-            
+
             $apiKey = $request->request->get('apiKey');
             if (empty($apiKey)) {
                 throw new ApiVerificationException('API key is required');
             }
 
-            $this->verifyApiKey($context);
-            
+            $this->apiClient->verifyApiKey($context);
+
             $this->logger->info('API key verification successful');
             return new JsonResponse(['success' => true]);
         } catch (ApiVerificationException $e) {
@@ -60,10 +59,5 @@ class ApiVerificationController extends AbstractController
                 'message' => 'An unexpected error occurred during verification'
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
-    }
-
-    private function verifyApiKey(Context $context): void
-    {
-        $this->apiClient->verifyApiKey($context);
     }
 }
