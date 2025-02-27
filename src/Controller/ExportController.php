@@ -24,8 +24,7 @@ class ExportController extends AbstractController
         $this->priceHistoryRepository = $priceHistoryRepository;
     }
 
-    #[Route(path: "/api/_action/bow-preishoheit/export-history", name: "api.action.bow.preishoheit.export.history", methods: ["POST"])]
-    #[Acl({"bow_preishoheit.viewer"})]
+    #[Route(path: "/api/_action/bow-preishoheit/export-history", name: "api.action.bow.preishoheit.export.history", acl: "bow_preishoheit.viewer", methods: ["POST"])]
     public function exportHistory(Request $request, Context $context): Response
     {
         $criteria = new Criteria();
