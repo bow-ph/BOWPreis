@@ -20,7 +20,6 @@ class BOWPreishoheitExtension extends Extension
         );
 
         $xmlLoader->load('services.xml');
-        $xmlLoader->load('config.xml');
     }
 
 
