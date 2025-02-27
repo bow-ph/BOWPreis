@@ -7,6 +7,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 
 class BOWPreishoheitExtension extends Extension implements PrependExtensionInterface
 {
@@ -15,22 +16,22 @@ class BOWPreishoheitExtension extends Extension implements PrependExtensionInter
         $configuration = new Configuration();
         $this->processConfiguration($configuration, $configs);
 
-        $loader = new YamlFileLoader(
+        $xmlLoader = new XmlFileLoader(
             $container,
             new FileLocator(__DIR__ . '/../Resources/config')
         );
 
-        $loader->load('services.xml');
-        $loader->load('config.xml');
+        $xmlLoader->load('services.xml');
+        $xmlLoader->load('config.xml');
     }
 
     public function prepend(ContainerBuilder $container): void
     {
-        $loader = new YamlFileLoader(
+        $yamlLoader = new YamlFileLoader(
             $container,
             new FileLocator(__DIR__ . '/../Resources/config/packages')
         );
 
-        $loader->load('monolog.yaml');
+        $yamlLoader->load('monolog.yaml');
     }
 }
