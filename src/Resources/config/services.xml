@@ -46,7 +46,7 @@
 
         <!-- Core Services -->
        <service id="BOW\Preishoheit\Service\ErrorHandling\ErrorLogger">
-            <argument type="service" id="monolog.logger.shopware"/>
+            <argument type="service" id="logger"/>
         </service>
 
         <service id="BOW\Preishoheit\Service\ErrorHandling\ErrorHandler">
