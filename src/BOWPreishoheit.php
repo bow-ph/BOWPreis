@@ -13,7 +13,6 @@ class BOWPreishoheit extends Plugin
     public function build(ContainerBuilder $container): void
     {
         parent::build($container);
-        $container->registerExtension(new BOWPreishoheitExtension());
     }
 
     public function install(InstallContext $installContext): void
