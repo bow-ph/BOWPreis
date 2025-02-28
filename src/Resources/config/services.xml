@@ -113,6 +113,7 @@
             <argument type="service" id="bow_preishoheit_price_history.repository"/>
             <argument type="service" id="bow_preishoheit_error_log.repository"/>
             <argument type="service" id="BOW\Preishoheit\Service\Price\PriceAdjustmentService"/>
+            <argument type="service" id="logger"/>
         </service>
 
         <!-- Price Update Command -->
