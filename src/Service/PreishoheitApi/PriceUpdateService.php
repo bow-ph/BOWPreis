@@ -4,7 +4,7 @@ namespace BOW\Preishoheit\Service\PreishoheitApi;
 
 use BOW\Preishoheit\Entity\Product\PreishoheitProductEntity;
 use BOW\Preishoheit\Service\Price\PriceAdjustmentService;
-use Psr\Log\LoggerInterface;
+use BOW\Preishoheit\Service\ErrorHandling\ErrorLogger;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
@@ -18,7 +18,7 @@ class PriceUpdateService
     private EntityRepository $priceHistoryRepository;
     private EntityRepository $errorLogRepository;
     private PriceAdjustmentService $priceAdjustmentService;
-    private LoggerInterface $logger;
+    private ErrorLogger $errorLogger;
 
     public function __construct(
         PreishoheitApiClient $apiClient,
@@ -26,14 +26,14 @@ class PriceUpdateService
         EntityRepository $priceHistoryRepository,
         EntityRepository $errorLogRepository,
         PriceAdjustmentService $priceAdjustmentService,
-        LoggerInterface $logger
+        ErrorLogger $errorLogger
     ) {
         $this->apiClient = $apiClient;
         $this->productRepository = $productRepository;
         $this->priceHistoryRepository = $priceHistoryRepository;
         $this->errorLogRepository = $errorLogRepository;
         $this->priceAdjustmentService = $priceAdjustmentService;
-        $this->logger = $logger;
+        $this->errorLogger = $errorLogger;
     }
 
     public function updatePrices(array $products, Context $context): void
@@ -121,8 +121,8 @@ class PriceUpdateService
 
     private function logError(string $type, string $message, Context $context): void
     {
-        // Log to standard logger
-        $this->logger->error($type . ': ' . $message);
+        // Log using ErrorLogger
+        $this->errorLogger->error($type . ': ' . $message);
         
         // Also create entry in error log repository for persistence
         $this->errorLogRepository->create([

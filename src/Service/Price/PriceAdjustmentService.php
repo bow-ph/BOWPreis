@@ -2,12 +2,12 @@
 
 namespace BOW\Preishoheit\Service\Price;
 
-use Psr\Log\LoggerInterface;
+use BOW\Preishoheit\Service\ErrorHandling\ErrorLogger;
 
 class PriceAdjustmentService
 {
     public function __construct(
-        private readonly LoggerInterface $logger
+        private readonly ErrorLogger $errorLogger
     ) {}
 
     public function calculateAdjustedPrice(float $basePrice, ?float $surchargePercentage): float
@@ -23,7 +23,7 @@ class PriceAdjustmentService
 
             return $basePrice * (1 + ($surchargePercentage / 100));
         } catch (\Exception $e) {
-            $this->logger->error('API Error: ' . $e->getMessage(), [
+            $this->errorLogger->logApiError($e, [
                 'basePrice' => $basePrice,
                 'surchargePercentage' => $surchargePercentage
             ]);
@@ -41,7 +41,7 @@ class PriceAdjustmentService
                     $product['surchargePercentage'] ?? null
                 );
             } catch (\Exception $e) {
-                $this->logger->error('API Error: ' . $e->getMessage(), [
+                $this->errorLogger->logApiError($e, [
                     'product' => $product
                 ]);
                 // Skip failed products but continue processing others
