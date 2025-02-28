@@ -19,6 +19,7 @@ class BOWPreishoheit extends Plugin
         $locator = new FileLocator(__DIR__ . '/Resources/config');
         $loader = new XmlFileLoader($container, $locator);
         $loader->load('services.xml');
+        $loader->load('config.xml');
     }
 
     public function install(InstallContext $installContext): void
