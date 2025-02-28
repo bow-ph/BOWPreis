@@ -5,14 +5,20 @@ namespace BOW\Preishoheit;
 use Shopware\Core\Framework\Plugin;
 use Shopware\Core\Framework\Plugin\Context\InstallContext;
 use Shopware\Core\Framework\Plugin\Context\UninstallContext;
+use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use BOW\Preishoheit\DependencyInjection\BOWPreishoheitExtension;
+use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 
 class BOWPreishoheit extends Plugin
 {
     public function build(ContainerBuilder $container): void
     {
         parent::build($container);
+        
+        // Load services.xml using XmlFileLoader
+        $locator = new FileLocator(__DIR__ . '/Resources/config');
+        $loader = new XmlFileLoader($container, $locator);
+        $loader->load('services.xml');
     }
 
     public function install(InstallContext $installContext): void
