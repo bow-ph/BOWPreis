@@ -91,7 +91,7 @@
             <argument type="service" id="BOW\Preishoheit\Service\PreishoheitApi\PriceUpdateService"/>
             <argument type="service" id="bow_preishoheit_product.repository"/>
             <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
-            <argument type="service" id="logger"/>
+            <argument type="service" id="BOW\Preishoheit\Service\ErrorHandling\ErrorLogger"/>
             <tag name="messenger.message_handler"/>
         </service>
 
@@ -122,7 +122,7 @@
         <!-- Price Update Command -->
         <service id="BOW\Preishoheit\Command\UpdatePricesCommand" public="true">
             <argument type="service" id="BOW\Preishoheit\Service\PreishoheitApi\PriceUpdateService"/>
-            <argument type="service" id="logger"/>
+            <argument type="service" id="bow_preishoheit_product.repository"/>
             <tag name="console.command"/>
         </service>
     </services>
