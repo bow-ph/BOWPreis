@@ -4,7 +4,7 @@
     "description": "Dynamic price adjustments for Shopware products based on Preishoheit API",
     "type": "shopware-platform-plugin",
     "license": "proprietary",
-    "version": "1.0.10",
+    "version": "1.0.11",
     "require": {
         "shopware/core": "~6.6.0",
         "shopware/administration": "~6.6.0",

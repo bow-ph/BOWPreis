@@ -4,7 +4,7 @@ namespace BOW\Preishoheit\Controller;
 
 use BOW\Preishoheit\Service\PreishoheitApi\PreishoheitApiClient;
 use BOW\Preishoheit\Exception\ApiVerificationException;
-use Psr\Log\LoggerInterface;
+use BOW\Preishoheit\Service\ErrorHandling\ErrorLogger;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\Routing\Annotation\Acl;
 use Shopware\Core\Framework\Routing\Annotation\RouteScope;
@@ -18,11 +18,11 @@ use Symfony\Component\Routing\Annotation\Route;
 class ApiVerificationController extends AbstractController
 {
     private PreishoheitApiClient $apiClient;
-    private LoggerInterface $logger;
+    private ErrorLogger $logger;
 
     public function __construct(
         PreishoheitApiClient $apiClient,
-        LoggerInterface $logger
+        ErrorLogger $logger
     ) {
         $this->apiClient = $apiClient;
         $this->logger = $logger;
