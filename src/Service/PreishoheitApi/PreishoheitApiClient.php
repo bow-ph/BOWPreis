@@ -4,6 +4,7 @@ namespace BOW\Preishoheit\Service\PreishoheitApi;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
+use Psr\Log\LoggerInterface;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\System\SystemConfig\SystemConfigService;
 
@@ -12,10 +13,12 @@ class PreishoheitApiClient
     private const API_BASE_URL = 'https://pod.preishoheit.de/v2';
     private ?Client $client = null;
     private SystemConfigService $systemConfigService;
+    private LoggerInterface $logger;
 
-    public function __construct(SystemConfigService $systemConfigService)
+    public function __construct(SystemConfigService $systemConfigService, LoggerInterface $logger)
     {
         $this->systemConfigService = $systemConfigService;
+        $this->logger = $logger;
     }
 
     private function getClient(): Client
