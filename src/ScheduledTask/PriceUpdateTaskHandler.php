@@ -3,7 +3,7 @@
 namespace BOW\Preishoheit\ScheduledTask;
 
 use BOW\Preishoheit\Service\PreishoheitApi\PriceUpdateService;
-use BOW\Preishoheit\Service\ErrorHandling\ErrorLogger;
+use Psr\Log\LoggerInterface;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
@@ -18,20 +18,20 @@ class PriceUpdateTaskHandler extends ScheduledTaskHandler
     private PriceUpdateService $priceUpdateService;
     private EntityRepository $preishoheitProductRepository;
     private SystemConfigService $systemConfigService;
-    private ErrorLogger $errorLogger;
+    private LoggerInterface $logger;
 
     public function __construct(
         EntityRepository $scheduledTaskRepository,
         PriceUpdateService $priceUpdateService,
         EntityRepository $preishoheitProductRepository,
         SystemConfigService $systemConfigService,
-        ErrorLogger $errorLogger
+        LoggerInterface $logger
     ) {
         parent::__construct($scheduledTaskRepository);
         $this->priceUpdateService = $priceUpdateService;
         $this->preishoheitProductRepository = $preishoheitProductRepository;
         $this->systemConfigService = $systemConfigService;
-        $this->errorLogger = $errorLogger;
+        $this->logger = $logger;
     }
 
     public static function getHandledMessages(): iterable
@@ -58,12 +58,12 @@ class PriceUpdateTaskHandler extends ScheduledTaskHandler
             $interval = $this->systemConfigService->get('BOWPreishoheit.config.updateInterval') ?? PriceUpdateTask::getDefaultInterval();
             $this->updateNextExecutionTime($interval);
 
-            $this->errorLogger->info('Scheduled price update completed successfully', [
+            $this->logger->info('Scheduled price update completed successfully', [
                 'productCount' => $products->count(),
                 'interval' => $interval
             ]);
         } catch (\Exception $e) {
-            $this->errorLogger->error('Error during scheduled price update: ' . $e->getMessage(), [
+            $this->logger->error('Error during scheduled price update: ' . $e->getMessage(), [
                 'exception' => get_class($e),
                 'trace' => $e->getTraceAsString()
             ]);
