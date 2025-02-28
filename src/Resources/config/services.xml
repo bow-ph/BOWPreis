@@ -30,7 +30,7 @@
         <!-- API Verification Controller -->
         <service id="BOW\Preishoheit\Controller\ApiVerificationController" public="true">
             <argument type="service" id="BOW\Preishoheit\Service\PreishoheitApi\PreishoheitApiClient"/>
-            <argument type="service" id="logger"/>
+            <argument type="service" id="BOW\Preishoheit\Service\ErrorHandling\ErrorLogger"/>
             <tag name="controller.service_arguments"/>
             <tag name="controller.service_subscriber"/>
             <tag name="shopware.route_scope" scopes="api"/>
@@ -45,6 +45,10 @@
         </service>
 
         <!-- Core Services -->
+        <service id="BOW\Preishoheit\Service\ErrorHandling\ErrorLogger">
+            <argument type="service" id="logger"/>
+        </service>
+
         <service id="BOW\Preishoheit\Service\ErrorHandling\ErrorHandler">
             <argument type="service" id="bow_preishoheit_error_log.repository"/>
         </service>
@@ -60,7 +64,7 @@
         <!-- API Services -->
         <service id="BOW\Preishoheit\Service\PreishoheitApi\PreishoheitApiClient" public="true">
             <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
-            <argument type="service" id="logger"/>
+            <argument type="service" id="BOW\Preishoheit\Service\ErrorHandling\ErrorLogger"/>
         </service>
 
         <!-- Mail Services -->
@@ -87,7 +91,7 @@
             <argument type="service" id="BOW\Preishoheit\Service\PreishoheitApi\PriceUpdateService"/>
             <argument type="service" id="bow_preishoheit_product.repository"/>
             <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
-            <argument type="service" id="logger"/>
+            <argument type="service" id="BOW\Preishoheit\Service\ErrorHandling\ErrorLogger"/>
             <tag name="messenger.message_handler"/>
         </service>
 
@@ -103,7 +107,7 @@
 
         <!-- Price Services -->
         <service id="BOW\Preishoheit\Service\Price\PriceAdjustmentService" public="true">
-            <argument type="service" id="logger"/>
+            <argument type="service" id="BOW\Preishoheit\Service\ErrorHandling\ErrorLogger"/>
         </service>
 
         <!-- Price Update Service -->
@@ -113,7 +117,7 @@
             <argument type="service" id="bow_preishoheit_price_history.repository"/>
             <argument type="service" id="bow_preishoheit_error_log.repository"/>
             <argument type="service" id="BOW\Preishoheit\Service\Price\PriceAdjustmentService"/>
-            <argument type="service" id="logger"/>
+            <argument type="service" id="BOW\Preishoheit\Service\ErrorHandling\ErrorLogger"/>
         </service>
 
         <!-- Price Update Command -->
