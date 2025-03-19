@@ -14,7 +14,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Shopware\Core\Framework\Routing\Attribute\RouteScope;
+
 
 #[Route(defaults: ['_routeScope' => ['api', 'administration']], path: '/api/_action/bow-preishoheit')]
 class ApiVerificationController extends AbstractController
