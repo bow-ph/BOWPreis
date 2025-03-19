@@ -1,6 +1,6 @@
 import './page/bow-preishoheit-list';
 import './page/bow-preishoheit-detail';
-import './page/bow-preishoheit-price-history';
+import './component/price-history';
 import './component/settings';
 import './component/history';
 import './component/errors';
