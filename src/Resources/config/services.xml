@@ -1,6 +1,5 @@
 <container xmlns="http://symfony.com/schema/dic/services"
-           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
 
         <!-- Entity Definitions -->
@@ -17,7 +16,7 @@
             <argument type="service" id="Shopware\Core\Framework\DataAbstractionLayer\Search\EntityAggregatorInterface"/>
             <argument type="service" id="event_dispatcher"/>
         </service>
-        
+
         <service id="bow_preishoheit_error_log.repository" class="Shopware\Core\Framework\DataAbstractionLayer\EntityRepository">
             <argument>BOW\Preishoheit\Entity\ErrorLog\ErrorLogDefinition</argument>
             <argument type="service" id="Shopware\Core\Framework\DataAbstractionLayer\Read\EntityReaderInterface"/>
@@ -45,7 +44,7 @@
         </service>
 
         <!-- Core Services -->
-        <service id="BOW\Preishoheit\Service\ErrorHandling\ErrorLogger">
+        <service id="BOW\Preishoheit\Service\ErrorHandling\ErrorLogger" lazy="true">
             <argument type="service" id="logger"/>
         </service>
 
