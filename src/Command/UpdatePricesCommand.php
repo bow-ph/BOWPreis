@@ -33,7 +33,8 @@ class UpdatePricesCommand extends Command
 
     protected function configure(): void
     {
-        $this->setDescription('Updates product prices from Preishoheit API')
+        $this->setName('bow:preishoheit:update-prices')
+            ->setDescription('Updates product prices from Preishoheit API')
             ->addOption('page', null, InputOption::VALUE_OPTIONAL, 'Page number for pagination', 1);
     }
 
@@ -42,35 +43,31 @@ class UpdatePricesCommand extends Command
         $context = \Shopware\Core\Framework\Context::createDefaultContext();
         $page = (int) $input->getOption('page');
 
-        $this->logger->info('Starting price update process', ['page' => $page]);
-
         try {
-            $products = $this->getProducts($context, $page);
+            $criteria = new Criteria();
+            $criteria->setLimit(20);
+            $criteria->setOffset(($page - 1) * 20);
+            $products = $this->preishoheitProductRepository->search($criteria, $context);
 
-            $this->priceUpdateService->updatePrices($products = $products->getElements(), $context);
+            if ($products->count() === 0) {
+                $output->writeln('No products found for price update.');
+                return Command::SUCCESS;
+            }
+
+            $this->priceUpdateService->updatePrices($products->getElements(), $context);
 
             $output->writeln('Price update completed successfully');
             $this->logger->info('Price update successfully completed', ['page' => $page]);
 
             return Command::SUCCESS;
         } catch (\Throwable $e) {
+            $output->writeln('Error updating prices: ' . $e->getMessage());
             $this->logger->error('Error updating prices', [
                 'message' => $e->getMessage(),
-                'exception' => $e
+                'trace' => $e->getTraceAsString()
             ]);
-
-            $output->writeln('Error updating prices: ' . $e->getMessage());
 
             return Command::FAILURE;
         }
-    }
-
-    private function getProducts(int $page, \Shopware\Core\Framework\Context $context): \Shopware\Core\Framework\DataAbstractionLayer\Search\EntitySearchResult
-    {
-        $criteria = new \Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria();
-        $criteria->setLimit(20);
-        $criteria->setOffset(($page - 1) * 20);
-
-        return $this->preishoheitProductRepository->search($criteria, $context);
     }
 }
