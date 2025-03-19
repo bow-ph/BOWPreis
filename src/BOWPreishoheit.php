@@ -11,16 +11,6 @@ use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 
 class BOWPreishoheit extends Plugin
 {
-    public function build(ContainerBuilder $container): void
-    {
-        parent::build($container);
-        
-        // Load services.xml using XmlFileLoader
-        $locator = new FileLocator(__DIR__ . '/Resources/config');
-        $loader = new XmlFileLoader($container, $locator);
-        $loader->load('services.xml');
-        $loader->load('config.xml');
-    }
 
     public function install(InstallContext $installContext): void
     {
