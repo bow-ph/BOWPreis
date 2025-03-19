@@ -2,13 +2,14 @@
 
 namespace BOW\Preishoheit\Service\ErrorHandling;
 
-use Psr\Log\LoggerInterface;
-
 class ErrorLogger
 {
-    public function __construct(
-        private LoggerInterface $logger
-    ) {}
+    private SimpleLogger $logger;
+
+    public function __construct()
+    {
+        $this->logger = new SimpleLogger();
+    }
 
     public function logApiError(\Throwable $error, array $context = []): void
     {
