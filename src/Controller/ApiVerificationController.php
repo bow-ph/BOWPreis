@@ -3,8 +3,6 @@
 namespace BOW\Preishoheit\Controller;
 
 use BOW\Preishoheit\Service\PreishoheitApi\PreishoheitApiClient;
-use BOW\Preishoheit\Service\Price\PriceAdjustmentService;;
-use BOW\Preishoheit\Service\PriceUpdateService;
 use BOW\Preishoheit\Exception\ApiVerificationException;
 use BOW\Preishoheit\Service\ErrorHandling\ErrorLogger;
 use Shopware\Core\Framework\Context;
