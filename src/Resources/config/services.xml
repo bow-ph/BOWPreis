@@ -107,6 +107,6 @@
         </service>
 
         <!-- NullTokenizer -->
-        <service id="Shopware\Core\Framework\DataAbstractionLayer\Search\Term\Tokenizer" class="BOW\Preishoheit\Search\NullTokenizer" decorates="Shopware\Core\Framework\DataAbstractionLayer\Search\Term\Tokenizer" public="true" />
+        <service id="bow_preishoheit.search.null_tokenizer" class="BOW\Preishoheit\Search\NullTokenizer" decorates="Shopware\Core\Framework\DataAbstractionLayer\Search\Term\Tokenizer" public="false" decoration-inner-name="bow_preishoheit.search.null_tokenizer.inner"/>
     </services>
 </container>
