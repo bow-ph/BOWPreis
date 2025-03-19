@@ -8,16 +8,16 @@ use BOW\Preishoheit\Service\Price\PriceAdjustmentService;
 use BOW\Preishoheit\Service\PreishoheitApi\PriceUpdateService;
 use Psr\Log\LoggerInterface;
 use Shopware\Core\Framework\Context;
-use Shopware\Core\Framework\Routing\Annotation\Acl;
-use Shopware\Core\Framework\Routing\Annotation\RouteScope;
+use Shopware\Core\Framework\Routing\Attribute\Acl;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Shopware\Core\Framework\Routing\Attribute\RouteScope;
+use Symfony\Component\Routing\Attribute\Route;
 
 
-#[Route(defaults: ['_routeScope' => ['api', 'administration']], path: '/api/_action/bow-preishoheit')]
+#[Route(defaults: ['_routeScope' => ['api']], path: '/_action/bow-preishoheit')]
 class ApiVerificationController extends AbstractController
 {
     private PreishoheitApiClient $apiClient;
