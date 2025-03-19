@@ -127,5 +127,7 @@
             <argument type="service" id="bow_preishoheit_product.repository"/>
             <tag name="console.command"/>
         </service>
+        <!-- NullTokenizer implementation -->
+        <service id="Shopware\Core\Framework\DataAbstractionLayer\Search\Term\Tokenizer" class="BOW\Preishoheit\Search\NullTokenizer" decorates="Shopware\Core\Framework\DataAbstractionLayer\Search\Term\Tokenizer" public="true" />
     </services>
 </container>
