@@ -54,14 +54,13 @@
         </service>
 
         <!-- API Verification Controller -->
-        <service id="BOW\Preishoheit\Controller\ApiVerificationController">
-            <argument type="service" id="BOW\Preishoheit\Service\PreishoheitApi\PreishoheitApiClient"/>
-            <argument type="service" id="BOW\Preishoheit\Service\ErrorHandling\ErrorLogger"/>
-            <argument type="service" id="BOW\Preishoheit\Service\Price\PriceAdjustmentService"/>
-            <argument type="service" id="BOW\Preishoheit\Service\PreishoheitApi\PriceUpdateService"/>
+
+        <service id="BOW\Preishoheit\Controller\ApiVerificationController" public="true">
             <tag name="controller.service_arguments"/>
             <tag name="controller.service_subscriber"/>
+            <tag name="shopware.route_scope" scopes="api"/>
         </service>
+
 
         <!-- API Services -->
         <service id="BOW\Preishoheit\Service\PreishoheitApi\PreishoheitApiClient" public="true">
@@ -77,7 +76,6 @@
         </service>
 
         <service id="BOW\Preishoheit\Controller\ExportController" public="true">
-            <argument type="service" id="bow_preishoheit_price_history.repository"/>
             <tag name="controller.service_arguments"/>
             <tag name="controller.service_subscriber"/>
             <tag name="shopware.route_scope" scopes="api"/>
