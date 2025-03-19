@@ -5,6 +5,8 @@ namespace BOW\Preishoheit\Controller;
 use BOW\Preishoheit\Service\PreishoheitApi\PreishoheitApiClient;
 use BOW\Preishoheit\Exception\ApiVerificationException;
 use BOW\Preishoheit\Service\ErrorHandling\ErrorLogger;
+use BOW\Preishoheit\Service\Price\PriceAdjustmentService;
+use BOW\Preishoheit\Service\PreishoheitApi\PriceUpdateService;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\Routing\Annotation\Acl;
 use Shopware\Core\Framework\Routing\Annotation\RouteScope;
@@ -20,13 +22,13 @@ class ApiVerificationController extends AbstractController
     private PreishoheitApiClient $apiClient;
     private ErrorLogger $errorLogger;
     private PriceAdjustmentService $priceAdjustmentService;
-    private ProductPriceUpdater $priceUpdater;
+    private PriceUpdateService $priceUpdater;
 
     public function __construct(
         PreishoheitApiClient $apiClient,
         ErrorLogger $errorLogger,
         PriceAdjustmentService $priceAdjustmentService,
-        ProductPriceUpdater $priceUpdater
+        PriceUpdateService $priceUpdater
     ) {
         $this->apiClient = $apiClient;
         $this->errorLogger = $errorLogger;

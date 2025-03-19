@@ -30,6 +30,8 @@
         <service id="BOW\Preishoheit\Controller\ApiVerificationController" public="true">
             <argument type="service" id="BOW\Preishoheit\Service\PreishoheitApi\PreishoheitApiClient"/>
             <argument type="service" id="BOW\Preishoheit\Service\ErrorHandling\ErrorLogger"/>
+            <argument type="service" id="BOW\Preishoheit\Service\Price\PriceAdjustmentService"/>
+            <argument type="service" id="BOW\Preishoheit\Service\PreishoheitApi\PriceUpdateService"/>
             <tag name="controller.service_arguments"/>
             <tag name="controller.service_subscriber"/>
             <tag name="shopware.route_scope" scopes="api"/>
