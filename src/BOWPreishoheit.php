@@ -2,6 +2,7 @@
 
 namespace BOW\Preishoheit;
 
+use BOW\Preishoheit\DependencyInjection\LoggerCompilerPass;
 use BOW\Preishoheit\DependencyInjection\TokenizerFixCompilerPass;
 use Shopware\Core\Framework\Plugin;
 use Shopware\Core\Framework\Plugin\Context\InstallContext;
@@ -16,6 +17,7 @@ class BOWPreishoheit extends Plugin
     {
         parent::build($container);
         $container->addCompilerPass(new TokenizerFixCompilerPass());
+        $container->addCompilerPass(new LoggerCompilerPass());
     }
 
     public function install(InstallContext $installContext): void

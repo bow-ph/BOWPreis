@@ -47,7 +47,7 @@
 
         <!-- Core Services -->
         <service id="BOW\Preishoheit\Service\ErrorHandling\ErrorLogger" lazy="true">
-            <argument type="service" id="logger"/>
+            <!-- Removed logger dependency -->
         </service>
 
         <service id="BOW\Preishoheit\Service\ErrorHandling\ErrorHandler">
