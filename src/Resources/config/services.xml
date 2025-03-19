@@ -1,10 +1,24 @@
+<?xml version="1.0" ?>
+
 <container xmlns="http://symfony.com/schema/dic/services"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://symfony.com/schema/dic/services
+                               http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
+        <defaults autowire="true" autoconfigure="true" public="false">
+            <bind key="$logger" type="service" id="logger"/>
+        </defaults>
 
         <!-- Entity Definitions -->
         <service id="BOW\Preishoheit\Entity\Product\PreishoheitProductDefinition">
             <tag name="shopware.entity.definition" entity="bow_preishoheit_product" />
+        </service>
+
+        <service id="BOW\Preishoheit\Entity\PriceHistory\PriceHistoryDefinition">
+            <tag name="shopware.entity.definition" entity="bow_preishoheit_price_history" />
+        </service>
+
+        <service id="BOW\Preishoheit\Entity\ErrorLog\ErrorLogDefinition">
+            <tag name="shopware.entity.definition" entity="bow_preishoheit_error_log" />
         </service>
 
         <!-- Repositories -->
@@ -26,10 +40,23 @@
             <argument type="service" id="event_dispatcher"/>
         </service>
 
+        <!-- Core Services -->
+        <service id="BOW\Preishoheit\Service\ErrorHandling\ErrorHandler">
+            <argument type="service" id="bow_preishoheit_error_log.repository"/>
+        </service>
+
+        <service id="BOW\Preishoheit\Service\Validation\PriceValidator">
+            <argument type="service" id="logger"/>
+        </service>
+
+        <service id="BOW\Preishoheit\Service\Validation\BulkEditValidator">
+            <argument type="service" id="product.repository"/>
+        </service>
+
         <!-- API Verification Controller -->
         <service id="BOW\Preishoheit\Controller\ApiVerificationController" public="true">
             <argument type="service" id="BOW\Preishoheit\Service\PreishoheitApi\PreishoheitApiClient"/>
-            <argument type="service" id="BOW\Preishoheit\Service\ErrorHandling\ErrorLogger"/>
+            <argument type="service" id="logger"/>
             <argument type="service" id="BOW\Preishoheit\Service\Price\PriceAdjustmentService"/>
             <argument type="service" id="BOW\Preishoheit\Service\PreishoheitApi\PriceUpdateService"/>
             <tag name="controller.service_arguments"/>
@@ -37,35 +64,10 @@
             <tag name="shopware.route_scope" scopes="api"/>
         </service>
 
-        <service id="BOW\Preishoheit\Entity\PriceHistory\PriceHistoryDefinition">
-            <tag name="shopware.entity.definition" entity="bow_preishoheit_price_history" />
-        </service>
-
-        <service id="BOW\Preishoheit\Entity\ErrorLog\ErrorLogDefinition">
-            <tag name="shopware.entity.definition" entity="bow_preishoheit_error_log" />
-        </service>
-
-        <!-- Core Services -->
-        <service id="BOW\Preishoheit\Service\ErrorHandling\ErrorLogger" lazy="true">
-            <!-- Removed logger dependency -->
-        </service>
-
-        <service id="BOW\Preishoheit\Service\ErrorHandling\ErrorHandler">
-            <argument type="service" id="bow_preishoheit_error_log.repository"/>
-        </service>
-
-        <service id="BOW\Preishoheit\Service\Validation\PriceValidator">
-            <argument type="service" id="BOW\Preishoheit\Service\ErrorHandling\ErrorHandler"/>
-        </service>
-
-        <service id="BOW\Preishoheit\Service\Validation\BulkEditValidator">
-            <argument type="service" id="product.repository"/>
-        </service>
-
         <!-- API Services -->
         <service id="BOW\Preishoheit\Service\PreishoheitApi\PreishoheitApiClient" public="true">
             <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
-            <argument type="service" id="BOW\Preishoheit\Service\ErrorHandling\ErrorLogger"/>
+            <argument type="service" id="logger"/>
         </service>
 
         <!-- Mail Services -->
@@ -92,23 +94,13 @@
             <argument type="service" id="BOW\Preishoheit\Service\PreishoheitApi\PriceUpdateService"/>
             <argument type="service" id="bow_preishoheit_product.repository"/>
             <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
-            <argument type="service" id="BOW\Preishoheit\Service\ErrorHandling\ErrorLogger"/>
-            <tag name="messenger.message_handler"/>
-        </service>
-
-        <service id="BOW\Preishoheit\ScheduledTask\FailedUpdateMailTask">
-            <tag name="shopware.scheduled.task" />
-        </service>
-
-        <service id="BOW\Preishoheit\ScheduledTask\FailedUpdateMailTaskHandler">
-            <argument type="service" id="scheduled_task.repository"/>
-            <argument type="service" id="BOW\Preishoheit\Service\Mail\FailedUpdateMailService"/>
+            <argument type="service" id="logger"/>
             <tag name="messenger.message_handler"/>
         </service>
 
         <!-- Price Services -->
         <service id="BOW\Preishoheit\Service\Price\PriceAdjustmentService" public="true">
-            <argument type="service" id="BOW\Preishoheit\Service\ErrorHandling\ErrorLogger"/>
+            <argument type="service" id="logger"/>
         </service>
 
         <!-- Price Update Service -->
@@ -118,16 +110,16 @@
             <argument type="service" id="bow_preishoheit_price_history.repository"/>
             <argument type="service" id="bow_preishoheit_error_log.repository"/>
             <argument type="service" id="BOW\Preishoheit\Service\Price\PriceAdjustmentService"/>
-            <argument type="service" id="BOW\Preishoheit\Service\ErrorHandling\ErrorLogger"/>
+            <argument type="service" id="logger"/>
         </service>
 
-        <!-- Price Update Command -->
         <service id="BOW\Preishoheit\Command\UpdatePricesCommand" public="true">
             <argument type="service" id="BOW\Preishoheit\Service\PreishoheitApi\PriceUpdateService"/>
             <argument type="service" id="bow_preishoheit_product.repository"/>
             <tag name="console.command"/>
         </service>
-        <!-- NullTokenizer implementation -->
+
+        <!-- NullTokenizer -->
         <service id="Shopware\Core\Framework\DataAbstractionLayer\Search\Term\Tokenizer" class="BOW\Preishoheit\Search\NullTokenizer" decorates="Shopware\Core\Framework\DataAbstractionLayer\Search\Term\Tokenizer" public="true" />
     </services>
 </container>
