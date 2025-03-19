@@ -1,6 +1,6 @@
 import template from './errors.html.twig';
 
-const { Component } = Shopware;
+const { Component  } = Shopware;
 const { Criteria } = Shopware.Data;
 
 Component.register('bow-preishoheit-errors', {

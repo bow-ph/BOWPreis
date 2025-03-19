@@ -1,5 +1,5 @@
 import template from './bow-preishoheit-detail.html.twig';
-const { Component } = Shopware;
+const { Component, Mixin } = Shopware;
 const { Criteria } = Shopware.Data;
 
 Component.register('bow-preishoheit-detail', {

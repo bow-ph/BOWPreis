@@ -1,7 +1,7 @@
 import template from './bulk-edit.html.twig';
 import './bulk-edit.scss';
 
-const { Component, Mixin, Application } = Shopware;
+const { Component, Mixin } = Shopware;
 const { Criteria } = Shopware.Data;
 
 Component.register('bow-preishoheit-bulk-edit', {
