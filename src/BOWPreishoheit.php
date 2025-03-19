@@ -2,6 +2,7 @@
 
 namespace BOW\Preishoheit;
 
+use BOW\Preishoheit\DependencyInjection\TokenizerFixCompilerPass;
 use Shopware\Core\Framework\Plugin;
 use Shopware\Core\Framework\Plugin\Context\InstallContext;
 use Shopware\Core\Framework\Plugin\Context\UninstallContext;
@@ -11,6 +12,11 @@ use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 
 class BOWPreishoheit extends Plugin
 {
+    public function build(ContainerBuilder $container): void
+    {
+        parent::build($container);
+        $container->addCompilerPass(new TokenizerFixCompilerPass());
+    }
 
     public function install(InstallContext $installContext): void
     {
