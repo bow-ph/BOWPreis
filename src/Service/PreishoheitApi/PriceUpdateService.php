@@ -10,6 +10,7 @@ use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\EntitySearchResult;
 use Shopware\Core\Framework\Uuid\Uuid;
 use BOW\Preishoheit\Exception\PreishoheitApiException;
+use BOW\Preishoheit\Service\Price\PriceAdjustmentService;
 
 class PriceUpdateService
 {
