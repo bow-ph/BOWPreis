@@ -69,40 +69,4 @@ class ApiVerificationController extends AbstractController
         }
     }
 
-    #[Route(path: "/sync", name: "api.action.bow.preishoheit.sync", methods: ["POST"])]
-    public function syncPrices(Request $request, Context $context): JsonResponse
-    {
-        try {
-            // Example: Create job via API using new v2/jobs endpoint.
-            $jobResponse = $this->apiClient->createJob('amazon', []);
-            if (!isset($jobResponse['job_id'])) {
-                throw new \Exception('No job ID received from API');
-            }
-
-            $jobResults = $this->apiClient->downloadJobResult($jobResponse['job_id']);
-
-            foreach ($jobResults['data'] as $result) {
-                // Example structure: ['productId' => string, 'basePrice' => float, 'surchargePercentage' => float]
-                if (!isset($result['productId'], $result['basePrice'], $result['surchargePercentage'])) {
-                    continue;
-                }
-                $newPrice = $this->priceAdjustmentService->calculateAdjustedPrice(
-                    $result['basePrice'],
-                    $result['surchargePercentage']
-                );
-                $this->priceUpdater->updatePrice($result['productId'], $newPrice, $context);
-            }
-
-            return new JsonResponse([
-                'success' => true,
-                'message' => 'Synchronization complete'
-            ], Response::HTTP_OK);
-        } catch (\Exception $e) {
-            $this->errorLogger->logSystemError($e->getMessage());
-            return new JsonResponse([
-                'success' => false,
-                'message' => $e->getMessage()
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
-    }
 }
