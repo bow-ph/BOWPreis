@@ -4,6 +4,7 @@ namespace BOW\Preishoheit\ScheduledTask;
 
 use BOW\Preishoheit\Service\Mail\FailedUpdateMailService;
 use Shopware\Core\Framework\Context;
+use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\MessageQueue\ScheduledTask\ScheduledTaskHandler;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
