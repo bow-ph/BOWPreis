@@ -4,9 +4,9 @@ namespace BOW\Preishoheit\Controller;
 
 use BOW\Preishoheit\Service\PreishoheitApi\PreishoheitApiClient;
 use BOW\Preishoheit\Exception\ApiVerificationException;
-use BOW\Preishoheit\Service\ErrorHandling\ErrorLogger;
 use BOW\Preishoheit\Service\Price\PriceAdjustmentService;
 use BOW\Preishoheit\Service\PreishoheitApi\PriceUpdateService;
+use Psr\Log\LoggerInterface;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\Routing\Annotation\Acl;
 use Shopware\Core\Framework\Routing\Annotation\RouteScope;
@@ -20,18 +20,18 @@ use Symfony\Component\Routing\Annotation\Route;
 class ApiVerificationController extends AbstractController
 {
     private PreishoheitApiClient $apiClient;
-    private ErrorLogger $errorLogger;
+    private LoggerInterface $logger;
     private PriceAdjustmentService $priceAdjustmentService;
     private PriceUpdateService $priceUpdater;
 
     public function __construct(
         PreishoheitApiClient $apiClient,
-        ErrorLogger $errorLogger,
+        LoggerInterface $logger,
         PriceAdjustmentService $priceAdjustmentService,
         PriceUpdateService $priceUpdater
     ) {
         $this->apiClient = $apiClient;
-        $this->errorLogger = $errorLogger;
+        $this->logger = $logger;
         $this->priceAdjustmentService = $priceAdjustmentService;
         $this->priceUpdater = $priceUpdater;
     }
@@ -40,7 +40,7 @@ class ApiVerificationController extends AbstractController
     public function verifyApiKey(Request $request, Context $context): JsonResponse
     {
         try {
-            $this->errorLogger->info('Starting API key verification');
+            $this->logger->info('Starting API key verification');
 
             $apiKey = $request->request->get('apiKey');
             if (empty($apiKey)) {
@@ -49,18 +49,18 @@ class ApiVerificationController extends AbstractController
 
             $this->apiClient->verifyApiKey($context);
 
-            $this->errorLogger->info('API key verification successful');
+            $this->logger->info('API key verification successful');
             return new JsonResponse(['success' => true]);
         } catch (ApiVerificationException $e) {
-            $this->errorLogger->error('API key verification failed: ' . $e->getMessage());
+            $this->logger->error('API key verification failed: ' . $e->getMessage());
             return new JsonResponse([
                 'success' => false,
                 'message' => $e->getMessage()
             ], Response::HTTP_BAD_REQUEST);
-        } catch (\Exception $e) {
-            $this->errorLogger->error('Unexpected error during API key verification: ' . $e->getMessage(), [
-                'exception' => get_class($e),
-                'trace' => $e->getTraceAsString()
+        } catch (\Throwable $e) {
+            $this->logger->error('Unexpected error during API key verification', [
+                'message' => $e->getMessage(),
+                'exception' => $e
             ]);
             return new JsonResponse([
                 'success' => false,
@@ -68,5 +68,4 @@ class ApiVerificationController extends AbstractController
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
-
 }

@@ -2,15 +2,14 @@
 
 namespace BOW\Preishoheit\Service\PreishoheitApi;
 
-use BOW\Preishoheit\Entity\Product\PreishoheitProductEntity;
-use BOW\Preishoheit\Service\Price\PriceAdjustmentService;
-use BOW\Preishoheit\Service\ErrorHandling\ErrorLogger;
+use Psr\Log\LoggerInterface;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\EntitySearchResult;
 use Shopware\Core\Framework\Uuid\Uuid;
+use BOW\Preishoheit\Exception\PreishoheitApiException;
 
 class PriceUpdateService
 {
@@ -19,7 +18,7 @@ class PriceUpdateService
     private EntityRepository $priceHistoryRepository;
     private EntityRepository $errorLogRepository;
     private PriceAdjustmentService $priceAdjustmentService;
-    private ErrorLogger $errorLogger;
+    private LoggerInterface $logger;
 
     public function __construct(
         PreishoheitApiClient $apiClient,
@@ -27,14 +26,14 @@ class PriceUpdateService
         EntityRepository $priceHistoryRepository,
         EntityRepository $errorLogRepository,
         PriceAdjustmentService $priceAdjustmentService,
-        ErrorLogger $errorLogger
+        LoggerInterface $logger
     ) {
         $this->apiClient = $apiClient;
         $this->productRepository = $productRepository;
         $this->priceHistoryRepository = $priceHistoryRepository;
         $this->errorLogRepository = $errorLogRepository;
         $this->priceAdjustmentService = $priceAdjustmentService;
-        $this->errorLogger = $errorLogger;
+        $this->logger = $logger;
     }
 
     public function updatePrices(array $products, Context $context): void
@@ -42,15 +41,15 @@ class PriceUpdateService
         try {
             $identifiers = $this->collectProductIdentifiers($products);
             $jobResponse = $this->apiClient->createJob('amazon', $identifiers);
-            
+
             if (!isset($jobResponse['job_id'])) {
                 throw new PreishoheitApiException('No job ID received from API');
             }
 
-            $jobId = $jobResponse['job_id'];
-            $this->processJobResults($jobId, $products, $context);
-        } catch (PreishoheitApiException $e) {
+            $this->logger->info('Price update job created successfully', ['jobId' => $jobResponse['job_id']]);
+        } catch (\Throwable $e) {
             $this->logError('API_ERROR', $e->getMessage(), $context);
+            throw $e;
         }
     }
 
@@ -65,56 +64,49 @@ class PriceUpdateService
         return $identifiers;
     }
 
-    private function processJobResults(string $jobId, array $products, Context $context): void
-    {
-        $results = $this->apiClient->downloadJobResult($jobId);
-        
-        foreach ($results['data'] ?? [] as $result) {
-            $this->processPriceUpdate($result, $context);
-        }
-    }
-
     private function processPriceUpdate(array $priceData, Context $context): void
     {
         try {
             if (!isset($priceData['ean'], $priceData['price'])) {
-                throw new PreishoheitApiException('Invalid price data received');
+                throw new PreishoheitApiException('Incomplete price data received');
             }
-
+    
             $criteria = new Criteria();
             $criteria->addFilter(new EqualsFilter('product.ean', $priceData['ean']));
             $preishoheitProduct = $this->productRepository->search($criteria, $context)->first();
-
-            if (!$preishoheitProduct) {
+    
+            if (!$preishoheitProduct || !$preishoheitProduct->getProduct()) {
                 throw new PreishoheitApiException('Product not found for EAN: ' . $priceData['ean']);
             }
-
+    
             $oldPrice = $preishoheitProduct->getProduct()->getPrice()->getGross();
             $newPrice = $this->priceAdjustmentService->calculateAdjustedPrice(
-                $priceData['price'],
+                (float)$priceData['price'],
                 $preishoheitProduct->getSurchargePercentage()
             );
-
-            // Update product price
+    
             $this->productRepository->update([
                 [
-                    'id' => $preishoheitProduct->getId(),
-                    'price' => [['gross' => $newPrice, 'net' => $newPrice / 1.19]], // Assuming 19% VAT
+                    'id' => $preishoheitProduct->getProduct()->getId(),
+                    'price' => ['gross' => $newPrice, 'net' => $newPrice / 1.19], // Assuming 19% VAT
                 ]
             ], $context);
-
-            // Log price history
+    
             $this->priceHistoryRepository->create([
                 [
                     'id' => Uuid::randomHex(),
-                    'ean' => $priceData['ean'],
-                    'productName' => $preishoheitProduct->getProduct()->getName(),
+                    'productId' => $preishoheitProduct->getProduct()->getId(),
                     'oldPrice' => $oldPrice,
-                    'newPrice' => $newPrice,
+                    'newPrice' => $newPrice
                 ]
             ], $context);
-
-        } catch (\Exception $e) {
+    
+            $this->logger->info('Price updated successfully', [
+                'productId' => $preishoheitProduct->getProduct()->getId(),
+                'oldPrice' => $oldPrice,
+                'newPrice' => $newPrice
+            ]);
+        } catch (\Throwable $e) {
             $this->logError('PRICE_UPDATE', $e->getMessage(), $context);
             throw $e;
         }
@@ -122,15 +114,13 @@ class PriceUpdateService
 
     private function logError(string $type, string $message, Context $context): void
     {
-        // Log using ErrorLogger
-        $this->errorLogger->error($type . ': ' . $message);
-        
-        // Also create entry in error log repository for persistence
+        $this->logger->error(sprintf('Error [%s]: %s', $type, $message));
+
         $this->errorLogRepository->create([
             [
                 'id' => Uuid::randomHex(),
                 'errorType' => $type,
-                'errorMessage' => $message,
+                'errorMessage' => $message
             ]
         ], $context);
     }
@@ -148,23 +138,11 @@ class PriceUpdateService
 
     private function logApiRequest(array $requestData, Context $context): void
     {
-        $this->errorLogRepository->create([
-            [
-                'id' => Uuid::randomHex(),
-                'errorType' => 'API_REQUEST',
-                'errorMessage' => json_encode($requestData),
-            ]
-        ], $context);
+        $this->logger->info('API request sent', ['request' => $requestData]);
     }
 
     private function logApiResponse(array $responseData, Context $context): void
     {
-        $this->errorLogRepository->create([
-            [
-                'id' => Uuid::randomHex(),
-                'errorType' => 'API_RESPONSE',
-                'errorMessage' => json_encode($responseData),
-            ]
-        ], $context);
+        $this->logger->info('API response received', ['response' => $responseData]);
     }
 }

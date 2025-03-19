@@ -2,30 +2,34 @@
 
 namespace BOW\Preishoheit\Service\Price;
 
-use BOW\Preishoheit\Service\ErrorHandling\ErrorLogger;
+use Psr\Log\LoggerInterface;
 
 class PriceAdjustmentService
 {
     public function __construct(
-        private readonly ErrorLogger $errorLogger
+        private readonly LoggerInterface $logger
     ) {}
 
     public function calculateAdjustedPrice(float $basePrice, ?float $surchargePercentage): float
     {
         try {
             if ($basePrice <= 0) {
-                throw new \InvalidArgumentException('Base price must be greater than 0');
+                throw new \InvalidArgumentException('Base price must be greater than zero');
             }
 
-            if ($surchargePercentage === null) {
-                return $basePrice;
+            $adjustedPrice = $basePrice;
+            
+            if ($surchargePercentage !== null) {
+                $adjustedPrice *= (1 + $surchargePercentage / 100);
             }
 
-            return $basePrice * (1 + ($surchargePercentage / 100));
-        } catch (\Exception $e) {
-            $this->errorLogger->logApiError($e, [
+            return $adjustedPrice;
+        } catch (\Throwable $e) {
+            $this->logger->error('Price adjustment calculation error', [
+                'message' => $e->getMessage(),
                 'basePrice' => $basePrice,
-                'surchargePercentage' => $surchargePercentage
+                'surchargePercentage' => $surchargePercentage,
+                'exception' => $e,
             ]);
             throw $e;
         }
@@ -34,20 +38,24 @@ class PriceAdjustmentService
     public function calculateBulkAdjustedPrices(array $products): array
     {
         $adjustedPrices = [];
+
         foreach ($products as $product) {
             try {
                 $adjustedPrices[$product['id']] = $this->calculateAdjustedPrice(
                     $product['price'],
                     $product['surchargePercentage'] ?? null
                 );
-            } catch (\Exception $e) {
-                $this->errorLogger->logApiError($e, [
-                    'product' => $product
+            } catch (\Throwable $e) {
+                $this->logger->error('Bulk price adjustment error for product', [
+                    'productId' => $product['id'],
+                    'message' => $e->getMessage(),
                 ]);
-                // Skip failed products but continue processing others
+
+                // Fehlerhafte Produkte überspringen, um Verarbeitung fortzusetzen
                 continue;
             }
         }
+
         return $adjustedPrices;
     }
 }

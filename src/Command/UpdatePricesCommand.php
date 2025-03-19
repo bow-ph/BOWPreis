@@ -3,10 +3,10 @@
 namespace BOW\Preishoheit\Command;
 
 use BOW\Preishoheit\Service\PreishoheitApi\PriceUpdateService;
+use Psr\Log\LoggerInterface;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
-use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -18,14 +18,17 @@ class UpdatePricesCommand extends Command
 
     private PriceUpdateService $priceUpdateService;
     private EntityRepository $preishoheitProductRepository;
+    private LoggerInterface $logger;
 
     public function __construct(
         PriceUpdateService $priceUpdateService,
-        EntityRepository $preishoheitProductRepository
+        EntityRepository $preishoheitProductRepository,
+        LoggerInterface $logger
     ) {
         parent::__construct();
         $this->priceUpdateService = $priceUpdateService;
         $this->preishoheitProductRepository = $preishoheitProductRepository;
+        $this->logger = $logger;
     }
 
     protected function configure(): void
@@ -36,34 +39,38 @@ class UpdatePricesCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $context = Context::createDefaultContext();
+        $context = \Shopware\Core\Framework\Context::createDefaultContext();
         $page = (int) $input->getOption('page');
-        
-        $products = $this->getProducts($context, $page);
-        
-        if ($products->count() === 0) {
-            $output->writeln('No active products found for price update');
-            return Command::SUCCESS;
-        }
+
+        $this->logger->info('Starting price update process', ['page' => $page]);
 
         try {
-            $this->priceUpdateService->updatePrices($products->getElements(), $context);
+            $products = $this->getProducts($context, $page);
+
+            $this->priceUpdateService->updatePrices($products = $products->getElements(), $context);
+
             $output->writeln('Price update completed successfully');
+            $this->logger->info('Price update successfully completed', ['page' => $page]);
+
             return Command::SUCCESS;
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
+            $this->logger->error('Error updating prices', [
+                'message' => $e->getMessage(),
+                'exception' => $e
+            ]);
+
             $output->writeln('Error updating prices: ' . $e->getMessage());
+
             return Command::FAILURE;
         }
     }
 
-    private function getProducts(Context $context, int $page): EntitySearchResult
+    private function getProducts(int $page, \Shopware\Core\Framework\Context $context): \Shopware\Core\Framework\DataAbstractionLayer\Search\EntitySearchResult
     {
-        $criteria = new Criteria();
-        $criteria->addAssociation('product');
-        $criteria->addFilter(new EqualsFilter('active', true));
+        $criteria = new \Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria();
         $criteria->setLimit(20);
         $criteria->setOffset(($page - 1) * 20);
-        
+
         return $this->preishoheitProductRepository->search($criteria, $context);
     }
 }

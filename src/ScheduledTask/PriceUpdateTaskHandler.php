@@ -2,36 +2,34 @@
 
 namespace BOW\Preishoheit\ScheduledTask;
 
-use BOW\Preishoheit\Service\PreishoheitApi\PriceUpdateService;
-use BOW\Preishoheit\Service\ErrorHandling\ErrorLogger;
+use Psr\Log\LoggerInterface;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
 use Shopware\Core\Framework\MessageQueue\ScheduledTask\ScheduledTaskHandler;
+use Shopware\Core\Framework\DataAbstractionLayer\Search\EntitySearchResult;
 use Shopware\Core\System\SystemConfig\SystemConfigService;
-use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
-#[AsMessageHandler(handles: PriceUpdateTask::class)]
 class PriceUpdateTaskHandler extends ScheduledTaskHandler
 {
     private PriceUpdateService $priceUpdateService;
     private EntityRepository $preishoheitProductRepository;
     private SystemConfigService $systemConfigService;
-    private ErrorLogger $errorLogger;
+    private LoggerInterface $logger;
 
     public function __construct(
         EntityRepository $scheduledTaskRepository,
         PriceUpdateService $priceUpdateService,
         EntityRepository $preishoheitProductRepository,
         SystemConfigService $systemConfigService,
-        ErrorLogger $errorLogger
+        LoggerInterface $logger
     ) {
         parent::__construct($scheduledTaskRepository);
         $this->priceUpdateService = $priceUpdateService;
         $this->preishoheitProductRepository = $preishoheitProductRepository;
         $this->systemConfigService = $systemConfigService;
-        $this->errorLogger = $errorLogger;
+        $this->logger = $logger;
     }
 
     public static function getHandledMessages(): iterable
@@ -42,7 +40,9 @@ class PriceUpdateTaskHandler extends ScheduledTaskHandler
     public function run(): void
     {
         $context = Context::createDefaultContext();
-        
+
+        $this->logger->info('Scheduled price update started.');
+
         try {
             $page = 1;
             do {
@@ -58,15 +58,16 @@ class PriceUpdateTaskHandler extends ScheduledTaskHandler
             $interval = $this->systemConfigService->get('BOWPreishoheit.config.updateInterval') ?? PriceUpdateTask::getDefaultInterval();
             $this->updateNextExecutionTime($interval);
 
-            $this->errorLogger->info('Scheduled price update completed successfully', [
-                'productCount' => $products->count(),
-                'interval' => $interval
+            $this->logger->info('Scheduled price update completed successfully', [
+                'pages_processed' => $page - 1,
             ]);
-        } catch (\Exception $e) {
-            $this->errorLogger->error('Error during scheduled price update: ' . $e->getMessage(), [
-                'exception' => get_class($e),
-                'trace' => $e->getTraceAsString()
+
+        } catch (\Throwable $e) {
+            $this->logger->error('Error during scheduled price update', [
+                'message' => $e->getMessage(),
+                'exception' => $e
             ]);
+
             throw $e;
         }
     }
@@ -80,12 +81,5 @@ class PriceUpdateTaskHandler extends ScheduledTaskHandler
         $criteria->setOffset(($page - 1) * 20);
         
         return $this->preishoheitProductRepository->search($criteria, $context);
-    }
-
-    private function updateNextExecutionTime(int $interval): void
-    {
-        $this->taskEntity->setNextExecutionTime(
-            (new \DateTime())->modify(sprintf('+%d seconds', $interval))
-        );
     }
 }
