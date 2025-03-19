@@ -1,6 +1,5 @@
 import './page/bow-preishoheit-list';
 import './page/bow-preishoheit-detail';
-import './component/price-history';
 import './component/settings';
 import './component/history';
 import './component/errors';
@@ -62,14 +61,6 @@ Shopware.Module.register('bow-preishoheit', {
                 }
             }
         },
-        priceHistory: {
-            component: 'bow-preishoheit-price-history',
-            path: 'price-history',
-            meta: {
-                parentPath: 'bow.preishoheit.list',
-                privilege: 'bow_preishoheit.viewer'
-            }
-        }
     },
 
     acl: {
@@ -77,7 +68,6 @@ Shopware.Module.register('bow-preishoheit', {
             privileges: [
                 'product:read',
                 'bow_preishoheit_product:read',
-                'bow_preishoheit_price_history:read',
                 'bow_preishoheit_error_log:read'
             ],
             dependencies: []
@@ -101,14 +91,6 @@ Shopware.Module.register('bow-preishoheit', {
         icon: 'regular-shopping-bag',
         parent: 'sw-catalogue',
         position: 100,
-        privilege: 'bow_preishoheit.viewer'
-    }, {
-        label: 'bow-preishoheit.general.priceHistoryMenuItem',
-        color: '#ff3d58',
-        path: 'bow.preishoheit.priceHistory',
-        icon: 'regular-clock',
-        parent: 'sw-catalogue',
-        position: 110,
         privilege: 'bow_preishoheit.viewer'
     }]
 });
