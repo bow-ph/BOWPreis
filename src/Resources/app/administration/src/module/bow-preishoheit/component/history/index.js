@@ -1,13 +1,15 @@
 import template from './history.html.twig';
 
-const { Component } = Shopware;
+const { Component, Mixin } = Shopware;
 const { Criteria } = Shopware.Data;
 
-export default {
+Component.register('bow-preishoheit-history', {
     template,
 
-    inject: [
-        'repositoryFactory'
+    inject: ['repositoryFactory'],
+
+    mixins: [
+        Mixin.getByName('notification')
     ],
 
     props: {
@@ -19,11 +21,13 @@ export default {
 
     data() {
         return {
+            history: [],
             isLoading: false,
-            priceHistory: [],
-            total: 0,
             page: 1,
-            limit: 25
+            limit: 25,
+            total: 0,
+            sortBy: 'createdAt',
+            sortDirection: 'DESC'
         };
     },
 
@@ -32,22 +36,39 @@ export default {
             return this.repositoryFactory.create('bow_preishoheit_price_history');
         },
 
-        priceHistoryColumns() {
-            return [{
-                property: 'ean',
-                label: this.$tc('bow-preishoheit.detail.columnEan'),
-                primary: true
-            }, {
-                property: 'oldPrice',
-                label: this.$tc('bow-preishoheit.detail.columnOldPrice')
-            }, {
-                property: 'newPrice',
-                label: this.$tc('bow-preishoheit.detail.columnNewPrice')
-            }, {
-                property: 'createdAt',
-                label: this.$tc('bow-preishoheit.detail.columnDate')
-            }];
+        columns() {
+            return [
+                {
+                    property: 'ean',
+                    label: this.$tc('bow-preishoheit.history.columnEan'),
+                    primary: true
+                },
+                {
+                    property: 'oldPrice',
+                    label: this.$tc('bow-preishoheit.history.columnOldPrice')
+                },
+                {
+                    property: 'newPrice',
+                    label: this.$tc('bow-preishoheit.history.columnNewPrice')
+                },
+                {
+                    property: 'createdAt',
+                    label: this.$tc('bow-preishoheit.history.columnDateTime')
+                }
+            ];
         }
+    },
+
+    data() {
+        return {
+            history: [],
+            isLoading: false,
+            page: 1,
+            limit: 25,
+            total: 0,
+            sortBy: 'createdAt',
+            sortDirection: 'DESC'
+        };
     },
 
     created() {
@@ -60,12 +81,18 @@ export default {
 
             const criteria = new Criteria(this.page, this.limit);
             criteria.addFilter(Criteria.equals('productId', this.product.id));
-            criteria.addSorting(Criteria.sort('createdAt', 'DESC'));
+            criteria.addSorting(Criteria.sort(this.sortBy, this.sortDirection));
 
-            return this.priceHistoryRepository.search(criteria)
-                .then(({ items, total }) => {
-                    this.priceHistory = items;
-                    this.total = total;
+            return this.priceHistoryRepository.search(criteria, Shopware.Context.api)
+                .then(result => {
+                    this.history = result.items;
+                    this.total = result.total;
+                })
+                .catch(error => {
+                    this.createNotificationError({
+                        title: this.$tc('bow-preishoheit.history.errorTitle'),
+                        message: error.message || this.$tc('bow-preishoheit.history.loadError')
+                    });
                 })
                 .finally(() => {
                     this.isLoading = false;
@@ -76,6 +103,18 @@ export default {
             this.page = page;
             this.limit = limit;
             this.loadPriceHistory();
+        },
+
+        onSort({ sortBy, sortDirection }) {
+            this.sortBy = sortBy;
+            this.sortDirection = sortDirection;
+            this.loadPriceHistory();
+        },
+
+        getPriceClass(item) {
+            if (item.newPrice <= 0) return 'price--error';
+            if (item.newPrice < item.oldPrice * 0.5) return 'price--warning';
+            return '';
         }
     }
-};
+});

@@ -1,19 +1,20 @@
 {% block bow_preishoheit_bulk_edit %}
     <div class="bow-preishoheit-bulk-edit">
-        <sw-card>
+        <sw-card :title="$tc('bow-preishoheit.bulk.cardTitle')">
             <template #toolbar>
                 <div class="bulk-edit-actions">
                     <sw-button
-                        :disabled="!selectedItems.length"
                         variant="primary"
                         size="small"
+                        :disabled="!selectedItems.length"
                         @click="onBulkEditClick">
                         {{ $tc('bow-preishoheit.bulk.editSelected', selectedItems.length) }}
                     </sw-button>
+
                     <sw-button
-                        :disabled="!selectedItems.length"
-                        variant="danger"
+                        variant="ghost"
                         size="small"
+                        :disabled="!selectedItems.length"
                         @click="onClearSelection">
                         {{ $tc('bow-preishoheit.bulk.clearSelection') }}
                     </sw-button>
@@ -27,14 +28,28 @@
                 :showSelection="true"
                 :allowColumnSort="true"
                 :isLoading="isLoading"
+                :sortBy="sortBy"
+                :sortDirection="sortDirection"
+                :page="page"
+                :limit="limit"
+                :total="total"
                 @selection-change="onSelectionChange"
                 @page-change="onPageChange"
                 @sort-change="onSort">
-                <template #column-price="{ item }">
+
+                <template #cell-price="{ item }">
                     {{ item.price | currency }}
                 </template>
-                <template #column-surchargePercentage="{ item }">
-                    {{ item.surchargePercentage }}%
+
+                <template #cell-preishoheitProduct.surchargePercentage="{ item }">
+                    {{ item.preishoheitProduct ? item.preishoheitProduct.surchargePercentage : '0' }}%
+                </template>
+
+                <template #empty-state>
+                    <sw-empty-state
+                        :title="$tc('bow-preishoheit.bulk.emptyStateTitle')"
+                        :subtitle="$tc('bow-preishoheit.bulk.emptyStateSubtitle')">
+                    </sw-empty-state>
                 </template>
             </sw-data-grid>
         </sw-card>
@@ -43,10 +58,11 @@
             v-if="showBulkEditModal"
             :title="$tc('bow-preishoheit.bulk.modalTitle')"
             @modal-close="onCloseBulkEditModal">
+
             <div v-if="isSaving" class="bulk-processing-status">
                 <sw-progress-bar
                     :value="(processingStatus.processed / processingStatus.total) * 100"
-                    :text="$tc('bow-preishoheit.bulk.processingStatus', 0, { 
+                    :text="$tc('bow-preishoheit.bulk.processingStatus', 0, {
                         processed: processingStatus.processed,
                         total: processingStatus.total,
                         success: processingStatus.success,
@@ -54,6 +70,7 @@
                     })">
                 </sw-progress-bar>
             </div>
+
             <div v-else class="bulk-edit-form">
                 <sw-select-field
                     v-model="bulkEditData.adjustmentType"
@@ -71,21 +88,21 @@
             </div>
 
             <template #modal-footer>
-                <div class="bulk-edit-footer">
-                    <sw-button
-                        size="small"
-                        @click="onCloseBulkEditModal">
-                        {{ $tc('bow-preishoheit.general.cancel') }}
-                    </sw-button>
-                    <sw-button
-                        variant="primary"
-                        size="small"
-                        :disabled="!isValidBulkEdit"
-                        :isLoading="isSaving"
-                        @click="onSaveBulkEdit">
-                        {{ $tc('bow-preishoheit.bulk.save') }}
-                    </sw-button>
-                </div>
+                <sw-button
+                    variant="ghost"
+                    size="small"
+                    @click="onCloseBulkEditModal">
+                    {{ $tc('global.default.cancel') }}
+                </sw-button>
+
+                <sw-button-process
+                    variant="primary"
+                    size="small"
+                    :disabled="!isValidBulkEdit"
+                    :isLoading="isSaving"
+                    @click="onSaveBulkEdit">
+                    {{ $tc('bow-preishoheit.bulk.save') }}
+                </sw-button-process>
             </template>
         </sw-modal>
     </div>

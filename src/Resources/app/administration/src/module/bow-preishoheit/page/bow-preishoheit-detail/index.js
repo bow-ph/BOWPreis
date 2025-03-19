@@ -1,13 +1,16 @@
 import template from './bow-preishoheit-detail.html.twig';
-
-const { Component } = Shopware;
+import { Component, Mixin } from 'src/core/shopware';
 const { Criteria } = Shopware.Data;
 
-export default {
+Component.register('bow-preishoheit-detail', {
     template,
 
     inject: [
         'repositoryFactory'
+    ],
+
+    mixins: [
+        Mixin.getByName('notification')
     ],
 
     props: {
@@ -52,13 +55,13 @@ export default {
             const criteria = new Criteria();
             criteria.addAssociation('product');
 
-            return this.productRepository.get(this.productId, Shopware.Context.api, criteria)
+            this.productRepository.get(this.productId, Shopware.Context.api, criteria)
                 .then((product) => {
                     this.product = product;
-                    return this.loadPriceHistory();
-                })
-                .then(() => {
-                    return this.loadErrorLogs();
+                    return Promise.all([
+                        this.loadPriceHistory(),
+                        this.loadErrorLogs()
+                    ]);
                 })
                 .finally(() => {
                     this.isLoading = false;
@@ -91,15 +94,20 @@ export default {
 
         onSave() {
             this.isLoading = true;
+            this.isSaveSuccessful = false;
 
             return this.productRepository.save(this.product, Shopware.Context.api)
                 .then(() => {
                     this.isSaveSuccessful = true;
+                    this.createNotificationSuccess({
+                        title: this.$tc('global.default.success'),
+                        message: this.$tc('global.notification.saveSuccess')
+                    });
                 })
                 .catch((error) => {
                     this.createNotificationError({
                         title: this.$tc('global.default.error'),
-                        message: error.message
+                        message: error.message || this.$tc('global.notification.saveError')
                     });
                 })
                 .finally(() => {
@@ -107,4 +115,4 @@ export default {
                 });
         }
     }
-};
+});

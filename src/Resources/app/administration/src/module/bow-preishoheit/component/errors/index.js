@@ -3,12 +3,10 @@ import template from './errors.html.twig';
 const { Component } = Shopware;
 const { Criteria } = Shopware.Data;
 
-export default {
+Component.register('bow-preishoheit-errors', {
     template,
 
-    inject: [
-        'repositoryFactory'
-    ],
+    inject: ['repositoryFactory'],
 
     props: {
         product: {
@@ -19,11 +17,13 @@ export default {
 
     data() {
         return {
+            errors: [],
             isLoading: false,
-            errorLogs: [],
             total: 0,
             page: 1,
-            limit: 25
+            limit: 25,
+            sortBy: 'createdAt',
+            sortDirection: 'DESC'
         };
     },
 
@@ -32,18 +32,22 @@ export default {
             return this.repositoryFactory.create('bow_preishoheit_error_log');
         },
 
-        errorLogColumns() {
-            return [{
-                property: 'errorType',
-                label: this.$tc('bow-preishoheit.detail.columnErrorType'),
-                primary: true
-            }, {
-                property: 'errorMessage',
-                label: this.$tc('bow-preishoheit.detail.columnErrorMessage')
-            }, {
-                property: 'createdAt',
-                label: this.$tc('bow-preishoheit.detail.columnDate')
-            }];
+        columns() {
+            return [
+                {
+                    property: 'errorType',
+                    label: this.$tc('bow-preishoheit.errors.columnErrorType'),
+                    primary: true
+                },
+                {
+                    property: 'errorMessage',
+                    label: this.$tc('bow-preishoheit.errors.columnErrorMessage')
+                },
+                {
+                    property: 'createdAt',
+                    label: this.$tc('bow-preishoheit.errors.columnDate')
+                }
+            ];
         }
     },
 
@@ -57,12 +61,12 @@ export default {
 
             const criteria = new Criteria(this.page, this.limit);
             criteria.addFilter(Criteria.equals('productId', this.product.id));
-            criteria.addSorting(Criteria.sort('createdAt', 'DESC'));
+            criteria.addSorting(Criteria.sort(this.sortBy, 'DESC'));
 
-            return this.errorLogRepository.search(criteria)
-                .then(({ items, total }) => {
-                    this.errorLogs = items;
-                    this.total = total;
+            return this.errorLogRepository.search(criteria, Shopware.Context.api)
+                .then(result => {
+                    this.errors = result.items;
+                    this.total = result.total;
                 })
                 .finally(() => {
                     this.isLoading = false;
@@ -73,6 +77,36 @@ export default {
             this.page = page;
             this.limit = limit;
             this.loadErrorLogs();
+        },
+
+        onSort({ sortBy, sortDirection }) {
+            this.sortBy = sortBy;
+            this.sortDirection = sortDirection;
+            this.loadErrorLogs();
+        }
+    },
+
+    computed: {
+        errorLogRepository() {
+            return this.repositoryFactory.create('bow_preishoheit_error_log');
+        },
+
+        columns() {
+            return [
+                {
+                    property: 'errorType',
+                    label: this.$tc('bow-preishoheit.errors.columnErrorType'),
+                    primary: true
+                },
+                {
+                    property: 'errorMessage',
+                    label: this.$tc('bow-preishoheit.errors.columnErrorMessage')
+                },
+                {
+                    property: 'createdAt',
+                    label: this.$tc('bow-preishoheit.errors.columnDateTime')
+                }
+            ];
         }
     }
-};
+});

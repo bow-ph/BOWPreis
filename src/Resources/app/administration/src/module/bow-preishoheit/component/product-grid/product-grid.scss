@@ -4,8 +4,12 @@
     }
 
     .sw-entity-listing {
-        .sw-field--switch {
-            margin: 0;
+        .sw-data-grid__cell {
+            vertical-align: middle;
+        }
+
+        .sw-switch-field {
+            margin-bottom: 0;
         }
     }
 }

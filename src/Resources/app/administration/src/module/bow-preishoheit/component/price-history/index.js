@@ -1,7 +1,7 @@
 import template from './price-history.html.twig';
 import './price-history.scss';
 
-const { Component, Mixin } = Shopware;
+const { Component, Mixin, Application } = Shopware;
 const { Criteria } = Shopware.Data;
 
 Component.register('bow-preishoheit-price-history', {
@@ -17,7 +17,7 @@ Component.register('bow-preishoheit-price-history', {
 
     data() {
         return {
-            history: [],
+            historyItems: [],
             isLoading: false,
             page: 1,
             limit: 25,
@@ -33,12 +33,7 @@ Component.register('bow-preishoheit-price-history', {
             columns: [
                 {
                     property: 'ean',
-                    label: this.$tc('bow-preishoheit.history.columnEan'),
-                    primary: true
-                },
-                {
-                    property: 'productName',
-                    label: this.$tc('bow-preishoheit.history.columnProductName')
+                    label: this.$tc('bow-preishoheit.history.columnEan')
                 },
                 {
                     property: 'oldPrice',
@@ -61,8 +56,16 @@ Component.register('bow-preishoheit-price-history', {
             return this.repositoryFactory.create('bow_preishoheit_price_history');
         },
 
-        priceHistoryCriteria() {
+        historyCriteria() {
             const criteria = new Criteria(this.page, this.limit);
+
+            if (this.dateRange.start || this.dateRange.end) {
+                criteria.addFilter(Criteria.range('createdAt', {
+                    gte: this.dateRange.start,
+                    lte: this.dateRange.end
+                }));
+            }
+
             criteria.addSorting(Criteria.sort(this.sortBy, this.sortDirection));
             return criteria;
         }
@@ -76,29 +79,15 @@ Component.register('bow-preishoheit-price-history', {
         loadHistory() {
             this.isLoading = true;
 
-            const criteria = this.priceHistoryCriteria;
-            
-            if (this.dateRange.start) {
-                criteria.addFilter(Criteria.range('createdAt', {
-                    gte: this.dateRange.start
-                }));
-            }
-            
-            if (this.dateRange.end) {
-                criteria.addFilter(Criteria.range('createdAt', {
-                    lte: this.dateRange.end
-                }));
-            }
-
-            return this.priceHistoryRepository.search(criteria)
-                .then((result) => {
-                    this.history = result.items;
+            return this.priceHistoryRepository.search(this.historyCriteria, Shopware.Context.api)
+                .then(result => {
+                    this.priceHistory = result.items;
                     this.total = result.total;
                 })
-                .catch((error) => {
+                .catch(error => {
                     this.createNotificationError({
                         title: this.$tc('bow-preishoheit.history.errorTitle'),
-                        message: error.message
+                        message: error.message || this.$tc('bow-preishoheit.history.loadError')
                     });
                 })
                 .finally(() => {
@@ -112,56 +101,34 @@ Component.register('bow-preishoheit-price-history', {
             this.loadHistory();
         },
 
-        onSort({ sortBy, sortDirection }) {
-            this.sortBy = sortBy;
-            this.sortDirection = sortDirection;
-            this.loadHistory();
-        },
-
         onDateRangeChange() {
+            this.page = 1;
             this.loadHistory();
         },
 
         getPriceClass(item) {
-            if (item.newPrice <= 0) {
-                return 'price--error';
-            }
-            if (item.newPrice < item.oldPrice * 0.5) {
-                return 'price--warning';
-            }
+            if (item.newPrice <= 0) return 'price--error';
+            if (item.newPrice < item.oldPrice * 0.5) return 'price--warning';
             return '';
         },
 
-        onExportClick() {
-            this.showExportModal = true;
-        },
-
-        onCloseExportModal() {
-            this.showExportModal = false;
-            this.isExporting = false;
-        },
-
-        async onConfirmExport() {
+        async onExportClick() {
             this.isExporting = true;
 
             try {
-                const response = await this.$http.post(
-                    `${this.getApplicationRootPath()}/api/_action/bow-preishoheit/export-history`,
-                    {
-                        dateRange: this.dateRange
-                    },
-                    {
-                        responseType: 'blob'
-                    }
+                const response = await Application.getContainer('init').httpClient.post(
+                    '/_action/bow-preishoheit/export-history',
+                    { dateRange: this.dateRange },
+                    { responseType: 'blob' }
                 );
 
                 const url = window.URL.createObjectURL(new Blob([response.data]));
                 const link = document.createElement('a');
                 link.href = url;
-                link.setAttribute('download', 'price-history.csv');
+                link.setAttribute('download', 'price-history-export.csv');
                 document.body.appendChild(link);
                 link.click();
-                document.body.removeChild(link);
+                window.URL.revokeObjectURL(url);
 
                 this.createNotificationSuccess({
                     title: this.$tc('bow-preishoheit.history.exportSuccessTitle'),
@@ -170,11 +137,10 @@ Component.register('bow-preishoheit-price-history', {
             } catch (error) {
                 this.createNotificationError({
                     title: this.$tc('bow-preishoheit.history.exportErrorTitle'),
-                    message: error.response?.data?.message || this.$tc('bow-preishoheit.history.exportError')
+                    message: error.message || this.$tc('bow-preishoheit.history.exportError')
                 });
             } finally {
                 this.isExporting = false;
-                this.showExportModal = false;
             }
         }
     }

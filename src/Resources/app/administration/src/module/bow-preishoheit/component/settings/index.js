@@ -1,7 +1,7 @@
 import template from './settings.html.twig';
 import './settings.scss';
 
-const { Component, Mixin } = Shopware;
+const { Component, Mixin, Application } = Shopware;
 
 Component.register('bow-preishoheit-settings', {
     template,
@@ -37,8 +37,8 @@ Component.register('bow-preishoheit-settings', {
             this.isUpdating = true;
 
             try {
-                await this.$http.post(
-                    `${this.getApplicationRootPath()}/api/_action/bow-preishoheit/update-prices`
+                await Application.getContainer('init').httpClient.post(
+                    '/_action/bow-preishoheit/update-prices'
                 );
 
                 this.createNotificationSuccess({

@@ -4,7 +4,7 @@ const { Component, Mixin } = Shopware;
 const { Criteria } = Shopware.Data;
 const { Uuid } = Shopware.Utils;
 
-export default {
+Component.register('bow-preishoheit-product-grid', {
     template,
 
     inject: [
@@ -27,26 +27,32 @@ export default {
             sortBy: 'name',
             sortDirection: 'ASC',
             term: '',
-            columns: [{
-                property: 'name',
-                label: this.$tc('bow-preishoheit.grid.columnProduct'),
-                primary: true,
-                routerLink: 'sw.product.detail'
-            }, {
-                property: 'productNumber',
-                label: this.$tc('bow-preishoheit.grid.columnProductNumber')
-            }, {
-                property: 'ean',
-                label: this.$tc('bow-preishoheit.grid.columnEan')
-            }, {
-                property: 'preishoheitProduct.surchargePercentage',
-                label: this.$tc('bow-preishoheit.grid.columnSurcharge'),
-                inlineEdit: 'number'
-            }, {
-                property: 'preishoheitProduct.active',
-                label: this.$tc('bow-preishoheit.grid.columnActive'),
-                inlineEdit: 'boolean'
-            }]
+            columns: [
+                {
+                    property: 'name',
+                    label: this.$tc('bow-preishoheit.grid.columnProduct'),
+                    primary: true,
+                    routerLink: 'sw.product.detail'
+                },
+                {
+                    property: 'productNumber',
+                    label: this.$tc('bow-preishoheit.grid.columnProductNumber')
+                },
+                {
+                    property: 'ean',
+                    label: this.$tc('bow-preishoheit.grid.columnEan')
+                },
+                {
+                    property: 'preishoheitProduct.surchargePercentage',
+                    label: this.$tc('bow-preishoheit.grid.columnSurcharge'),
+                    inlineEdit: 'number'
+                },
+                {
+                    property: 'preishoheitProduct.active',
+                    label: this.$tc('bow-preishoheit.grid.columnActive'),
+                    inlineEdit: 'boolean'
+                }
+            ]
         };
     },
 
@@ -70,19 +76,19 @@ export default {
 
             const criteria = new Criteria(this.page, this.limit);
             criteria.addAssociation('preishoheitProduct');
-            
+
             if (this.term) {
                 criteria.setTerm(this.term);
             }
 
             criteria.addSorting(Criteria.sort(this.sortBy, this.sortDirection));
 
-            return this.productRepository.search(criteria)
-                .then((result) => {
+            return this.productRepository.search(criteria, Shopware.Context.api)
+                .then(result => {
                     this.availableProducts = result.items;
                     this.total = result.total;
                 })
-                .catch((error) => {
+                .catch(error => {
                     this.createNotificationError({
                         title: this.$tc('bow-preishoheit.grid.errorTitle'),
                         message: error.message
@@ -116,7 +122,7 @@ export default {
                 if (!product.preishoheitProduct) {
                     await this.createPreishoheitProduct(product);
                 } else {
-                    await this.preishoheitProductRepository.save(product.preishoheitProduct);
+                    await this.preishoheitProductRepository.save(product.preishoheitProduct, Shopware.Context.api);
                 }
 
                 this.createNotificationSuccess({
@@ -126,7 +132,7 @@ export default {
             } catch (error) {
                 this.createNotificationError({
                     title: this.$tc('bow-preishoheit.grid.errorTitle'),
-                    message: error.message
+                    message: error.message || this.$tc('bow-preishoheit.grid.saveError')
                 });
             }
         },
@@ -136,13 +142,13 @@ export default {
         },
 
         async createPreishoheitProduct(product) {
-            const preishoheitProduct = this.preishoheitProductRepository.create();
+            const preishoheitProduct = this.preishoheitProductRepository.create(Shopware.Context.api);
             preishoheitProduct.id = Uuid.randomHex();
             preishoheitProduct.productId = product.id;
             preishoheitProduct.active = true;
             preishoheitProduct.surchargePercentage = 0;
-            
-            await this.preishoheitProductRepository.save(preishoheitProduct);
+
+            await this.preishoheitProductRepository.save(preishoheitProduct, Shopware.Context.api);
             await this.loadProducts();
         },
 
@@ -161,7 +167,7 @@ export default {
             });
 
             this.isLoading = true;
-            return this.preishoheitProductRepository.sync(newProducts)
+            return this.preishoheitProductRepository.sync(newProducts, Shopware.Context.api)
                 .then(() => {
                     this.createNotificationSuccess({
                         title: this.$tc('bow-preishoheit.grid.successTitle'),
@@ -169,10 +175,10 @@ export default {
                     });
                     this.loadProducts();
                 })
-                .catch((error) => {
+                .catch(error => {
                     this.createNotificationError({
                         title: this.$tc('bow-preishoheit.grid.errorTitle'),
-                        message: error.message
+                        message: error.message || this.$tc('bow-preishoheit.grid.saveError')
                     });
                 })
                 .finally(() => {
@@ -180,4 +186,4 @@ export default {
                 });
         }
     }
-};
+});

@@ -1,15 +1,26 @@
 {% block bow_preishoheit_errors %}
     <div class="bow-preishoheit-errors">
-        <sw-card :title="$tc('bow-preishoheit.detail.errorsTitle')" :isLoading="isLoading">
+        <sw-card :title="$tc('bow-preishoheit.errors.cardTitle')" :isLoading="isLoading">
             <sw-data-grid
-                :dataSource="errorLogs"
-                :columns="errorLogColumns"
+                :dataSource="history"
+                :columns="columns"
+                :isLoading="isLoading"
                 :showSettings="true"
                 :showSelection="false"
-                :allowInlineEdit="false"
-                :allowColumnEdit="false"
-                :isLoading="isLoading"
-                @page-change="onPageChange">
+                :sortBy="sortBy"
+                :sortDirection="sortDirection"
+                :page="page"
+                :limit="limit"
+                :total="total"
+                @page-change="onPageChange"
+                @sort-column="onSort">
+
+                <template #empty-state>
+                    <sw-empty-state
+                        :title="$tc('bow-preishoheit.errors.emptyStateTitle')"
+                        :subtitle="$tc('bow-preishoheit.errors.emptyStateSubtitle')">
+                    </sw-empty-state>
+                </template>
             </sw-data-grid>
         </sw-card>
     </div>

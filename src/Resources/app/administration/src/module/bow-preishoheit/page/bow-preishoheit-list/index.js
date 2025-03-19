@@ -3,7 +3,7 @@ import template from './bow-preishoheit-list.html.twig';
 const { Component } = Shopware;
 const { Criteria } = Shopware.Data;
 
-export default {
+Component.register('bow-preishoheit-list', {
     template,
 
     inject: [
@@ -14,8 +14,8 @@ export default {
         return {
             isLoading: false,
             products: null,
-            total: 0,
-            criteria: new Criteria(1, 25)
+            criteria: new Criteria(),
+            total: 0
         };
     },
 
@@ -25,38 +25,50 @@ export default {
         },
 
         productColumns() {
-            return [{
-                property: 'product.name',
-                label: this.$tc('bow-preishoheit.list.columnProductName'),
-                routerLink: 'bow.preishoheit.detail',
-                primary: true
-            }, {
-                property: 'product.ean',
-                label: this.$tc('bow-preishoheit.list.columnEan')
-            }, {
-                property: 'surchargePercentage',
-                label: this.$tc('bow-preishoheit.list.columnSurcharge')
-            }, {
-                property: 'discountPercentage',
-                label: this.$tc('bow-preishoheit.list.columnDiscount')
-            }, {
-                property: 'updatedAt',
-                label: this.$tc('bow-preishoheit.list.columnLastUpdate')
-            }];
+            return [
+                {
+                    property: 'product.name',
+                    label: this.$tc('bow-preishoheit.list.columnProductName'),
+                    routerLink: 'bow.preishoheit.detail',
+                    primary: true
+                },
+                {
+                    property: 'product.ean',
+                    label: this.$tc('bow-preishoheit.list.columnEan')
+                },
+                {
+                    property: 'product.price',
+                    label: this.$tc('bow-preishoheit.list.columnPrice')
+                },
+                {
+                    property: 'synchronizedAt',
+                    label: this.$tc('bow-preishoheit.list.columnLastUpdate')
+                }
+            ];
         }
     },
 
+    data() {
+        return {
+            isLoading: false,
+            products: [],
+            criteria: new Criteria(1, 25),
+            total: 0
+        };
+    },
+
     created() {
-        this.getList();
+        this.loadProducts();
     },
 
     methods: {
-        getList() {
+        loadProducts() {
             this.isLoading = true;
 
             this.criteria.addAssociation('product');
 
-            return this.productRepository.search(this.criteria)
+            this.repositoryFactory.create('bow_preishoheit_product')
+                .search(this.criteria, Shopware.Context.api)
                 .then(({ items, total }) => {
                     this.products = items;
                     this.total = total;
@@ -64,10 +76,10 @@ export default {
                 .finally(() => {
                     this.isLoading = false;
                 });
-        },
+    },
 
-        onRefresh() {
-            this.getList();
+        refreshList() {
+            this.loadProducts();
         }
     }
-};
+});

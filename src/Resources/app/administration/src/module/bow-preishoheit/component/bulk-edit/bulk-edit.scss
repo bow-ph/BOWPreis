@@ -3,14 +3,14 @@
         margin-bottom: 20px;
     }
 
-    .bulk-edit-actions {
+    &__actions {
         display: flex;
         align-items: center;
         gap: 16px;
         margin-bottom: 16px;
     }
 
-    .bulk-processing-status {
+    &__processing-status {
         padding: 24px;
         text-align: center;
 
@@ -19,7 +19,7 @@
         }
     }
 
-    .bulk-edit-form {
+    &__form {
         max-width: 600px;
         margin: 0 auto;
 
@@ -28,16 +28,16 @@
         }
     }
 
-    .sw-data-grid {
-        .sw-data-grid__cell--selection {
-            width: 42px;
-        }
-    }
-
-    .bulk-edit-footer {
+    &__footer {
         display: flex;
         justify-content: flex-end;
         gap: 8px;
         margin-top: 24px;
+    }
+
+    .sw-data-grid {
+        .sw-data-grid__cell--selection {
+            width: 42px;
+        }
     }
 }
