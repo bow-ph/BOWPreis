@@ -22,8 +22,9 @@
         </service>
 
         <!-- Repositories -->
+        <!-- Repository korrekt definiert -->
         <service id="bow_preishoheit_price_history.repository" class="Shopware\Core\Framework\DataAbstractionLayer\EntityRepository">
-            <argument>BOW\Preishoheit\Entity\PriceHistory\PriceHistoryDefinition</argument>
+            <argument type="service" id="BOW\Preishoheit\Entity\PriceHistory\PriceHistoryDefinition"/>
             <argument type="service" id="Shopware\Core\Framework\DataAbstractionLayer\Read\EntityReaderInterface"/>
             <argument type="service" id="Shopware\Core\Framework\DataAbstractionLayer\VersionManager"/>
             <argument type="service" id="Shopware\Core\Framework\DataAbstractionLayer\Search\EntitySearcherInterface"/>
@@ -32,13 +33,14 @@
         </service>
 
         <service id="bow_preishoheit_error_log.repository" class="Shopware\Core\Framework\DataAbstractionLayer\EntityRepository">
-            <argument>BOW\Preishoheit\Entity\ErrorLog\ErrorLogDefinition</argument>
+            <argument type="service" id="BOW\Preishoheit\Entity\ErrorLog\ErrorLogDefinition"/>
             <argument type="service" id="Shopware\Core\Framework\DataAbstractionLayer\Read\EntityReaderInterface"/>
             <argument type="service" id="Shopware\Core\Framework\DataAbstractionLayer\VersionManager"/>
             <argument type="service" id="Shopware\Core\Framework\DataAbstractionLayer\Search\EntitySearcherInterface"/>
             <argument type="service" id="Shopware\Core\Framework\DataAbstractionLayer\Search\EntityAggregatorInterface"/>
             <argument type="service" id="event_dispatcher"/>
         </service>
+
 
         <!-- Core Services -->
         <service id="BOW\Preishoheit\Service\ErrorHandling\ErrorHandler">
