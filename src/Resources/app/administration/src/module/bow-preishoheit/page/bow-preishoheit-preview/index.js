@@ -32,8 +32,14 @@ Component.register('bow-preishoheit-preview', {
             this.systemConfigApiService.getValues('BOWPreishoheit.config')
                 .then((values) => {
                     this.config = values;
-                    this.productGroup = this.config['BOWPreishoheit.config.productGroup'];
-                    this.selectedCountries = this.config['BOWPreishoheit.config.countrySelection'];
+                    this.productGroup = this.config['BOWPreishoheit.config.productGroup'] || 'amazon';
+                    this.selectedCountries = this.config['BOWPreishoheit.config.countrySelection'] || [];
+                })
+                .catch(() => {
+                    this.createNotificationError({
+                        title: this.$tc('bow-preishoheit.preview.errorTitle'),
+                        message: this.$tc('bow-preishoheit.preview.configLoadError')
+                    });
                 })
                 .finally(() => {
                     this.isLoading = false;
@@ -41,6 +47,14 @@ Component.register('bow-preishoheit-preview', {
         },
 
         fetchPreviewData() {
+            if (!this.productGroup || !this.selectedCountries.length) {
+                this.createNotificationError({
+                    title: this.$tc('bow-preishoheit.preview.errorTitle'),
+                    message: this.$tc('bow-preishoheit.preview.missingConfigError')
+                });
+                return;
+            }
+
             this.isLoading = true;
 
             const payload = {

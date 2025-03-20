@@ -6,18 +6,26 @@
             </sw-button>
         </template>
 
-        <sw-data-grid
-            :dataSource="previewData"
-            :columns="[
-                { property: 'productName', label: $tc('bow-preishoheit.preview.productName') },
-                { property: 'identifier', label: $tc('bow-preishoheit.preview.identifier') },
-                { property: 'country', label: $tc('bow-preishoheit.preview.country') },
-                { property: 'currentPrice', label: $tc('bow-preishoheit.preview.currentPrice') },
-                { property: 'newPrice', label: $tc('bow-preishoheit.preview.newPrice') },
-                { property: 'difference', label: $tc('bow-preishoheit.preview.difference') }
-            ]"
-            :showSettings="true"
-            :isLoading="isLoading">
-        </sw-data-grid>
+        <template v-if="previewData.length > 0">
+            <sw-data-grid
+                :dataSource="previewData"
+                :columns="[
+                    { property: 'productName', label: $tc('bow-preishoheit.preview.productName') },
+                    { property: 'identifier', label: $tc('bow-preishoheit.preview.identifier') },
+                    { property: 'country', label: $tc('bow-preishoheit.preview.country') },
+                    { property: 'currentPrice', label: $tc('bow-preishoheit.preview.currentPrice') },
+                    { property: 'newPrice', label: $tc('bow-preishoheit.preview.newPrice') },
+                    { property: 'difference', label: $tc('bow-preishoheit.preview.difference') }
+                ]"
+                :showSettings="true"
+                :isLoading="isLoading">
+            </sw-data-grid>
+        </template>
+
+        <template v-else>
+            <sw-empty-state title="{{ $tc('bow-preishoheit.preview.emptyTitle') }}"
+                            subtitle="{{ $tc('bow-preishoheit.preview.emptySubtitle') }}">
+            </sw-empty-state>
+        </template>
     </sw-card>
 </div>

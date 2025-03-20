@@ -87,7 +87,9 @@
             "newPrice": "New Price",
             "difference": "Difference",
             "errorTitle": "Preview Error",
-            "loadError": "Could not load preview data."
+            "loadError": "Could not load preview data.",
+            "emptyTitle": "No data available",
+            "emptySubtitle": "Load the preview to see the price updates."
         }
     }
 }
