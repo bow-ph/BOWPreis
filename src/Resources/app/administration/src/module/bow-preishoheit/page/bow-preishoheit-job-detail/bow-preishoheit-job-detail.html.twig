@@ -27,8 +27,8 @@
 
                         <div v-else-if="isJobFinished">
                             <p>{{ $tc('bow-preishoheit.jobs.statusFinished') }}</p>
-                            <router-link :to="{ name: 'bow.preishoheit.jobDownload', params: { jobId: jobId }}">
-                                {{ $tc('bow-preishoheit.jobs.downloadData') }}
+                            <router-link :to="{ name: 'bow.preishoheit.jobPreview', params: { jobId: jobId }}">
+                                {{ $tc('bow-preishoheit.jobs.showData') }}
                             </router-link>
                         </div>
 
