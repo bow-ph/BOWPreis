@@ -1,6 +1,5 @@
 import './page/bow-preishoheit-list';
 import './page/bow-preishoheit-detail';
-import './page/bow-preishoheit-preview';
 import './page/bow-preishoheit-job-list';
 import './page/bow-preishoheit-job-create';
 
