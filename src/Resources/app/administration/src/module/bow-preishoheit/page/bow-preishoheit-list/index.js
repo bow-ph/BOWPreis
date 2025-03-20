@@ -1,74 +1,92 @@
-import template from './bow-preishoheit-job-list.html.twig';
-
+import template from './bow-preishoheit-list.html.twig';
 const { Component } = Shopware;
+const { Criteria } = Shopware.Data;
 
-Component.register('bow-preishoheit-job-list', {
+Component.register('bow-preishoheit-list', {
     template,
 
-    inject: ['notificationService'],
+    inject: ['repositoryFactory, httpClient'],
 
     data() {
         return {
             isLoading: false,
-            jobs: []
+            products: [],
+            criteria: new Criteria(1, 25),
+            total: 0
         };
     },
 
+    computed: {
+        productRepository() {
+            return this.repositoryFactory.create('bow_preishoheit_product');
+        },
+
+        productColumns() {
+            return [
+                {
+                    property: 'product.name',
+                    label: this.$tc('bow-preishoheit.list.columnProductName'),
+                    routerLink: 'bow.preishoheit.detail',
+                    primary: true
+                },
+                {
+                    property: 'product.ean',
+                    label: this.$tc('bow-preishoheit.list.columnEan')
+                },
+                {
+                    property: 'product.price',
+                    label: this.$tc('bow-preishoheit.list.columnPrice')
+                },
+                {
+                    property: 'synchronizedAt',
+                    label: this.$tc('bow-preishoheit.list.columnLastUpdate')
+                }
+            ];
+        }
+    },
+
     created() {
-        this.loadJobs();
+        this.loadProducts();
     },
 
     methods: {
-        loadJobs() {
+        loadProducts() {
             this.isLoading = true;
+            this.criteria.addAssociation('product');
 
-            const httpClient = Shopware.Service('httpClient');
-
-            if (!httpClient) {
-                this.notificationService.error('httpClient Service ist nicht verfügbar.');
-                this.isLoading = false;
-                return;
-            }
-
-            httpClient.get('/api/bow-preishoheit/jobs')
-                .then(response => {
-                    this.jobs = response.data.data || [];
+            this.productRepository
+                .search(this.criteria, Shopware.Context.api)
+                .then(({ items, total }) => {
+                    this.products = items;
+                    this.total = total;
                 })
-                .catch(error => {
-                    this.notificationService.error(
-                        error.response?.data?.message || error.message
-                    );
+                .catch((error) => {
+                    this.createNotificationError({
+                        title: 'Fehler',
+                        message: error.message
+                    });
                 })
                 .finally(() => {
                     this.isLoading = false;
                 });
         },
 
-        onRefresh() {
-            this.loadJobs();
+        refreshList() {
+            this.loadProducts();
         },
 
-        openJobDetail(item) {
-            this.$router.push({
-                name: 'bow.preishoheit.jobDetail',
-                params: { jobId: item.id }
-            });
+        onPageChange({ page = 1, limit = 25 }) {
+            this.criteria.page = page;
+            this.criteria.limit = limit;
+            this.loadProducts();
         },
 
-        getBadgeVariant(status) {
-            switch (status.toLowerCase()) {
-                case 'finished':
-                case 'success':
-                    return 'success';
-                case 'pending':
-                case 'running':
-                    return 'warning';
-                case 'failed':
-                case 'error':
-                    return 'danger';
-                default:
-                    return 'neutral';
+        onSortColumn({ sortBy, sortDirection }) {
+            this.criteria.resetSorting();
+            if (sortBy) {
+                this.criteria.addSorting(Criteria.sort(sortBy, sortDirection));
             }
+            this.loadProducts();
         }
     }
 });

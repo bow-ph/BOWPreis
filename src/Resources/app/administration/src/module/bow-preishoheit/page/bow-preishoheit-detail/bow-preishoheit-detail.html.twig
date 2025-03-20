@@ -1,0 +1,44 @@
+{% block bow_preishoheit_job_detail %}
+<sw-page class="bow-preishoheit-job-detail">
+    {% block bow_preishoheit_job_detail_smart_bar_header %}
+        <template #smart-bar-header>
+            <h2>{{ $tc('bow-preishoheit.jobs.detailTitle') }}</h2>
+        </template>
+    {% endblock %}
+
+    {% block bow_preishoheit_job_detail_smart_bar_actions %}
+        <template #smart-bar-actions>
+            <sw-button variant="primary" @click="refreshStatus" :isLoading="isLoading">
+                {{ $tc('global.default.refresh') }}
+            </sw-button>
+        </template>
+    {% endblock %}
+
+    {% block bow_preishoheit_job_detail_content %}
+        <template #content>
+            <sw-card-view>
+                <sw-card>
+                    <div v-if="isLoading" class="sw-loader"></div>
+
+                    <template v-else>
+                        <div v-if="isJobPending">
+                            <p>{{ $tc('bow-preishoheit.jobs.statusPending') }}</p>
+                        </div>
+
+                        <div v-else-if="isJobFinished">
+                            <p>{{ $tc('bow-preishoheit.jobs.statusFinished') }}</p>
+                            <router-link :to="{ name: 'bow.preishoheit.jobPreview', params: { jobId: jobId }}">
+                                {{ $tc('bow-preishoheit.jobs.showData') }}
+                            </router-link>
+                        </div>
+
+                        <div v-else-if="isJobFailed">
+                            <p>{{ $tc('bow-preishoheit.jobs.statusFailed') }}</p>
+                        </div>
+                    </template>
+                </sw-card>
+            </sw-card-view>
+        </template>
+    {% endblock %}
+</sw-page>
+{% endblock %}
