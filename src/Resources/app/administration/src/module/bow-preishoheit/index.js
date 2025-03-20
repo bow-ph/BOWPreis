@@ -1,9 +1,5 @@
 import './page/bow-preishoheit-list';
 import './page/bow-preishoheit-detail';
-import './component/settings';
-import './component/history';
-import './component/errors';
-import './component/product-grid';
 import './page/bow-preishoheit-preview';
 import './page/bow-preishoheit-job-list';
 import './page/bow-preishoheit-job-create';
