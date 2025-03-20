@@ -5,7 +5,7 @@ const { Criteria } = Shopware.Data;
 Component.register('bow-preishoheit-list', {
     template,
 
-    inject: ['repositoryFactory, httpClient'],
+    inject: ['repositoryFactory', 'httpClient'],
 
     data() {
         return {

@@ -5,7 +5,7 @@ const { Component, Mixin } = Shopware;
 Component.register('bow-preishoheit-job-list', {
     template,
 
-    inject: ['repositoryFactory, httpClient'],
+    inject: ['repositoryFactory', 'httpClient'],
 
     mixins: [
         Mixin.getByName('notification')
