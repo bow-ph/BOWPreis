@@ -5,7 +5,11 @@ const { Component, Data: { Criteria } } = Shopware;
 Component.register('bow-preishoheit-job-create', {
     template,
 
-    inject: ['systemConfigApiService', 'repositoryFactory'],
+    inject: ['systemConfigApiService', 'repositoryFactory', 'httpClient'],
+
+    mixins: [
+        Shopware.Mixin.getByName('notification')
+    ],
 
     data() {
         return {
@@ -49,7 +53,7 @@ Component.register('bow-preishoheit-job-create', {
             const countryRepo = this.repositoryFactory.create('country');
             countryRepo.search(new Criteria(), Shopware.Context.api)
                 .then(result => {
-                    this.countries = result.map(country => ({
+                    this.countries = result.items.map(country => ({
                         label: country.name,
                         value: country.iso
                     }));
@@ -60,7 +64,7 @@ Component.register('bow-preishoheit-job-create', {
             const dynamicGroupRepo = this.repositoryFactory.create('product_stream');
             dynamicGroupRepo.search(new Criteria(), Shopware.Context.api)
                 .then(result => {
-                    this.dynamicProductGroups = result.map(group => ({
+                    this.dynamicProductGroups = result.items.map(group => ({
                         label: group.name,
                         value: group.id
                     }));
@@ -82,7 +86,7 @@ Component.register('bow-preishoheit-job-create', {
                 dynamicProductGroupId: this.jobData.dynamicProductGroupId
             };
 
-            this.$http.post('/api/_action/bow-preishoheit/jobs/create', payload)
+            this.httpClient.post('/api/_action/bow-preishoheit/jobs/create', payload)
                 .then(response => {
                     this.createNotificationSuccess({
                         title: this.$tc('bow-preishoheit.jobs.successTitle'),
