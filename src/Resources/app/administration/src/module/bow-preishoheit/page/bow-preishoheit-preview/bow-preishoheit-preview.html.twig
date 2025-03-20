@@ -1,31 +1,43 @@
-<div class="bow-preishoheit-price-update-preview">
-    <sw-card>
-        <template #toolbar>
-            <sw-button variant="primary" :isLoading="isLoading" @click="fetchPreviewData">
-                {{ $tc('bow-preishoheit.preview.loadButton') }}
-            </sw-button>
-        </template>
+{% block bow_preishoheit_preview %}
+    <sw-page class="bow-preishoheit-price-update-preview">
+        {% block bow_preishoheit_preview_smart_bar_header %}
+            <template #smart-bar-header>
+                <h2>{{ $tc('bow-preishoheit.general.preview') }}</h2>
+            </template>
+        {% endblock %}
 
-        <template v-if="previewData.length > 0">
-            <sw-data-grid
-                :dataSource="previewData"
-                :columns="[
-                    { property: 'productName', label: $tc('bow-preishoheit.preview.productName') },
-                    { property: 'identifier', label: $tc('bow-preishoheit.preview.identifier') },
-                    { property: 'country', label: $tc('bow-preishoheit.preview.country') },
-                    { property: 'currentPrice', label: $tc('bow-preishoheit.preview.currentPrice') },
-                    { property: 'newPrice', label: $tc('bow-preishoheit.preview.newPrice') },
-                    { property: 'difference', label: $tc('bow-preishoheit.preview.difference') }
-                ]"
-                :showSettings="true"
-                :isLoading="isLoading">
-            </sw-data-grid>
-        </template>
+        {% block bow_preishoheit_preview_smart_bar_actions %}
+            <template #smart-bar-actions>
+                <sw-button variant="primary" :isLoading="isLoading" @click="fetchPreviewData">
+                    {{ $tc('bow-preishoheit.preview.loadButton') }}
+                </sw-button>
+            </template>
+        {% endblock %}
 
-        <template v-else>
-            <sw-empty-state title="{{ $tc('bow-preishoheit.preview.emptyTitle') }}"
-                            subtitle="{{ $tc('bow-preishoheit.preview.emptySubtitle') }}">
-            </sw-empty-state>
-        </template>
-    </sw-card>
-</div>
+        {% block bow_preishoheit_preview_content %}
+            <template #content>
+                <sw-data-grid
+                    v-if="previewData.length > 0"
+                    :dataSource="previewData"
+                    :columns="[
+                        { property: 'productName', label: $tc('bow-preishoheit.preview.productName') },
+                        { property: 'identifier', label: $tc('bow-preishoheit.preview.identifier') },
+                        { property: 'country', label: $tc('bow-preishoheit.preview.country') },
+                        { property: 'currentPrice', label: $tc('bow-preishoheit.preview.currentPrice') },
+                        { property: 'newPrice', label: $tc('bow-preishoheit.preview.newPrice') },
+                        { property: 'difference', label: $tc('bow-preishoheit.preview.difference') }
+                    ]"
+                    :showSettings="true"
+                    :isLoading="isLoading"
+                >
+                </sw-data-grid>
+
+                <sw-empty-state
+                    v-else
+                    :title="$tc('bow-preishoheit.preview.emptyTitle')"
+                    :subtitle="$tc('bow-preishoheit.preview.emptySubtitle')"
+                />
+            </template>
+        {% endblock %}
+    </sw-page>
+{% endblock %}

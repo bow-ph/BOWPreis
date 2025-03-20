@@ -1,34 +1,31 @@
 {% block bow_preishoheit_list %}
     <sw-page class="bow-preishoheit-list">
         {% block bow_preishoheit_list_smart_bar_header %}
-            <template #smart-bar-header>
-                <h2>{{ $tc('bow-preishoheit.list.title') }}</h2>
+            <template slot="smart-bar-header">
+                <h2>{{ $tc('bow-preishoheit.general.mainMenuItemGeneral') }}</h2>
             </template>
         {% endblock %}
 
         {% block bow_preishoheit_list_smart_bar_actions %}
-            <template #smart-bar-actions>
-                <sw-button variant="primary" @click="refreshList">
+            <template slot="smart-bar-actions">
+                <sw-button variant="primary" @click="onRefresh">
                     {{ $tc('global.default.refresh') }}
                 </sw-button>
             </template>
         {% endblock %}
 
         {% block bow_preishoheit_list_content %}
-            <template #content>
+            <template slot="content">
                 <sw-entity-listing
+                    v-if="products"
                     :items="products"
+                    :repository="productRepository"
                     :columns="productColumns"
-                    :repository="repositoryFactory.create('bow_preishoheit_product')"
-                    :isLoading="isLoading"
-                    @refresh="refreshList"
-                >
-                    <template #empty-state>
-                        <sw-empty-state
-                            title="{{ $tc('bow-preishoheit.list.emptyStateTitle') }}"
-                            subtitle="{{ $tc('bow-preishoheit.list.emptyStateSubtitle') }}"
-                        />
-                    </template>
+                    :allowEdit="true"
+                    :allowDelete="true"
+                    @page-change="onPageChange"
+                    @column-sort="onSortColumn"
+                    detailRoute="bow.preishoheit.detail">
                 </sw-entity-listing>
             </template>
         {% endblock %}
