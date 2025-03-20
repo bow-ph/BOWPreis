@@ -22,7 +22,15 @@
         </service>
 
         <!-- Repositories -->
-        <!-- Repository korrekt definiert -->
+        <service id="bow_preishoheit_product.repository" class="Shopware\Core\Framework\DataAbstractionLayer\EntityRepository">
+            <argument type="service" id="BOW\Preishoheit\Entity\Product\PreishoheitProductDefinition"/>
+            <argument type="service" id="Shopware\Core\Framework\DataAbstractionLayer\Read\EntityReaderInterface"/>
+            <argument type="service" id="Shopware\Core\Framework\DataAbstractionLayer\VersionManager"/>
+            <argument type="service" id="Shopware\Core\Framework\DataAbstractionLayer\Search\EntitySearcherInterface"/>
+            <argument type="service" id="Shopware\Core\Framework\DataAbstractionLayer\Search\EntityAggregatorInterface"/>
+            <argument type="service" id="event_dispatcher"/>
+        </service>
+
         <service id="bow_preishoheit_price_history.repository" class="Shopware\Core\Framework\DataAbstractionLayer\EntityRepository">
             <argument type="service" id="BOW\Preishoheit\Entity\PriceHistory\PriceHistoryDefinition"/>
             <argument type="service" id="Shopware\Core\Framework\DataAbstractionLayer\Read\EntityReaderInterface"/>
@@ -41,58 +49,12 @@
             <argument type="service" id="event_dispatcher"/>
         </service>
 
-
-        <!-- Core Services -->
-        <service id="BOW\Preishoheit\Service\ErrorHandling\ErrorHandler">
-            <argument type="service" id="bow_preishoheit_error_log.repository"/>
-        </service>
-
-        <service id="BOW\Preishoheit\Service\Validation\PriceValidator">
-            <argument type="service" id="logger"/>
-        </service>
-
-        <service id="BOW\Preishoheit\Service\Validation\BulkEditValidator">
-            <argument type="service" id="product.repository"/>
-        </service>
-
-
-
-
-
         <!-- API Services -->
         <service id="BOW\Preishoheit\Service\PreishoheitApi\PreishoheitApiClient" public="true">
             <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
             <argument type="service" id="logger"/>
         </service>
 
-        <!-- Mail Services -->
-        <service id="BOW\Preishoheit\Service\Mail\FailedUpdateMailService">
-            <argument type="service" id="bow_preishoheit_error_log.repository"/>
-            <argument type="service" id="Shopware\Core\Content\Mail\Service\MailService"/>
-            <argument>%env(SHOPWARE_ADMIN_EMAIL_PLUGINS)%</argument>
-        </service>
-
-
-        <!-- Scheduled Tasks -->
-        <service id="BOW\Preishoheit\ScheduledTask\PriceUpdateTask">
-            <tag name="shopware.scheduled.task" />
-        </service>
-
-        <service id="BOW\Preishoheit\ScheduledTask\PriceUpdateTaskHandler">
-            <argument type="service" id="scheduled_task.repository"/>
-            <argument type="service" id="BOW\Preishoheit\Service\PreishoheitApi\PriceUpdateService"/>
-            <argument type="service" id="bow_preishoheit_product.repository"/>
-            <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
-            <argument type="service" id="logger"/>
-            <tag name="messenger.message_handler"/>
-        </service>
-
-        <!-- Price Services -->
-        <service id="BOW\Preishoheit\Service\Price\PriceAdjustmentService" public="true">
-            <argument type="service" id="logger"/>
-        </service>
-
-        <!-- Price Update Service -->
         <service id="BOW\Preishoheit\Service\PreishoheitApi\PriceUpdateService" public="true">
             <argument type="service" id="BOW\Preishoheit\Service\PreishoheitApi\PreishoheitApiClient"/>
             <argument type="service" id="product.repository"/>
@@ -103,12 +65,7 @@
             <argument type="service" id="country.repository"/>
         </service>
 
-        <service id="BOW\Preishoheit\Command\UpdatePricesCommand" public="true">
-            <argument type="service" id="BOW\Preishoheit\Service\PreishoheitApi\PriceUpdateService"/>
-            <argument type="service" id="bow_preishoheit_product.repository"/>
-            <tag name="console.command"/>
-        </service>
-
+        <!-- Job Persistence -->
         <service id="BOW\Preishoheit\Service\JobPersistenceService">
             <argument type="service" id="bow_preishoheit_product.repository"/>
         </service>

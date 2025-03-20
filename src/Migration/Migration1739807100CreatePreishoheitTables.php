@@ -14,25 +14,25 @@ class Migration1739807100CreatePreishoheitTables extends MigrationStep
 
     public function update(Connection $connection): void
     {
-        // Create product selection table
+        // Tabelle für die Preishoheit Produktdaten erstellen
         $connection->executeStatement('
             CREATE TABLE IF NOT EXISTS `bow_preishoheit_product` (
                 `id` BINARY(16) NOT NULL,
-                `active` TINYINT(1) NOT NULL DEFAULT 1,
-                `surcharge_percentage` DOUBLE DEFAULT NULL,
-                `discount_percentage` DOUBLE DEFAULT NULL,
                 `product_id` BINARY(16) NOT NULL,
-                `product_version_id` BINARY(16) NOT NULL,
+                `job_id` VARCHAR(255) NOT NULL,
+                `price_data` JSON NULL,
+                `synchronized_at` DATETIME(3) NULL,
                 `created_at` DATETIME(3) NOT NULL,
                 `updated_at` DATETIME(3) NULL,
                 PRIMARY KEY (`id`),
-                KEY `fk.bow_preishoheit_product.product_id` (`product_id`,`product_version_id`),
-                CONSTRAINT `fk.bow_preishoheit_product.product_id` FOREIGN KEY (`product_id`,`product_version_id`)
-                    REFERENCES `product` (`id`,`version_id`) ON DELETE CASCADE ON UPDATE CASCADE
+                KEY `fk.bow_preishoheit_product.product_id` (`product_id`),
+                CONSTRAINT `fk.bow_preishoheit_product.product_id`
+                    FOREIGN KEY (`product_id`)
+                    REFERENCES `product` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
         ');
 
-        // Create price history table
+        // Tabelle für den Preisverlauf (falls benötigt)
         $connection->executeStatement('
             CREATE TABLE IF NOT EXISTS `bow_preishoheit_price_history` (
                 `id` BINARY(16) NOT NULL,
@@ -46,7 +46,7 @@ class Migration1739807100CreatePreishoheitTables extends MigrationStep
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
         ');
 
-        // Create error log table
+        // Error-Log Tabelle (falls benötigt)
         $connection->executeStatement('
             CREATE TABLE IF NOT EXISTS `bow_preishoheit_error_log` (
                 `id` BINARY(16) NOT NULL,
@@ -62,6 +62,6 @@ class Migration1739807100CreatePreishoheitTables extends MigrationStep
 
     public function updateDestructive(Connection $connection): void
     {
-        // No destructive updates needed
+        // Keine destruktiven Updates nötig
     }
 }
