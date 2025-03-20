@@ -13,10 +13,6 @@
             <tag name="shopware.entity.definition" entity="bow_preishoheit_product" />
         </service>
 
-        <service id="BOW\Preishoheit\Entity\PriceHistory\PriceHistoryDefinition">
-            <tag name="shopware.entity.definition" entity="bow_preishoheit_price_history" />
-        </service>
-
         <service id="BOW\Preishoheit\Entity\ErrorLog\ErrorLogDefinition">
             <tag name="shopware.entity.definition" entity="bow_preishoheit_error_log" />
         </service>
