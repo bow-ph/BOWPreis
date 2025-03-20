@@ -109,10 +109,8 @@
             <tag name="console.command"/>
         </service>
 
-        <service id="BOW\Preishoheit\Controller\PreviewController" public="true">
-            <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
-            <argument type="service" id="BOW\Preishoheit\Service\PreishoheitApi\PreishoheitApiClient"/>
-            <argument type="service" id="logger"/>
+        <service id="BOW\Preishoheit\Service\JobPersistenceService">
+            <argument type="service" id="bow_preishoheit_product.repository"/>
         </service>
 
         <!-- NullTokenizer -->

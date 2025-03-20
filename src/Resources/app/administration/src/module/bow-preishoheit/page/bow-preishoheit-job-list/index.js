@@ -1,11 +1,15 @@
 import template from './bow-preishoheit-job-list.html.twig';
 
-const { Component } = Shopware;
+const { Component, Mixin } = Shopware;
 
 Component.register('bow-preishoheit-job-list', {
     template,
 
     inject: ['httpClient'],
+
+    mixins: [
+        Mixin.getByName('notification')
+    ],
 
     data() {
         return {
@@ -29,12 +33,16 @@ Component.register('bow-preishoheit-job-list', {
                 .catch(error => {
                     this.createNotificationError({
                         title: this.$tc('bow-preishoheit.jobs.errorTitle'),
-                        message: error.message
+                        message: error.response?.data?.message || error.message
                     });
                 })
                 .finally(() => {
                     this.isLoading = false;
                 });
+        },
+
+        onRefresh() {
+            this.loadJobs();
         }
     }
 });

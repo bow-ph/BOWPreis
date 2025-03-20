@@ -5,7 +5,7 @@
         </template>
 
         <template #smart-bar-actions>
-            <sw-button variant="primary" :isLoading="isLoading" @click="loadJobs">
+            <sw-button variant="primary" :isLoading="isLoading" @click="onRefresh">
                 {{ $tc('global.default.refresh') }}
             </sw-button>
         </template>
@@ -14,13 +14,13 @@
             <sw-data-grid
                 :dataSource="jobs"
                 :columns="[
-                    { property: 'id', label: 'Job ID' },
-                    { property: 'status', label: 'Status' },
-                    { property: 'createdAt', label: 'Created At' }
+                    { property: 'id', label: $tc('bow-preishoheit.jobs.columnJobId') },
+                    { property: 'status', label: $tc('bow-preishoheit.jobs.columnStatus') },
+                    { property: 'createdAt', label: $tc('bow-preishoheit.jobs.columnCreatedAt'), dateFormat: 'date' }
                 ]"
                 :isLoading="isLoading"
                 :showSettings="true">
-                
+
                 <template #empty-state>
                     <sw-empty-state
                         :title="$tc('bow-preishoheit.jobs.emptyTitle')"

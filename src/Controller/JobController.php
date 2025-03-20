@@ -70,4 +70,34 @@ public function createJob(Request $request, Context $context): JsonResponse
     }
 }
 
+#[Route(path: '/api/_action/bow-preishoheit/jobs/{jobId}', name: 'api.bow.preishoheit.jobs.status', methods: ['GET'])]
+    public function getJobStatus(string $jobId, Context $context): JsonResponse
+    {
+        try {
+            $jobData = $this->apiClient->getJob($jobId);
+
+            if ($jobData['status'] === 'Finished') {
+                // Hier Daten persistieren
+                $this->jobPersistenceService->persistJobData($jobData['products'], $context);
+            }
+
+            return new JsonResponse([
+                'success' => true,
+                'status' => $jobData['status'],
+                'data' => $jobData['products'] ?? []
+            ]);
+        } catch (\Throwable $e) {
+            $this->logger->error('Error fetching job status', [
+                'jobId' => $jobId,
+                'exception' => $e
+            ]);
+
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'Failed to fetch job status',
+                'error' => $e->getMessage()
+            ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }
