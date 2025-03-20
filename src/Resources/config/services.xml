@@ -12,11 +12,6 @@
         <service id="BOW\Preishoheit\Entity\Product\PreishoheitProductDefinition">
             <tag name="shopware.entity.definition" entity="bow_preishoheit_product" />
         </service>
-
-        <service id="BOW\Preishoheit\Entity\ErrorLog\ErrorLogDefinition">
-            <tag name="shopware.entity.definition" entity="bow_preishoheit_error_log" />
-        </service>
-
         <!-- Repositories -->
         <service id="bow_preishoheit_product.repository" class="Shopware\Core\Framework\DataAbstractionLayer\EntityRepository">
             <argument type="service" id="BOW\Preishoheit\Entity\Product\PreishoheitProductDefinition"/>
