@@ -5,7 +5,7 @@ const { Component } = Shopware;
 Component.register('bow-preishoheit-job-list', {
     template,
 
-    inject: ['repositoryFactory', 'notificationService'],
+    inject: ['notificationService'],
 
     data() {
         return {
@@ -22,17 +22,9 @@ Component.register('bow-preishoheit-job-list', {
         loadJobs() {
             this.isLoading = true;
 
-            const httpClient = Shopware.Service('httpClient');
-
-            if (!httpClient) {
-                this.notificationService.error('httpClient konnte nicht geladen werden.');
-                this.isLoading = false;
-                return;
-            }
-
-            httpClient.get('/api/bow-preishoheit/jobs')
+            Shopware.Service('httpClient').get('/api/bow-preishoheit/jobs')
                 .then(response => {
-                    this.jobs = response.data.data;
+                    this.jobs = response.data.data || [];
                 })
                 .catch(error => {
                     this.notificationService.error(
@@ -46,6 +38,29 @@ Component.register('bow-preishoheit-job-list', {
 
         onRefresh() {
             this.loadJobs();
+        },
+
+        openJobDetail(item) {
+            this.$router.push({ 
+                name: 'bow.preishoheit.jobDetail', 
+                params: { jobId: item.id } 
+            });
+        },
+
+        getBadgeVariant(status) {
+            switch(status.toLowerCase()) {
+                case 'finished':
+                case 'success':
+                    return 'success'; // Grün
+                case 'pending':
+                case 'running':
+                    return 'warning'; // Gelb
+                case 'failed':
+                case 'error':
+                    return 'danger'; // Rot
+                default:
+                    return 'neutral'; // Grau (neutral)
+            }
         }
     }
 });
