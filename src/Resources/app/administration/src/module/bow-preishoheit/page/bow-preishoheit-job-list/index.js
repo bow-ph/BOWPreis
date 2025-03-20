@@ -5,7 +5,7 @@ const { Component } = Shopware;
 Component.register('bow-preishoheit-job-list', {
     template,
 
-    inject: ['repositoryFactory', 'httpClient', 'notificationService'],
+    inject: ['repositoryFactory', 'notificationService'],
 
 
     data() {
