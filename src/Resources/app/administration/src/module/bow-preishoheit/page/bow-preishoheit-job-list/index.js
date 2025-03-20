@@ -7,7 +7,6 @@ Component.register('bow-preishoheit-job-list', {
 
     inject: ['repositoryFactory', 'notificationService'],
 
-
     data() {
         return {
             isLoading: false,
@@ -22,7 +21,16 @@ Component.register('bow-preishoheit-job-list', {
     methods: {
         loadJobs() {
             this.isLoading = true;
-            this.httpClient.get('/api/bow-preishoheit/jobs')
+
+            const httpClient = Shopware.Service('httpClient');
+
+            if (!httpClient) {
+                this.notificationService.error('httpClient konnte nicht geladen werden.');
+                this.isLoading = false;
+                return;
+            }
+
+            httpClient.get('/api/bow-preishoheit/jobs')
                 .then(response => {
                     this.jobs = response.data.data;
                 })
@@ -35,10 +43,9 @@ Component.register('bow-preishoheit-job-list', {
                     this.isLoading = false;
                 });
         },
-    
+
         onRefresh() {
             this.loadJobs();
         }
     }
-    
 });

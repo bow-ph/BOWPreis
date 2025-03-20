@@ -1,45 +1,28 @@
-{% block bow_preishoheit_job_list %}
-    <sw-page>
+<div>
+    <sw-page class="bow-preishoheit-job-list">
         <template #smart-bar-header>
-            <h2>{{ $tc('bow-preishoheit.jobs.pageTitle') }}</h2>
+            <h2>{{ $t('bow-preishoheit.jobs.pageTitle') }}</h2>
         </template>
 
-        <template #smart-bar-actions>
-            <sw-button variant="primary" routerLink="{ name: 'bow.preishoheit.jobCreate' }">
-                    {{ $tc('bow-preishoheit.jobs.createNewJob') }}
-            </sw-button>
+        <sw-button @click="onRefresh" variant="primary" :disabled="isLoading">
+            <sw-icon name="regular-sync"></sw-icon>
+            {{ $t('bow-preishoheit.jobs.refreshButton') }}
+        </sw-button>
 
-            <sw-button variant="default" :isLoading="isLoading" @click="onRefresh">
-                     {{ $tc('global.default.refresh') }}
-            </sw-button>
+        <sw-loader v-if="isLoading"></sw-loader>
 
-        </template>
+        <!-- Empty state -->
+        <div v-if="!isLoading && jobs.length === 0" class="sw-empty-state">
+            <sw-icon name="regular-info-circle" size="48"></sw-icon>
+            <h3>{{ $t('bow-preishoheit.jobs.emptyTitle') }}</h3>
+            <p>{{ $t('bow-preishoheit.jobs.emptyDescription') }}</p>
+        </div>
 
-        <template #content>
-            <sw-data-grid
-    :dataSource="jobs"
-    :columns="[
-        { property: 'id', label: $tc('bow-preishoheit.jobs.columnJobId') },
-        { property: 'status', label: $tc('bow-preishoheit.jobs.columnStatus') },
-        { property: 'createdAt', label: $tc('bow-preishoheit.jobs.columnCreatedAt'), dateFormat: 'date' }
-    ]"
-    :isLoading="isLoading"
-    :showSettings="true">
-
-    <template #column-status="{ item }">
-        <span v-if="item.status === 'Finished'">🟢 Fertig</span>
-        <span v-else-if="item.status === 'Pending'">🟡 Läuft</span>
-        <span v-else-if="item.status === 'Failed'">🔴 Fehler</span>
-        <span v-else>⚪️ Unbekannt</span>
-    </template>
-
-    <template #empty-state>
-        <sw-empty-state
-            :title="$tc('bow-preishoheit.jobs.emptyTitle')"
-            :subtitle="$tc('bow-preishoheit.jobs.emptySubtitle')">
-        </sw-empty-state>
-    </template>
-</sw-data-grid>
-        </template>
+        <!-- Job list -->
+        <sw-data-grid v-else :dataSource="jobs">
+            <sw-data-grid-column property="id" label="ID"></sw-data-grid-column>
+            <sw-data-grid-column property="status" label="Status"></sw-data-grid-column>
+            <sw-data-grid-column property="createdAt" label="Created At"></sw-data-grid-column>
+        </sw-data-grid>
     </sw-page>
-{% endblock %}
+</div>
