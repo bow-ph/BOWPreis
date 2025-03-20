@@ -12,24 +12,26 @@
             <required>true</required>
         </input-field>
     </card>
+
     <card>
         <title>Mapping Einstellungen</title>
-        <input-field type="select">
+        <input-field type="single-select">
             <name>mappingMethod</name>
             <label>Mapping-Methode wählen</label>
             <options>
                 <option>
-                    <value>ean</value>
-                    <label>EAN (empfohlen)</label>
+                    <id>ean</id>
+                    <name>EAN (empfohlen)</name>
                 </option>
                 <option>
-                    <value>product_number</value>
-                    <label>Produktnummer</label>
+                    <id>product_number</id>
+                    <name>Produktnummer</name>
                 </option>
             </options>
-            <default>ean</default>
+            <defaultValue>ean</defaultValue>
         </input-field>
     </card>
+
     <card>
         <title>Update Settings</title>
         <title lang="de-DE">Update-Einstellungen</title>
@@ -43,33 +45,33 @@
             <options>
                 <option>
                     <id>300</id>
-                    <name>Every 5 minutes - For shops with highly volatile prices</name>
-                    <name lang="de-DE">Alle 5 Minuten - Für Shops mit stark schwankenden Preisen</name>
+                    <name>Every 5 minutes</name>
+                    <name lang="de-DE">Alle 5 Minuten</name>
                 </option>
                 <option>
                     <id>900</id>
-                    <name>Every 15 minutes - Recommended for dynamic pricing</name>
-                    <name lang="de-DE">Alle 15 Minuten - Empfohlen für Shops mit dynamischer Preisgestaltung</name>
+                    <name>Every 15 minutes</name>
+                    <name lang="de-DE">Alle 15 Minuten</name>
                 </option>
                 <option>
                     <id>1800</id>
-                    <name>Every 30 minutes - For shops with frequent price changes</name>
-                    <name lang="de-DE">Alle 30 Minuten - Für Shops mit häufigen Preisänderungen</name>
+                    <name>Every 30 minutes</name>
+                    <name lang="de-DE">Alle 30 Minuten</name>
                 </option>
                 <option>
                     <id>3600</id>
-                    <name>Every hour - For medium-sized shops</name>
-                    <name lang="de-DE">Jede Stunde - Für mittelgroße Shops</name>
+                    <name>Every hour</name>
+                    <name lang="de-DE">Jede Stunde</name>
                 </option>
                 <option>
                     <id>43200</id>
-                    <name>Twice daily - Morning and evening price sync</name>
-                    <name lang="de-DE">Zweimal täglich - Morgens und abends ein Preisabgleich</name>
+                    <name>Twice daily</name>
+                    <name lang="de-DE">Zweimal täglich</name>
                 </option>
                 <option>
                     <id>86400</id>
-                    <name>Once daily - For daily price updates</name>
-                    <name lang="de-DE">Einmal täglich - Falls Preise nur einmal pro Tag aktualisiert werden müssen</name>
+                    <name>Once daily</name>
+                    <name lang="de-DE">Einmal täglich</name>
                 </option>
             </options>
             <defaultValue>900</defaultValue>
@@ -89,4 +91,5 @@
             <required>true</required>
         </input-field>
     </card>
+
 </config>
