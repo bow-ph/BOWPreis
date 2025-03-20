@@ -100,6 +100,7 @@
             <argument type="service" id="bow_preishoheit_error_log.repository"/>
             <argument type="service" id="BOW\Preishoheit\Service\Price\PriceAdjustmentService"/>
             <argument type="service" id="logger"/>
+            <argument type="service" id="country.repository"/>
         </service>
 
         <service id="BOW\Preishoheit\Command\UpdatePricesCommand" public="true">

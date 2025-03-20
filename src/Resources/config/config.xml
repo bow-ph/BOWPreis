@@ -92,4 +92,68 @@
         </input-field>
     </card>
 
+    <card>
+        <title>Country Selection</title>
+        <title lang="de-DE">Länderauswahl</title>
+
+        <input-field type="multi-select">
+            <name>countrySelection</name>
+            <label>Countries for Price Updates</label>
+            <label lang="de-DE">Länder für Preisaktualisierungen</label>
+            <helpText>Select the countries relevant for price updates</helpText>
+            <helpText lang="de-DE">Wählen Sie die Länder aus, die für die Preisaktualisierung relevant sind</helpText>
+            <entity>country</entity>
+        </input-field>
+    </card>
+
+    <card>
+        <title>Product Group Settings</title>
+        <title lang="de-DE">Produktgruppeneinstellungen</title>
+
+        <input-field type="single-select">
+            <name>productGroup</name>
+            <label>Select Product Group</label>
+            <label lang="de-DE">Produktgruppe auswählen</label>
+            <options>
+                <option>
+                    <id>amazon</id>
+                    <name>Amazon</name>
+                </option>
+                <option>
+                    <id>google_shopping</id>
+                    <name>Google Shopping</name>
+                </option>
+                <option>
+                    <id>billiger</id>
+                    <name>Billiger.de</name>
+                </option>
+                <option>
+                    <id>geizhals</id>
+                    <name>Geizhals.de</name>
+                </option>
+                <option>
+                    <id>idealoshopping</id>
+                    <name>Idealo Shopping</name>
+                </option>
+                <option>
+                    <id>kaufland</id>
+                    <name>Kaufland</name>
+                </option>
+                <option>
+                    <id>mediamarkt</id>
+                    <name>MediaMarkt</name>
+                </option>
+                <option>
+                    <id>otto</id>
+                    <name>Otto.de</name>
+                </option>
+                <option>
+                    <id>saturn</id>
+                    <name>Saturn</name>
+                </option>
+            </options>
+            <defaultValue>amazon</defaultValue>
+        </input-field>
+    </card>
+
 </config>

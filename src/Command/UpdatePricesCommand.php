@@ -20,18 +20,21 @@ class UpdatePricesCommand extends Command
     private EntityRepository $preishoheitProductRepository;
     private SystemConfigService $configService;
     private LoggerInterface $logger;
+    private EntityRepository $countryRepository;
 
     public function __construct(
         PriceUpdateService $priceUpdateService,
         EntityRepository $preishoheitProductRepository,
         SystemConfigService $configService,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        EntityRepository $countryRepository
     ) {
         parent::__construct('bow:preishoheit:update-prices');
         $this->priceUpdateService = $priceUpdateService;
         $this->preishoheitProductRepository = $preishoheitProductRepository;
         $this->configService = $configService;
         $this->logger = $logger;
+        $this->countryRepository = $countryRepository;
     }
 
     protected function configure(): void
@@ -46,10 +49,14 @@ class UpdatePricesCommand extends Command
         $page = (int) $input->getOption('page');
 
         $mappingMethod = $this->configService->get('BOWPreishoheit.config.mappingMethod', 'ean');
+        $productGroup = $this->configService->get('BOWPreishoheit.config.productGroup', 'amazon');
+        $countries = $this->configService->get('BOWPreishoheit.config.countrySelection', $this->getActiveCountries($context));
 
         $this->logger->info('Starting price update process', [
             'page' => $page,
-            'mappingMethod' => $mappingMethod
+            'mappingMethod' => $mappingMethod,
+            'productGroup' => $productGroup,
+            'countries' => $countries
         ]);
 
         try {
@@ -61,7 +68,7 @@ class UpdatePricesCommand extends Command
                 return Command::SUCCESS;
             }
 
-            $this->priceUpdateService->updatePrices($products->getElements(), $context);
+            $this->priceUpdateService->updatePrices($products->getElements(), $context, $productGroup, $countries);
 
             $output->writeln('Price update completed successfully.');
             $this->logger->info('Price update completed successfully', ['count' => $products->count()]);
@@ -88,5 +95,14 @@ class UpdatePricesCommand extends Command
         $criteria->setOffset(($page - 1) * 20);
 
         return $this->preishoheitProductRepository->search($criteria, $context);
+    }
+
+    private function getActiveCountries(Context $context): array
+    {
+        $criteria = new Criteria();
+        $criteria->addFilter(new EqualsFilter('active', true));
+        $countries = $this->countryRepository->search($criteria, $context);
+
+        return array_map(fn($country) => $country->getIso(), $countries->getElements());
     }
 }
