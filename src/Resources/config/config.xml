@@ -12,7 +12,24 @@
             <required>true</required>
         </input-field>
     </card>
-
+    <card>
+        <title>Mapping Einstellungen</title>
+        <input-field type="select">
+            <name>mappingMethod</name>
+            <label>Mapping-Methode wählen</label>
+            <options>
+                <option>
+                    <value>ean</value>
+                    <label>EAN (empfohlen)</label>
+                </option>
+                <option>
+                    <value>product_number</value>
+                    <label>Produktnummer</label>
+                </option>
+            </options>
+            <default>ean</default>
+        </input-field>
+    </card>
     <card>
         <title>Update Settings</title>
         <title lang="de-DE">Update-Einstellungen</title>

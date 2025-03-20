@@ -6,25 +6,31 @@ use BOW\Preishoheit\Service\PreishoheitApi\PriceUpdateService;
 use Psr\Log\LoggerInterface;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
+use Shopware\Core\System\SystemConfig\SystemConfigService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
+use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
 
 class UpdatePricesCommand extends Command
 {
     private PriceUpdateService $priceUpdateService;
     private EntityRepository $preishoheitProductRepository;
+    private SystemConfigService $configService;
     private LoggerInterface $logger;
 
     public function __construct(
         PriceUpdateService $priceUpdateService,
         EntityRepository $preishoheitProductRepository,
+        SystemConfigService $configService,
         LoggerInterface $logger
     ) {
         parent::__construct('bow:preishoheit:update-prices');
         $this->priceUpdateService = $priceUpdateService;
         $this->preishoheitProductRepository = $preishoheitProductRepository;
+        $this->configService = $configService;
         $this->logger = $logger;
     }
 
@@ -36,16 +42,22 @@ class UpdatePricesCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $context = \Shopware\Core\Framework\Context::createDefaultContext();
+        $context = Context::createDefaultContext();
         $page = (int) $input->getOption('page');
 
-        $this->logger->info('Starting price update process', ['page' => $page]);
+        $mappingMethod = $this->configService->get('BOWPreishoheit.config.mappingMethod', 'ean');
+
+        $this->logger->info('Starting price update process', [
+            'page' => $page,
+            'mappingMethod' => $mappingMethod
+        ]);
 
         try {
             $products = $this->getProducts($context, $page);
 
             if ($products->count() === 0) {
                 $output->writeln('No products found for price update.');
+                $this->logger->info('No products found for price update', ['page' => $page]);
                 return Command::SUCCESS;
             }
 
@@ -69,8 +81,9 @@ class UpdatePricesCommand extends Command
 
     private function getProducts(Context $context, int $page): \Shopware\Core\Framework\DataAbstractionLayer\Search\EntitySearchResult
     {
-        $criteria = new \Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria();
+        $criteria = new Criteria();
         $criteria->addAssociation('product');
+        $criteria->addFilter(new EqualsFilter('active', true));
         $criteria->setLimit(20);
         $criteria->setOffset(($page - 1) * 20);
 
