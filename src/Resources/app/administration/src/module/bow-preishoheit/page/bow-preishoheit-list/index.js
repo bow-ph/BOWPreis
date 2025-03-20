@@ -1,92 +1,74 @@
-import template from './bow-preishoheit-list.html.twig';
-const { Component } = Shopware;
-const { Criteria } = Shopware.Data;
+import template from './bow-preishoheit-job-list.html.twig';
 
-Component.register('bow-preishoheit-list', {
+const { Component } = Shopware;
+
+Component.register('bow-preishoheit-job-list', {
     template,
 
-    inject: ['repositoryFactory', 'httpClient'],
+    inject: ['notificationService'],
 
     data() {
         return {
             isLoading: false,
-            products: [],
-            criteria: new Criteria(1, 25),
-            total: 0
+            jobs: []
         };
     },
 
-    computed: {
-        productRepository() {
-            return this.repositoryFactory.create('bow_preishoheit_product');
-        },
-
-        productColumns() {
-            return [
-                {
-                    property: 'product.name',
-                    label: this.$tc('bow-preishoheit.list.columnProductName'),
-                    routerLink: 'bow.preishoheit.detail',
-                    primary: true
-                },
-                {
-                    property: 'product.ean',
-                    label: this.$tc('bow-preishoheit.list.columnEan')
-                },
-                {
-                    property: 'product.price',
-                    label: this.$tc('bow-preishoheit.list.columnPrice')
-                },
-                {
-                    property: 'synchronizedAt',
-                    label: this.$tc('bow-preishoheit.list.columnLastUpdate')
-                }
-            ];
-        }
-    },
-
     created() {
-        this.loadProducts();
+        this.loadJobs();
     },
 
     methods: {
-        loadProducts() {
+        loadJobs() {
             this.isLoading = true;
-            this.criteria.addAssociation('product');
 
-            this.productRepository
-                .search(this.criteria, Shopware.Context.api)
-                .then(({ items, total }) => {
-                    this.products = items;
-                    this.total = total;
+            const httpClient = Shopware.Service('httpClient');
+
+            if (!httpClient) {
+                this.notificationService.error('httpClient Service ist nicht verfügbar.');
+                this.isLoading = false;
+                return;
+            }
+
+            httpClient.get('/api/bow-preishoheit/jobs')
+                .then(response => {
+                    this.jobs = response.data.data || [];
                 })
-                .catch((error) => {
-                    this.createNotificationError({
-                        title: 'Fehler',
-                        message: error.message
-                    });
+                .catch(error => {
+                    this.notificationService.error(
+                        error.response?.data?.message || error.message
+                    );
                 })
                 .finally(() => {
                     this.isLoading = false;
                 });
         },
 
-        refreshList() {
-            this.loadProducts();
+        onRefresh() {
+            this.loadJobs();
         },
 
-        onPageChange({ page = 1, limit = 25 }) {
-            this.criteria.page = page;
-            this.criteria.limit = limit;
-            this.loadProducts();
+        openJobDetail(item) {
+            this.$router.push({
+                name: 'bow.preishoheit.jobDetail',
+                params: { jobId: item.id }
+            });
         },
 
-        onSortColumn({ sortBy, sortDirection }) {
-            this.criteria.resetSorting();
-            if (sortBy) {
-                this.criteria.addSorting(Criteria.sort(sortBy, sortDirection));
+        getBadgeVariant(status) {
+            switch (status.toLowerCase()) {
+                case 'finished':
+                case 'success':
+                    return 'success';
+                case 'pending':
+                case 'running':
+                    return 'warning';
+                case 'failed':
+                case 'error':
+                    return 'danger';
+                default:
+                    return 'neutral';
             }
-            this.loadProducts();
         }
     }
 });
