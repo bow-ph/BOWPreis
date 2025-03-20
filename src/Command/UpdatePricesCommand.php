@@ -49,8 +49,19 @@ class UpdatePricesCommand extends Command
         $page = (int) $input->getOption('page');
 
         $mappingMethod = $this->configService->get('BOWPreishoheit.config.mappingMethod', 'ean');
+        if (!in_array($mappingMethod, ['ean', 'product_number'])) {
+            $this->logger->warning('Invalid mapping method, defaulting to "ean".');
+            $mappingMethod = 'ean';
+        }
+
         $productGroup = $this->configService->get('BOWPreishoheit.config.productGroup', 'amazon');
-        $countries = $this->configService->get('BOWPreishoheit.config.countrySelection', $this->getActiveCountries($context));
+        if (empty($productGroup)) {
+            $this->logger->warning('No product group defined, defaulting to "amazon".');
+            $productGroup = 'amazon';
+        }
+
+        $countriesConfig = $this->configService->get('BOWPreishoheit.config.countrySelection');
+        $countries = $countriesConfig ?: $this->getActiveCountries($context);
 
         $this->logger->info('Starting price update process', [
             'page' => $page,

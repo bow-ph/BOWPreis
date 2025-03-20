@@ -1,0 +1,23 @@
+<div class="bow-preishoheit-price-update-preview">
+    <sw-card>
+        <template #toolbar>
+            <sw-button variant="primary" :isLoading="isLoading" @click="fetchPreviewData">
+                {{ $tc('bow-preishoheit.preview.loadButton') }}
+            </sw-button>
+        </template>
+
+        <sw-data-grid
+            :dataSource="previewData"
+            :columns="[
+                { property: 'productName', label: $tc('bow-preishoheit.preview.productName') },
+                { property: 'identifier', label: $tc('bow-preishoheit.preview.identifier') },
+                { property: 'country', label: $tc('bow-preishoheit.preview.country') },
+                { property: 'currentPrice', label: $tc('bow-preishoheit.preview.currentPrice') },
+                { property: 'newPrice', label: $tc('bow-preishoheit.preview.newPrice') },
+                { property: 'difference', label: $tc('bow-preishoheit.preview.difference') }
+            ]"
+            :showSettings="true"
+            :isLoading="isLoading">
+        </sw-data-grid>
+    </sw-card>
+</div>

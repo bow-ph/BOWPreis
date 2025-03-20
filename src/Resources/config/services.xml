@@ -109,6 +109,12 @@
             <tag name="console.command"/>
         </service>
 
+        <service id="BOW\Preishoheit\Controller\PreviewController" public="true">
+            <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
+            <argument type="service" id="BOW\Preishoheit\Service\PreishoheitApi\PreishoheitApiClient"/>
+            <argument type="service" id="logger"/>
+        </service>
+
         <!-- NullTokenizer -->
         <service id="bow_preishoheit.search.null_tokenizer" class="BOW\Preishoheit\Search\NullTokenizer" decorates="Shopware\Core\Framework\DataAbstractionLayer\Search\Term\Tokenizer" public="false" decoration-inner-name="bow_preishoheit.search.null_tokenizer.inner"/>
     </services>

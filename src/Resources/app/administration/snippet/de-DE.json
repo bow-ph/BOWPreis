@@ -15,8 +15,20 @@
             "columnOldPrice": "Alter Preis",
             "columnNewPrice": "Neuer Preis",
             "columnDateTime": "Datum/Uhrzeit",
-            "errorTitle": "Fehler",
-            "errorMessage": "Preisverlauf konnte nicht geladen werden"
+            "errorTitle": "Fehler beim Laden des Preisverlaufs",
+            "errorMessage": "Preisverlauf konnte nicht geladen werden",
+            "startDate": "Startdatum",
+            "endDate": "Enddatum",
+            "startDatePlaceholder": "Startdatum auswählen",
+            "endDatePlaceholder": "Enddatum auswählen",
+            "export": "Exportieren",
+            "exportTitle": "Preisverlauf exportieren",
+            "exportConfirm": "Möchten Sie den Preisverlauf exportieren?",
+            "confirmExport": "Exportieren",
+            "exportSuccessTitle": "Erfolg",
+            "exportSuccessMessage": "Preisverlauf erfolgreich exportiert",
+            "exportErrorTitle": "Fehler",
+            "exportError": "Preisverlauf konnte nicht exportiert werden"
         },
         "grid": {
             "columnProduct": "Produkt",
@@ -44,28 +56,6 @@
             "errorTitle": "Fehler beim Speichern",
             "apiKeyRequired": "Bitte geben Sie einen API-Schlüssel ein"
         },
-        "history": {
-            "cardTitle": "Preisverlauf",
-            "columnEan": "EAN/GTIN",
-            "columnProductName": "Produktname",
-            "columnOldPrice": "Alter Preis",
-            "columnNewPrice": "Neuer Preis",
-            "columnDateTime": "Datum/Uhrzeit",
-            "errorTitle": "Fehler beim Laden des Preisverlaufs",
-            "errorMessage": "Preisverlauf konnte nicht geladen werden",
-            "startDate": "Startdatum",
-            "endDate": "Enddatum",
-            "startDatePlaceholder": "Startdatum auswählen",
-            "endDatePlaceholder": "Enddatum auswählen",
-            "export": "Exportieren",
-            "exportTitle": "Preisverlauf exportieren",
-            "exportConfirm": "Möchten Sie den Preisverlauf exportieren?",
-            "confirmExport": "Exportieren",
-            "exportSuccessTitle": "Erfolg",
-            "exportSuccessMessage": "Preisverlauf erfolgreich exportiert",
-            "exportErrorTitle": "Fehler",
-            "exportError": "Preisverlauf konnte nicht exportiert werden"
-        },
         "bulk": {
             "editSelected": "{0} ausgewählte Produkte bearbeiten",
             "clearSelection": "Auswahl aufheben",
@@ -80,14 +70,24 @@
             "columnPrice": "Preis",
             "columnSurcharge": "Aufschlag (%)",
             "successTitle": "Erfolg",
-            "successMessage": "Produkte erfolgreich aktualisiert",
+            "successMessage": "{success} von {total} Produkten erfolgreich aktualisiert",
             "errorTitle": "Fehler",
             "errorMessage": "Produkte konnten nicht aktualisiert werden",
             "processingStatus": "Verarbeite {processed}/{total} Produkte ({success} erfolgreich, {failed} fehlgeschlagen)",
             "itemErrorTitle": "Fehler beim Aktualisieren von {productName}",
             "warningTitle": "Warnung",
-            "warningMessage": "{failed} von {total} Produkten konnten nicht aktualisiert werden",
-            "successMessage": "{success} von {total} Produkten erfolgreich aktualisiert"
+            "warningMessage": "{failed} von {total} Produkten konnten nicht aktualisiert werden"
+        },
+        "preview": {
+            "loadButton": "Vorschau laden",
+            "productName": "Produktname",
+            "identifier": "EAN/Produktnummer",
+            "country": "Land",
+            "currentPrice": "Aktueller Preis",
+            "newPrice": "Neuer Preis",
+            "difference": "Differenz",
+            "errorTitle": "Fehler bei Vorschau",
+            "loadError": "Die Vorschau konnte nicht geladen werden."
         }
     }
 }

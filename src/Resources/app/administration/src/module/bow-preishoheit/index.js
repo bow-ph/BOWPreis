@@ -4,6 +4,7 @@ import './component/settings';
 import './component/history';
 import './component/errors';
 import './component/product-grid';
+import './page/bow-preishoheit-preview';
 
 Shopware.Module.register('bow-preishoheit', {
     type: 'plugin',
@@ -61,6 +62,14 @@ Shopware.Module.register('bow-preishoheit', {
                 }
             }
         },
+        preview: {
+            component: 'bow-preishoheit-preview',
+            path: 'preview',
+            meta: {
+                parentPath: 'bow.preishoheit.list',
+                privilege: 'bow_preishoheit.viewer'
+            }
+        }
     },
 
     acl: {
