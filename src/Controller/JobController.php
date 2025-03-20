@@ -49,7 +49,11 @@ class JobController extends AbstractController
     #[Route(path: '/api/_action/bow-preishoheit/jobs/create', name: 'api.bow.preishoheit.jobs.create', methods: ['POST'])]
     public function createJob(Request $request, Context $context): JsonResponse
     {
-        $data = $request->request->all();
+        $data = json_decode($request->getContent(), true);
+
+        if (!$data) {
+            return new JsonResponse(['success' => false, 'message' => 'Invalid request payload'], JsonResponse::HTTP_BAD_REQUEST);
+        }
 
         try {
             $response = $this->apiClient->createJob(
@@ -58,6 +62,8 @@ class JobController extends AbstractController
                 $data['countries'],
                 $data['categories'] ?? []
             );
+
+            $this->jobPersistenceService->saveJob($response, $context);
 
             return new JsonResponse([
                 'success' => true,
