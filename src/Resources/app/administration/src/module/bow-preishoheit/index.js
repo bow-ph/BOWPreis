@@ -28,7 +28,7 @@ Shopware.Module.register('bow-preishoheit', {
                 privilege: 'bow_preishoheit.viewer'
             }
         },
-        jobDetail: {
+        'bow.preishoheit.jobDetail': {
             component: 'bow-preishoheit-job-detail',
             path: 'jobs/detail/:jobId',
             meta: {
@@ -41,7 +41,7 @@ Shopware.Module.register('bow-preishoheit', {
                 }
             }
         },
-        jobCreate: {
+        'bow.preishoheit.jobCreate': {
             component: 'bow-preishoheit-job-create',
             path: 'jobs/create',
             meta: {
