@@ -1,0 +1,63 @@
+<sw-page class="bow-preishoheit-job-create">
+    <template #smart-bar-header>
+        <h2>{{ $tc('bow-preishoheit.jobs.createTitle') }}</h2>
+    </template>
+
+    <template #content>
+        <sw-card-view>
+            <sw-card>
+                <sw-field label="{{ $tc('bow-preishoheit.jobs.productGroup') }}">
+                    <sw-single-select
+                        :options="productGroups"
+                        v-model="jobData.productGroup"
+                        placeholder="{{ $tc('bow-preishoheit.jobs.productGroupPlaceholder') }}"
+                    />
+                </sw-field>
+
+                <sw-field label="{{ $tc('bow-preishoheit.jobs.selectProducts') }}">
+                    <sw-entity-multi-id-select
+                        entity="product"
+                        v-model="jobData.selectedProducts"
+                        labelProperty="name"
+                        placeholder="{{ $tc('bow-preishoheit.jobs.productsPlaceholder') }}"
+                    />
+                </sw-field>
+
+                <sw-field label="{{ $tc('bow-preishoheit.jobs.dynamicProductGroup') }}">
+                    <sw-single-select
+                        v-model="jobData.dynamicProductGroupId"
+                        :options="dynamicProductGroups"
+                        labelProperty="name"
+                        valueProperty="id"
+                        placeholder="{{ $tc('bow-preishoheit.jobs.dynamicGroupPlaceholder') }}"
+                    />
+                </sw-field>
+
+                <sw-field label="{{ $tc('bow-preishoheit.jobs.countries') }}">
+                    <sw-multi-select
+                        v-model="jobData.countries"
+                        :options="countries"
+                        labelProperty="name"
+                        valueProperty="iso"
+                        placeholder="{{ $tc('bow-preishoheit.jobs.countriesPlaceholder') }}"
+                    />
+                </sw-field>
+
+                <sw-field label="{{ $tc('bow-preishoheit.jobs.categories') }}">
+                    <sw-category-tree-field
+                        v-model="jobData.categories"
+                        :multiple="true"
+                    />
+                </sw-field>
+
+                <sw-button variant="primary" :isLoading="isLoading" @click="saveJob">
+                    {{ $tc('bow-preishoheit.jobs.createButton') }}
+                </sw-button>
+
+                <sw-button variant="default" @click="onCancel">
+                    {{ $tc('bow-preishoheit.jobs.cancelButton') }}
+                </sw-button>
+            </sw-card>
+        </sw-card-view>
+    </template>
+</sw-page>

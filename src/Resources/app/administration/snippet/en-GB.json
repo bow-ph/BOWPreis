@@ -102,6 +102,23 @@
             "loadError": "Could not load preview data.",
             "emptyTitle": "No data available",
             "emptySubtitle": "Load the preview to see the price updates."
+        },
+        "jobs": {
+            "createTitle": "Create new job",
+            "productGroup": "Product Group",
+            "productGroupPlaceholder": "Select product group",
+            "selectProducts": "Select Products",
+            "productsPlaceholder": "Select products from the shop",
+            "dynamicProductGroup": "Dynamic Product Group",
+            "dynamicGroupPlaceholder": "Select a dynamic product group",
+            "countries": "Countries",
+            "countriesPlaceholder": "Select countries",
+            "categories": "Categories",
+            "createButton": "Create job",
+            "cancelButton": "Cancel",
+            "successTitle": "Success",
+            "createSuccess": "Job successfully created.",
+            "errorTitle": "Error"
         }
     },
     "global": {

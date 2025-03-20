@@ -5,7 +5,6 @@ namespace BOW\Preishoheit\Service\PreishoheitApi;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Psr\Log\LoggerInterface;
-use Shopware\Core\Framework\Context;
 use Shopware\Core\System\SystemConfig\SystemConfigService;
 use BOW\Preishoheit\Exception\PreishoheitApiException;
 
@@ -47,77 +46,71 @@ class PreishoheitApiClient
         return $this->client;
     }
 
-    public function verifyApiKey(Context $context): bool
+    public function verifyApiKey(): bool
     {
         try {
             $response = $this->getClient()->get('/verify-api-key');
-            if ($response->getStatusCode() !== 200) {
-                $this->logger->error('API responded with invalid status code', [
-                    'statusCode' => $response->getStatusCode()
-                ]);
-                throw new PreishoheitApiException('Invalid API response status: ' . $response->getStatusCode());
-            }
-    
             $responseBody = json_decode($response->getBody()->getContents(), true);
-    
+
             if (isset($responseBody['header']['error'])) {
-                $errorBody = $responseBody['header']['error'];
-                $this->logger->error('API key verification failed: ' . $errorBody);
-                throw new PreishoheitApiException($errorBody);
+                throw new PreishoheitApiException($responseBody['header']['error']);
             }
-    
-            $this->logger->info('API key verification succeeded.');
+
             return true;
         } catch (GuzzleException $e) {
-            $this->logger->error('HTTP Error verifying API key', [
-                'message' => $e->getMessage(),
-                'exception' => $e
-            ]);
-    
             throw new PreishoheitApiException('Failed to verify API key: ' . $e->getMessage());
         }
     }
 
-    public function createJob(string $productGroup, array $identifiers, array $countries): array
-{
-    try {
-        $payload = [
-            'productGroup' => $productGroup,
-            'identifiers' => $identifiers,
-            'countries' => $countries,
-        ];
+    public function createJob(string $productGroup, array $identifiers, array $countries, array $categories): array
+    {
+        try {
+            $payload = [
+                'productGroup' => $productGroup,
+                'identifiers' => $identifiers,
+                'countries' => $countries,
+                'categories' => $categories,
+            ];
 
-        $response = $this->getClient()->post('/jobs', [
-            'json' => $payload
-        ]);
-
-        if ($response->getStatusCode() !== 200) {
-            $this->logger->error('Job creation failed with invalid status code', [
-                'statusCode' => $response->getStatusCode()
+            $response = $this->getClient()->post('/jobs', [
+                'json' => $payload
             ]);
 
-            throw new PreishoheitApiException('Invalid API response status: ' . $response->getStatusCode());
+            $responseBody = json_decode($response->getBody()->getContents(), true);
+
+            if (isset($responseBody['header']['error'])) {
+                throw new PreishoheitApiException($responseBody['header']['error']);
+            }
+
+            return $responseBody['data'] ?? [];
+        } catch (GuzzleException $e) {
+            throw new PreishoheitApiException('Failed to create job: ' . $e->getMessage());
         }
-
-        $responseBody = json_decode($response->getBody()->getContents(), true);
-
-        if (isset($responseBody['header']['error'])) {
-            $errorBody = $responseBody['header']['error'];
-            $this->logger->error('Job creation error: ' . $errorBody);
-
-            throw new PreishoheitApiException($errorBody);
-        }
-
-        return $responseBody['data'] ?? [];
-    } catch (GuzzleException $e) {
-        $this->logger->error('HTTP Error creating job', [
-            'message' => $e->getMessage(),
-            'exception' => $e
-        ]);
-
-        throw new PreishoheitApiException('Failed to create job: ' . $e->getMessage());
     }
-}
 
-    
+    public function getJobs(): array
+    {
+        try {
+            $response = $this->getClient()->get('/jobs');
+            $responseBody = json_decode($response->getBody()->getContents(), true);
+
+            if (isset($responseBody['header']['error'])) {
+                throw new PreishoheitApiException($responseBody['header']['error']);
+            }
+
+            return $responseBody['data'] ?? [];
+        } catch (GuzzleException $e) {
+            throw new PreishoheitApiException('Failed to fetch jobs: ' . $e->getMessage());
+        }
+    }
+
+    public function closeJob(string $jobId): bool
+    {
+        try {
+            $response = $this->getClient()->delete('/jobs/' . $jobId);
+            return $response->getStatusCode() === 200;
+        } catch (GuzzleException $e) {
+            throw new PreishoheitApiException('Failed to close job: ' . $e->getMessage());
+        }
+    }
 }

@@ -1,0 +1,33 @@
+{% block bow_preishoheit_job_list %}
+    <sw-page>
+        <template #smart-bar-header>
+            <h2>{{ $tc('bow-preishoheit.jobs.pageTitle') }}</h2>
+        </template>
+
+        <template #smart-bar-actions>
+            <sw-button variant="primary" :isLoading="isLoading" @click="loadJobs">
+                {{ $tc('global.default.refresh') }}
+            </sw-button>
+        </template>
+
+        <template #content>
+            <sw-data-grid
+                :dataSource="jobs"
+                :columns="[
+                    { property: 'id', label: 'Job ID' },
+                    { property: 'status', label: 'Status' },
+                    { property: 'createdAt', label: 'Created At' }
+                ]"
+                :isLoading="isLoading"
+                :showSettings="true">
+                
+                <template #empty-state>
+                    <sw-empty-state
+                        :title="$tc('bow-preishoheit.jobs.emptyTitle')"
+                        :subtitle="$tc('bow-preishoheit.jobs.emptySubtitle')">
+                    </sw-empty-state>
+                </template>
+            </sw-data-grid>
+        </template>
+    </sw-page>
+{% endblock %}

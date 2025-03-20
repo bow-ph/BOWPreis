@@ -102,6 +102,23 @@
             "loadError": "Die Vorschau konnte nicht geladen werden.",
             "emptyTitle": "Keine Daten verfügbar",
             "emptySubtitle": "Laden Sie die Vorschau, um die Preisaktualisierungen zu sehen."
+        },
+        "jobs": {
+            "createTitle": "Neuen Job erstellen",
+            "productGroup": "Produktgruppe",
+            "productGroupPlaceholder": "Produktgruppe wählen",
+            "selectProducts": "Produkte auswählen",
+            "productsPlaceholder": "Produkte aus dem Shop auswählen",
+            "dynamicProductGroup": "Dynamische Produktgruppe",
+            "dynamicGroupPlaceholder": "Dynamische Produktgruppe auswählen",
+            "countries": "Länder",
+            "countriesPlaceholder": "Länder auswählen",
+            "categories": "Kategorien",
+            "createButton": "Job erstellen",
+            "cancelButton": "Abbrechen",
+            "successTitle": "Erfolg",
+            "createSuccess": "Job erfolgreich erstellt.",
+            "errorTitle": "Fehler"
         }
     },
     "global": {

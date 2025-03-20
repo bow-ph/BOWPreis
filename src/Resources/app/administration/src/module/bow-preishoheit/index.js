@@ -5,6 +5,8 @@ import './component/history';
 import './component/errors';
 import './component/product-grid';
 import './page/bow-preishoheit-preview';
+import './page/bow-preishoheit-job-list';
+import './page/bow-preishoheit-job-create';
 
 Shopware.Module.register('bow-preishoheit', {
     type: 'plugin',
@@ -69,6 +71,22 @@ Shopware.Module.register('bow-preishoheit', {
                 parentPath: 'sw.catalogue.index',
                 privilege: 'bow_preishoheit.viewer'
             }
+        },
+        jobList: {
+            component: 'bow-preishoheit-job-list',
+            path: 'jobs',
+            meta: {
+                parentPath: 'bow.preishoheit.list',
+                privilege: 'bow_preishoheit.viewer'
+            }
+        },
+        jobCreate: {
+            component: 'bow-preishoheit-job-create',
+            path: 'jobs/create',
+            meta: {
+                parentPath: 'bow.preishoheit.jobs',
+                privilege: 'bow_preishoheit.editor'
+            }
         }
     },
 
@@ -108,6 +126,14 @@ Shopware.Module.register('bow-preishoheit', {
         icon: 'regular-eye',
         parent: 'sw-catalogue',
         position: 110,
+        privilege: 'bow_preishoheit.viewer'
+    }, {
+        label: 'bow-preishoheit.jobs.menuLabel',
+        color: '#ff3d58',
+        path: 'bow.preishoheit.jobList',
+        icon: 'regular-list',
+        parent: 'sw-catalogue',
+        position: 120,
         privilege: 'bow_preishoheit.viewer'
     }]
 });
