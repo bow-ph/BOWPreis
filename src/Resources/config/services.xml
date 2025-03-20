@@ -1,29 +1,19 @@
 <?xml version="1.0" ?>
 
 <container xmlns="http://symfony.com/schema/dic/services"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://symfony.com/schema/dic/services
-                               http://symfony.com/schema/dic/services/services-1.0.xsd">
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
     <services>
-        <defaults autowire="true" autoconfigure="true" public="false">
-            <bind key="$logger" type="service" id="logger"/>
-        </defaults>
+        <defaults autowire="true" autoconfigure="true" public="false"/>
 
         <!-- Entity Definitions -->
         <service id="BOW\Preishoheit\Entity\Product\PreishoheitProductDefinition">
             <tag name="shopware.entity.definition" entity="bow_preishoheit_product" />
         </service>
+
         <!-- Repositories -->
         <service id="bow_preishoheit_product.repository" class="Shopware\Core\Framework\DataAbstractionLayer\EntityRepository">
             <argument type="service" id="BOW\Preishoheit\Entity\Product\PreishoheitProductDefinition"/>
-            <argument type="service" id="Shopware\Core\Framework\DataAbstractionLayer\Read\EntityReaderInterface"/>
-            <argument type="service" id="Shopware\Core\Framework\DataAbstractionLayer\VersionManager"/>
-            <argument type="service" id="Shopware\Core\Framework\DataAbstractionLayer\Search\EntitySearcherInterface"/>
-            <argument type="service" id="Shopware\Core\Framework\DataAbstractionLayer\Search\EntityAggregatorInterface"/>
-            <argument type="service" id="event_dispatcher"/>
-        </service>
-
-        <service id="bow_preishoheit_price_history.repository" class="Shopware\Core\Framework\DataAbstractionLayer\EntityRepository">
-            <argument type="service" id="BOW\Preishoheit\Entity\PriceHistory\PriceHistoryDefinition"/>
             <argument type="service" id="Shopware\Core\Framework\DataAbstractionLayer\Read\EntityReaderInterface"/>
             <argument type="service" id="Shopware\Core\Framework\DataAbstractionLayer\VersionManager"/>
             <argument type="service" id="Shopware\Core\Framework\DataAbstractionLayer\Search\EntitySearcherInterface"/>
@@ -49,15 +39,13 @@
         <service id="BOW\Preishoheit\Service\PreishoheitApi\PriceUpdateService" public="true">
             <argument type="service" id="BOW\Preishoheit\Service\PreishoheitApi\PreishoheitApiClient"/>
             <argument type="service" id="product.repository"/>
-            <argument type="service" id="bow_preishoheit_price_history.repository"/>
             <argument type="service" id="bow_preishoheit_error_log.repository"/>
-            <argument type="service" id="BOW\Preishoheit\Service\Price\PriceAdjustmentService"/>
             <argument type="service" id="logger"/>
             <argument type="service" id="country.repository"/>
         </service>
 
         <!-- Job Persistence -->
-        <service id="BOW\Preishoheit\Service\JobPersistenceService">
+        <service id="BOW\Preishoheit\Service\Job\JobPersistenceService">
             <argument type="service" id="bow_preishoheit_product.repository"/>
         </service>
 
