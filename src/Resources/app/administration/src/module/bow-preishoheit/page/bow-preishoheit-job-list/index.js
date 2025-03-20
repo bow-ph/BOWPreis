@@ -1,15 +1,12 @@
 import template from './bow-preishoheit-job-list.html.twig';
 
-const { Component, Mixin } = Shopware;
+const { Component } = Shopware;
 
 Component.register('bow-preishoheit-job-list', {
     template,
 
-    inject: ['repositoryFactory', 'httpClient'],
+    inject: ['repositoryFactory', 'httpClient', 'notificationService'],
 
-    mixins: [
-        Mixin.getByName('notification')
-    ],
 
     data() {
         return {
@@ -30,10 +27,9 @@ Component.register('bow-preishoheit-job-list', {
                     this.jobs = response.data.data;
                 })
                 .catch(error => {
-                    this.createNotificationError({
-                        title: this.$tc('bow-preishoheit.jobs.errorTitle'),
-                        message: error.response?.data?.message || error.message
-                    });
+                    this.notificationService.error(
+                        error.response?.data?.message || error.message
+                    );
                 })
                 .finally(() => {
                     this.isLoading = false;
