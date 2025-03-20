@@ -17,7 +17,6 @@
         {% block bow_preishoheit_preview_content %}
             <template #content>
                 <sw-data-grid
-                    v-if="previewData.length > 0"
                     :dataSource="previewData"
                     :columns="[
                         { property: 'productName', label: $tc('bow-preishoheit.preview.productName') },

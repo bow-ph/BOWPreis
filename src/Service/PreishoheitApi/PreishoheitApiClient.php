@@ -77,5 +77,47 @@ class PreishoheitApiClient
             throw new PreishoheitApiException('Failed to verify API key: ' . $e->getMessage());
         }
     }
+
+    public function createJob(string $productGroup, array $identifiers, array $countries): array
+{
+    try {
+        $payload = [
+            'productGroup' => $productGroup,
+            'identifiers' => $identifiers,
+            'countries' => $countries,
+        ];
+
+        $response = $this->getClient()->post('/jobs', [
+            'json' => $payload
+        ]);
+
+        if ($response->getStatusCode() !== 200) {
+            $this->logger->error('Job creation failed with invalid status code', [
+                'statusCode' => $response->getStatusCode()
+            ]);
+
+            throw new PreishoheitApiException('Invalid API response status: ' . $response->getStatusCode());
+        }
+
+        $responseBody = json_decode($response->getBody()->getContents(), true);
+
+        if (isset($responseBody['header']['error'])) {
+            $errorBody = $responseBody['header']['error'];
+            $this->logger->error('Job creation error: ' . $errorBody);
+
+            throw new PreishoheitApiException($errorBody);
+        }
+
+        return $responseBody['data'] ?? [];
+    } catch (GuzzleException $e) {
+        $this->logger->error('HTTP Error creating job', [
+            'message' => $e->getMessage(),
+            'exception' => $e
+        ]);
+
+        throw new PreishoheitApiException('Failed to create job: ' . $e->getMessage());
+    }
+}
+
     
 }
