@@ -25,7 +25,6 @@ Component.register('bow-preishoheit-job-list', {
     methods: {
         loadJobs() {
             this.isLoading = true;
-
             this.httpClient.get('/api/bow-preishoheit/jobs')
                 .then(response => {
                     this.jobs = response.data.data;
@@ -40,9 +39,10 @@ Component.register('bow-preishoheit-job-list', {
                     this.isLoading = false;
                 });
         },
-
+    
         onRefresh() {
             this.loadJobs();
         }
     }
+    
 });

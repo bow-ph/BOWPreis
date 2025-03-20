@@ -5,29 +5,41 @@
         </template>
 
         <template #smart-bar-actions>
-            <sw-button variant="primary" :isLoading="isLoading" @click="onRefresh">
-                {{ $tc('global.default.refresh') }}
+            <sw-button variant="primary" routerLink="{ name: 'bow.preishoheit.jobCreate' }">
+                    {{ $tc('bow-preishoheit.jobs.createNewJob') }}
             </sw-button>
+
+            <sw-button variant="default" :isLoading="isLoading" @click="onRefresh">
+                     {{ $tc('global.default.refresh') }}
+            </sw-button>
+
         </template>
 
         <template #content>
             <sw-data-grid
-                :dataSource="jobs"
-                :columns="[
-                    { property: 'id', label: $tc('bow-preishoheit.jobs.columnJobId') },
-                    { property: 'status', label: $tc('bow-preishoheit.jobs.columnStatus') },
-                    { property: 'createdAt', label: $tc('bow-preishoheit.jobs.columnCreatedAt'), dateFormat: 'date' }
-                ]"
-                :isLoading="isLoading"
-                :showSettings="true">
+    :dataSource="jobs"
+    :columns="[
+        { property: 'id', label: $tc('bow-preishoheit.jobs.columnJobId') },
+        { property: 'status', label: $tc('bow-preishoheit.jobs.columnStatus') },
+        { property: 'createdAt', label: $tc('bow-preishoheit.jobs.columnCreatedAt'), dateFormat: 'date' }
+    ]"
+    :isLoading="isLoading"
+    :showSettings="true">
 
-                <template #empty-state>
-                    <sw-empty-state
-                        :title="$tc('bow-preishoheit.jobs.emptyTitle')"
-                        :subtitle="$tc('bow-preishoheit.jobs.emptySubtitle')">
-                    </sw-empty-state>
-                </template>
-            </sw-data-grid>
+    <template #column-status="{ item }">
+        <span v-if="item.status === 'Finished'">🟢 Fertig</span>
+        <span v-else-if="item.status === 'Pending'">🟡 Läuft</span>
+        <span v-else-if="item.status === 'Failed'">🔴 Fehler</span>
+        <span v-else>⚪️ Unbekannt</span>
+    </template>
+
+    <template #empty-state>
+        <sw-empty-state
+            :title="$tc('bow-preishoheit.jobs.emptyTitle')"
+            :subtitle="$tc('bow-preishoheit.jobs.emptySubtitle')">
+        </sw-empty-state>
+    </template>
+</sw-data-grid>
         </template>
     </sw-page>
 {% endblock %}
