@@ -10,7 +10,7 @@
                     <sw-single-select
                         :options="productGroups"
                         v-model="jobData.productGroup"
-                        placeholder="{{ $tc('bow-preishoheit.jobs.productGroupPlaceholder') }}"
+                        :placeholder="$tc('bow-preishoheit.jobs.productGroupPlaceholder')"
                     />
                 </sw-field>
 
@@ -19,7 +19,7 @@
                         entity="product"
                         v-model="jobData.selectedProducts"
                         labelProperty="name"
-                        placeholder="{{ $tc('bow-preishoheit.jobs.productsPlaceholder') }}"
+                        :placeholder="$tc('bow-preishoheit.jobs.productsPlaceholder')"
                     />
                 </sw-field>
 
@@ -27,9 +27,7 @@
                     <sw-single-select
                         v-model="jobData.dynamicProductGroupId"
                         :options="dynamicProductGroups"
-                        labelProperty="name"
-                        valueProperty="id"
-                        placeholder="{{ $tc('bow-preishoheit.jobs.dynamicGroupPlaceholder') }}"
+                        :placeholder="$tc('bow-preishoheit.jobs.dynamicGroupPlaceholder')"
                     />
                 </sw-field>
 
@@ -37,9 +35,7 @@
                     <sw-multi-select
                         v-model="jobData.countries"
                         :options="countries"
-                        labelProperty="name"
-                        valueProperty="iso"
-                        placeholder="{{ $tc('bow-preishoheit.jobs.countriesPlaceholder') }}"
+                        :placeholder="$tc('bow-preishoheit.jobs.countriesPlaceholder')"
                     />
                 </sw-field>
 
@@ -50,13 +46,15 @@
                     />
                 </sw-field>
 
-                <sw-button variant="primary" :isLoading="isLoading" @click="saveJob">
-                    {{ $tc('bow-preishoheit.jobs.createButton') }}
-                </sw-button>
+                <div class="sw-card__toolbar">
+                    <sw-button variant="primary" :isLoading="isLoading" @click="saveJob">
+                        {{ $tc('bow-preishoheit.jobs.createButton') }}
+                    </sw-button>
 
-                <sw-button variant="default" @click="onCancel">
-                    {{ $tc('bow-preishoheit.jobs.cancelButton') }}
-                </sw-button>
+                    <sw-button variant="default" @click="onCancel">
+                        {{ $tc('bow-preishoheit.jobs.cancelButton') }}
+                    </sw-button>
+                </div>
             </sw-card>
         </sw-card-view>
     </template>

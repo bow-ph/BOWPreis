@@ -1,20 +1,15 @@
-import template from './bow-preishoheit-detail.html.twig';
+import template from './bow-preishoheit-job-detail.html.twig';
 const { Component, Mixin } = Shopware;
-const { Criteria } = Shopware.Data;
 
-Component.register('bow-preishoheit-detail', {
+Component.register('bow-preishoheit-job-detail', {
     template,
 
-    inject: [
-        'repositoryFactory'
-    ],
+    inject: ['repositoryFactory'],
 
-    mixins: [
-        Mixin.getByName('notification')
-    ],
+    mixins: [Mixin.getByName('notification')],
 
     props: {
-        productId: {
+        jobId: {
             type: String,
             required: true
         }
@@ -23,96 +18,71 @@ Component.register('bow-preishoheit-detail', {
     data() {
         return {
             isLoading: false,
-            isSaveSuccessful: false,
-            product: null,
-            priceHistory: [],
-            errorLogs: []
+            jobStatus: null,
+            jobData: null,
+            pollingInterval: null
         };
     },
 
     computed: {
-        productRepository() {
-            return this.repositoryFactory.create('bow_preishoheit_product');
+        isJobFinished() {
+            return this.jobStatus === 'Finished';
         },
-
-        priceHistoryRepository() {
-            return this.repositoryFactory.create('bow_preishoheit_price_history');
+        isJobPending() {
+            return this.jobStatus === 'Pending';
         },
-
-        errorLogRepository() {
-            return this.repositoryFactory.create('bow_preishoheit_error_log');
+        isJobFailed() {
+            return this.jobStatus === 'Failed';
         }
     },
 
     created() {
-        this.loadData();
+        this.loadJobStatus();
+        this.startPolling();
+    },
+
+    beforeUnmount() {
+        clearInterval(this.pollingInterval);
     },
 
     methods: {
-        loadData() {
+        loadJobStatus() {
             this.isLoading = true;
-
-            const criteria = new Criteria();
-            criteria.addAssociation('product');
-
-            this.productRepository.get(this.productId, Shopware.Context.api, criteria)
-                .then((product) => {
-                    this.product = product;
-                    return Promise.all([
-                        this.loadPriceHistory(),
-                        this.loadErrorLogs()
-                    ]);
+            this.$http.get(`/api/_action/bow-preishoheit/jobs/${this.jobId}`)
+                .then(response => {
+                    if (response.data.success) {
+                        this.jobStatus = response.data.status;
+                        this.jobData = response.data.data;
+                    } else {
+                        this.createNotificationError({
+                            title: this.$tc('global.default.error'),
+                            message: response.data.message
+                        });
+                    }
                 })
-                .finally(() => {
-                    this.isLoading = false;
-                });
-        },
-
-        loadPriceHistory() {
-            const criteria = new Criteria();
-            criteria.addFilter(Criteria.equals('productId', this.productId));
-            criteria.addSorting(Criteria.sort('createdAt', 'DESC'));
-            criteria.setLimit(50);
-
-            return this.priceHistoryRepository.search(criteria, Shopware.Context.api)
-                .then(({ items }) => {
-                    this.priceHistory = items;
-                });
-        },
-
-        loadErrorLogs() {
-            const criteria = new Criteria();
-            criteria.addFilter(Criteria.equals('productId', this.productId));
-            criteria.addSorting(Criteria.sort('createdAt', 'DESC'));
-            criteria.setLimit(50);
-
-            return this.errorLogRepository.search(criteria, Shopware.Context.api)
-                .then(({ items }) => {
-                    this.errorLogs = items;
-                });
-        },
-
-        onSave() {
-            this.isLoading = true;
-            this.isSaveSuccessful = false;
-
-            return this.productRepository.save(this.product, Shopware.Context.api)
-                .then(() => {
-                    this.isSaveSuccessful = true;
-                    this.createNotificationSuccess({
-                        title: this.$tc('global.default.success'),
-                        message: this.$tc('global.notification.saveSuccess')
-                    });
-                })
-                .catch((error) => {
+                .catch(error => {
                     this.createNotificationError({
                         title: this.$tc('global.default.error'),
-                        message: error.message || this.$tc('global.notification.saveError')
+                        message: error.message
                     });
                 })
                 .finally(() => {
                     this.isLoading = false;
                 });
+        },
+
+        startPolling() {
+            this.pollingInterval = setInterval(() => {
+                if (!this.isJobFinished && !this.isJobFailed) {
+                    this.loadJobStatus();
+                } else {
+                    clearInterval(this.pollingInterval);
+                }
+            }, 30000); // alle 30 Sekunden
+        },
+
+        refreshStatus() {
+            this.loadJobStatus();
         }
     }
 });

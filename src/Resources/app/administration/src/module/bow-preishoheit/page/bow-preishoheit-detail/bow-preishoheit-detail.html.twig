@@ -1,57 +1,44 @@
-{% block bow_preishoheit_detail %}
-    <sw-page class="bow-preishoheit-detail">
-        {% block bow_preishoheit_detail_smart_bar_header %}
-            <template #smart-bar-header>
-                <h2 v-if="product && product.product">{{ product.product.name }}</h2>
-                <h2 v-else>{{ $tc('bow-preishoheit.detail.noProductLoaded') }}</h2>
-            </template>
-        {% endblock %}
+{% block bow_preishoheit_job_detail %}
+<sw-page class="bow-preishoheit-job-detail">
+    {% block bow_preishoheit_job_detail_smart_bar_header %}
+        <template #smart-bar-header>
+            <h2>{{ $tc('bow-preishoheit.jobs.detailTitle') }}</h2>
+        </template>
+    {% endblock %}
 
-        {% block bow_preishoheit_detail_smart_bar_actions %}
-            <template #smart-bar-actions>
-                <sw-button-process
-                    :isLoading="isLoading"
-                    :processSuccess="isSaveSuccessful"
-                    variant="primary"
-                    @process-finish="isSaveSuccessful = false"
-                    @click="onSave">
-                    {{ $tc('global.default.save') }}
-                </sw-button-process>
-            </template>
-        {% endblock %}
+    {% block bow_preishoheit_job_detail_smart_bar_actions %}
+        <template #smart-bar-actions>
+            <sw-button variant="primary" @click="refreshStatus" :isLoading="isLoading">
+                {{ $tc('global.default.refresh') }}
+            </sw-button>
+        </template>
+    {% endblock %}
 
-        {% block bow_preishoheit_detail_content %}
-            <template #content>
-                <sw-card-view>
-                    {% block bow_preishoheit_detail_content_tabs %}
-                        <sw-tabs class="bow-preishoheit-detail-tabs">
-                            <sw-tabs-item
-                                :route="{ name: 'bow.preishoheit.detail.settings', params: { id: productId } }"
-                                :title="$tc('bow-preishoheit.detail.tabSettings')">
-                            </sw-tabs-item>
+    {% block bow_preishoheit_job_detail_content %}
+        <template #content>
+            <sw-card-view>
+                <sw-card>
+                    <div v-if="isLoading" class="sw-loader"></div>
 
-                            <sw-tabs-item
-                                :route="{ name: 'bow.preishoheit.detail.history', params: { id: productId } }"
-                                :title="$tc('bow-preishoheit.detail.tabHistory')">
-                            </sw-tabs-item>
+                    <template v-else>
+                        <div v-if="isJobPending">
+                            <p>{{ $tc('bow-preishoheit.jobs.statusPending') }}</p>
+                        </div>
 
-                            <sw-tabs-item
-                                :route="{ name: 'bow.preishoheit.detail.errors', params: { id: productId } }"
-                                :title="$tc('bow-preishoheit.detail.tabErrors')">
-                            </sw-tabs-item>
+                        <div v-else-if="isJobFinished">
+                            <p>{{ $tc('bow-preishoheit.jobs.statusFinished') }}</p>
+                            <router-link :to="{ name: 'bow.preishoheit.jobDownload', params: { jobId: jobId }}">
+                                {{ $tc('bow-preishoheit.jobs.downloadData') }}
+                            </router-link>
+                        </div>
 
-                            <sw-tabs-item
-                                :route="{ name: 'bow.preishoheit.detail.api-config', params: { id: productId } }"
-                                :title="$tc('bow-preishoheit.detail.tabApiConfig')">
-                            </sw-tabs-item>
-                        </sw-tabs>
-                    {% endblock %}
-
-                    {% block bow_preishoheit_detail_content_view %}
-                        <router-view :product="product" @refresh="loadData"></router-view>
-                    {% endblock %}
-                </sw-card-view>
-            </template>
-        {% endblock %}
-    </sw-page>
+                        <div v-else-if="isJobFailed">
+                            <p>{{ $tc('bow-preishoheit.jobs.statusFailed') }}</p>
+                        </div>
+                    </template>
+                </sw-card>
+            </sw-card-view>
+        </template>
+    {% endblock %}
+</sw-page>
 {% endblock %}
