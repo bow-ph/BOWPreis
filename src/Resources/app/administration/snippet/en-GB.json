@@ -1,5 +1,17 @@
 {
     "bow-preishoheit": {
+        "general": {
+            "mainMenuItemGeneral": "Price Authority",
+            "descriptionTextModule": "Management of product prices with Price Authority",
+            "preview": "Price Authority Preview"
+        },
+        "list": {
+            "title": "Product List",
+            "columnProductName": "Product Name",
+            "columnEan": "EAN/GTIN",
+            "columnPrice": "Price",
+            "columnLastUpdate": "Last Update"
+        },
         "settings": {
             "cardTitle": "Price Update Settings",
             "buttonManualUpdate": "Update Prices Now",
@@ -46,7 +58,7 @@
         "apiConfig": {
             "cardTitle": "API Configuration",
             "apiKeyLabel": "API Key",
-            "apiKeyPlaceholder": "Enter your Preishoheit API key",
+            "apiKeyPlaceholder": "Enter your Price Authority API key",
             "buttonSave": "Save",
             "buttonVerify": "Verify API Key",
             "verificationSuccessTitle": "Success",
@@ -90,6 +102,11 @@
             "loadError": "Could not load preview data.",
             "emptyTitle": "No data available",
             "emptySubtitle": "Load the preview to see the price updates."
+        }
+    },
+    "global": {
+        "default": {
+            "refresh": "Refresh"
         }
     }
 }
