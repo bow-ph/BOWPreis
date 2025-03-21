@@ -17,16 +17,7 @@
     <sw-card-view>
         <sw-loader v-if="isLoading"></sw-loader>
 
-        <div v-if="!isLoading && jobs.length === 0" class="sw-empty-state">
-            <sw-icon name="regular-info-circle" size="48"></sw-icon>
-            <h3>{{ $t('bow-preishoheit.jobs.emptyTitle') }}</h3>
-            <p>{{ $t('bow-preishoheit.jobs.emptyDescription') }}</p>
-            <sw-button variant="primary" @click="$router.push({ name: 'bow.preishoheit.jobCreate' })">
-                {{ $t('bow-preishoheit.jobs.createFirstJob') }}
-            </sw-button>
-        </div>
-
-        <sw-data-grid v-else :dataSource="jobs" @row-click="openJobDetail">
+        <sw-data-grid :dataSource="jobs" @row-click="openJobDetail">
             <sw-data-grid-column property="id" label="ID" primary></sw-data-grid-column>
 
             <sw-data-grid-column property="status" label="Status">
@@ -38,6 +29,21 @@
             </sw-data-grid-column>
 
             <sw-data-grid-column property="createdAt" label="Erstellt am"></sw-data-grid-column>
+
+            <template #emptyState>
+                <sw-empty-state
+                    :title="$t('bow-preishoheit.jobs.emptyTitle')"
+                    :description="$t('bow-preishoheit.jobs.emptyDescription')">
+                    <template #icon>
+                        <sw-icon name="regular-info-circle" size="64"></sw-icon>
+                    </template>
+                    <template #actions>
+                        <sw-button variant="primary" @click="$router.push({ name: 'bow.preishoheit.jobCreate' })">
+                            {{ $t('bow-preishoheit.jobs.createFirstJob') }}
+                        </sw-button>
+                    </template>
+                </sw-empty-state>
+            </template>
         </sw-data-grid>
     </sw-card-view>
 </sw-page>
