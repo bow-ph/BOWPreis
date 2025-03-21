@@ -1,207 +1,145 @@
-# BOW Preishoheit Plugin
+# Preishoheit Plugin für Shopware 6.6.x
 
-## Overview
-The BOWPreishoheit plugin enables dynamic price adjustments for Shopware products based on imported data from the Preishoheit API. It provides a comprehensive solution for automated price management with real-time updates and detailed tracking.
+## 🇩🇪 Deutsche Version
+- [English version below](#gb-english-version)
 
-## Key Features
-- Product selection for dynamic pricing
-- Flexible pricing settings
-- Price import history
-- Comprehensive error logging
-- Automated processing via cron jobs
-- Secure API key management
-- Bilingual interface (German/English)
+Mit diesem Plugin kannst du dynamisch die Preise deiner Shopware-Produkte mithilfe der Preishoheit API verwalten und optimieren.
 
-## Requirements
-- Shopware 6.6.x
-- PHP 8.1 or higher
-- Valid Preishoheit API key
-- Active internet connection for API communication
-- Cron service for automated updates
+---
 
-## Installation
-1. Upload the plugin to your Shopware installation
-2. Install and activate the plugin through the plugin manager
-3. Configure your Preishoheit API key in the plugin settings
+## 🚀 Funktionen und Vorteile
 
-## Configuration
+- **Automatische Preisanpassung** deiner Produkte auf Basis aktueller Marktpreise.
+- **Einfache Verwaltung** über die Shopware-Administration.
+- **Flexible Konfiguration** über das Shopware-Backend (API-Key, Intervalle, Felder).
+- **Persistentes Produkt-Mapping** für eine einfache Wiederverwendung.
 
-### API Configuration
-1. Navigate to Settings > System > BOW Preishoheit
-2. Open the "API Configuration" tab
-3. Enter your Preishoheit API key in the secure input field
-4. Click "Verify API Key" to test the connection
-5. Save your configuration after successful verification
+---
 
-### Product Selection
-1. Access the "Product Selection" tab
-2. Use the grid view to select products for price management
-3. Configure individual surcharge/discount percentages
-4. Enable/disable price updates per product
-5. Use bulk actions for efficient management
+## ⚙️ Installation
 
-### Price Update Settings
-1. Configure global price adjustment settings
-2. Set up automated update intervals (1min - 24hrs)
-3. Use manual update button for immediate price updates
-4. Monitor update status and results
+1. **Plugin hochladen:**
+   Lade die ZIP-Datei im Shopware-Adminbereich unter  
+   `Einstellungen → System → Plugins` hoch.
 
-### API Endpoints
+2. **Plugin aktivieren:**
+   Nach dem Hochladen das Plugin installieren und aktivieren.
 
-#### Price Update Endpoints
-```
-POST /api/_action/bow-preishoheit/update-prices
-- Triggers manual price update
-- Returns: { "success": true/false, "message": "string" }
+3. **Plugin konfigurieren:**
+   Trage den von Preishoheit bereitgestellten API-Key und API-Endpoint unter  
+   `Einstellungen → System → Plugins → Preishoheit → Konfiguration` ein.
 
-POST /api/_action/bow-preishoheit/verify-api-key
-- Verifies API key configuration
-- Body: { "apiKey": "string" }
-- Returns: { "success": true/false, "message": "string" }
-```
+4. **Cronjob einrichten (optional, empfohlen):**
+   Der Cronjob läuft standardmäßig alle 5 Minuten und prüft den Status deiner Preisanfragen.
 
-### Component Usage
+---
 
-#### Product Grid
-```javascript
-// Template usage
-<bow-preishoheit-product-grid></bow-preishoheit-product-grid>
+## 🖥️ Nutzung im Shopware Admin
 
-// Features
-- Product selection with pagination
-- Inline editing for surcharge/discount
-- Bulk selection capabilities
-- Sorting and filtering
-```
+Nach erfolgreicher Installation findest du im Admin folgende Tabs:
 
-#### Price History
-```javascript
-// Template usage
-<bow-preishoheit-price-history></bow-preishoheit-price-history>
+- **General**: Übersicht zu Jobs, Status und letzten API-Checks.
+- **Jobs**: Jobs zur dynamischen Preisanpassung erstellen und verwalten.
+- **Results**: Ergebnisse verwalten und manuell anpassen (Titel, Preis, EAN).
+- **Mapping**: Externe Produkt-IDs mit Shopware-Produkten verknüpfen.
+- **Settings**: Cronjob-Intervalle und Felder zur automatischen Datenüberschreibung konfigurieren.
 
-// Features
-- Tabular view of price changes
-- Date/time tracking
-- EAN/GTIN tracking
-- Price comparison
-```
+---
 
-#### Settings Component
-```javascript
-// Template usage
-<bow-preishoheit-settings></bow-preishoheit-settings>
+## 🛠️ Technische Details
 
-// Features
-- API key management
-- Manual update trigger
-- Configuration options
-```
+### Voraussetzungen:
+- Shopware-Version: 6.6.x oder höher
+- PHP 8.2+
+- Composer
+- Aktiver Preishoheit API-Key
 
-### Error Handling
-The plugin includes comprehensive error handling with detailed logging:
+### Composer-Abhängigkeiten:
+- Guzzle HTTP-Client
 
-#### API Communication Errors
-- Invalid API key
-- Connection timeout
-- Server errors
-- Logged to `var/log/bow_preishoheit_api.log`
+### Shopware DAL Integration:
+- Vollständig integriert mit Shopware DAL & Entity-System.
 
-#### Configuration Errors
-- Missing API key
-- Invalid settings
-- Logged to `var/log/bow_preishoheit_config.log`
+---
 
-#### System Errors
-- Unexpected errors
-- Critical failures
-- Logged to `var/log/bow_preishoheit_system.log`
+## 📝 Lizenz
+Dieses Plugin ist proprietär.  
+© 2024 BOW E-Commerce Agentur GmbH
 
-### Implementation Notes
+---
 
-#### Error Handling Service
-```php
-// Use ErrorLogger service for consistent error handling
-$this->errorLogger->logApiError($error, $context);
-$this->errorLogger->logConfigurationError($error);
-$this->errorLogger->logSystemError($error, $context);
-```
+## 🧑‍💻 Support
+Bei Fragen oder Problemen wende dich an: [info@bow-agentur.de](mailto:info@bow-agentur.de)
 
-#### Price Calculation
-```php
-// Use PriceAdjustmentService for price calculations
-$newPrice = $this->priceAdjustmentService->calculateAdjustedPrice(
-    $basePrice,
-    $surchargePercentage
-);
-```
+---
 
-#### Entity Structure
-```php
-// PreishoheitProduct entity fields
-- id (string, primary)
-- productId (string, foreign key)
-- active (boolean)
-- surchargePercentage (float)
-- createdAt (datetime)
-- updatedAt (datetime)
-```
+## 🇬🇧 English Version
+- [Deutsche Version oben](#deutsche-version)
 
-## Testing
+With this plugin, you can dynamically manage and optimize the prices of your Shopware products using the Preishoheit API.
 
-### Running Tests
-```bash
-# Unit Tests
-./vendor/bin/phpunit tests/Unit
+---
 
-# Integration Tests
-./vendor/bin/phpunit tests/Integration
-```
+## 🚀 Features & Benefits
 
-### Test Coverage
-- Unit tests for services and components
-- Integration tests for API communication
-- End-to-end tests for admin interface
-- Price calculation validation
-- Error handling verification
+- **Automatic price adjustments** for your products based on current market prices.
+- **Easy administration** via Shopware administration interface.
+- **Flexible configuration** via Shopware backend (API key, intervals, fields).
+- **Persistent product mapping** for easy reuse.
 
-## Development
+---
 
-### Directory Structure
-```
-BOWPreishoheit/
-├── src/
-│   ├── Controller/
-│   │   └── ApiVerificationController.php
-│   ├── Exception/
-│   │   ├── ApiVerificationException.php
-│   │   ├── ConfigurationException.php
-│   │   └── PreishoheitApiException.php
-│   ├── Service/
-│   │   ├── ErrorHandling/
-│   │   ├── Price/
-│   │   └── PreishoheitApi/
-│   └── Resources/
-│       └── app/
-│           └── administration/
-│               ├── component/
-│               └── snippet/
-└── tests/
-    ├── Unit/
-    └── Integration/
-```
+## ⚙️ Installation
 
-### Best Practices
-- Follow Shopware coding standards
-- Use dependency injection
-- Implement comprehensive error handling
-- Include bilingual support
-- Write unit and integration tests
-- Follow reference plugin patterns:
-  - FroshTools for tab-based navigation
-  - SwagCustomizedProducts for product grid
-  - rapi1Connector for API handling
+1. **Upload the plugin:**
+   Upload the ZIP file in your Shopware admin panel under  
+   `Settings → System → Plugins`.
 
-## Support
-For support inquiries, please contact:
-- Email: support@bow-agentur.de
-- Website: https://www.bow-agentur.de
+2. **Activate the plugin:**
+   After upload, install and activate the plugin.
+
+3. **Configure the plugin:**
+   Enter the API key and API endpoint provided by Preishoheit under  
+   `Settings → System → Plugins → Preishoheit → Configuration`.
+
+4. **Set up Cronjob (optional, recommended):**
+   The cronjob runs every 5 minutes by default, checking your pricing job statuses.
+
+---
+
+## 🖥️ Usage in Shopware Admin
+
+After installation, you'll find these tabs in your Shopware Admin:
+
+- **General**: Overview of jobs, status, and recent API checks.
+- **Jobs**: Create and manage jobs for dynamic pricing adjustments.
+- **Results**: Manage and manually adjust results (title, price, EAN).
+- **Mapping**: Link external product IDs with Shopware products.
+- **Settings**: Configure cronjob intervals and automatic data overwrite fields.
+
+---
+
+## 🛠️ Technical details
+
+### Requirements:
+- Shopware version: 6.6.x or higher
+- PHP 8.2+
+- Composer
+- Active Preishoheit API key
+
+### Composer dependencies:
+- Guzzle HTTP client
+
+### Shopware DAL integration:
+- Fully integrated with Shopware DAL & Entity System.
+
+---
+
+## 📝 License
+This plugin is proprietary.  
+© 2024 BOW E-Commerce Agentur GmbH
+
+---
+
+## 🧑‍💻 Support
+For questions or issues, contact: [info@bow-agentur.de](mailto:info@bow-agentur.de)
