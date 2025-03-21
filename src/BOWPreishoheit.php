@@ -12,7 +12,7 @@ use Shopware\Core\Framework\Plugin\Context\DeactivateContext;
 use Shopware\Core\System\SystemConfig\SystemConfigService;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
-class BOWPreishoheit extends Plugin
+class BowPreishoheit extends Plugin
 {
     public function install(InstallContext $installContext): void
     {

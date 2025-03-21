@@ -25,13 +25,8 @@
         "Bow\\Preishoheit\\": "src/"
       }
     },
-    "autoload-dev": {
-      "psr-4": {
-        "Bow\\Preishoheit\\Tests\\": "tests/"
-      }
-    },
     "extra": {
-      "shopware-plugin-class": "Bow\\Preishoheit\\BOWPreishoheit",
+      "shopware-plugin-class": "Bow\\Preishoheit\\BowPreishoheit",
       "label": {
         "de-DE": "Preishoheit",
         "en-GB": "Price Authority"
