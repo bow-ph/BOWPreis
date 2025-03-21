@@ -1,8 +1,49 @@
 {
     "bow-preishoheit": {
-        "general": {
-            "mainMenuItemGeneral": "Preishoheit",
-            "descriptionTextModule": "Dynamische Preisanpassungen für Shopware-Produkte"
-        }
+      "general": {
+        "title": "Allgemein",
+        "totalJobs": "Gesamtzahl Jobs",
+        "openJobs": "Offene Jobs",
+        "lastApiCheck": "Letzte API-Prüfung",
+        "refreshStatus": "Status aktualisieren"
+      },
+      "jobs": {
+        "title": "Jobs verwalten",
+        "createJob": "Job erstellen",
+        "ean": "EAN",
+        "country": "Land",
+        "platform": "Plattform",
+        "category": "Kategorie",
+        "selectProducts": "Produkte auswählen"
+      },
+      "results": {
+        "title": "Ergebnisse",
+        "approveAndSave": "Alle Änderungen freigeben & speichern",
+        "edit": "Bearbeiten",
+        "price": "Preis",
+        "titleField": "Titel",
+        "ean": "EAN"
+      },
+      "mapping": {
+        "title": "Produkt-Mapping",
+        "productSelect": "Produkt auswählen",
+        "externalId": "Externe Produkt-ID",
+        "saveMapping": "Mapping speichern",
+        "delete": "Löschen"
+      },
+      "settings": {
+        "title": "Einstellungen",
+        "cronInterval": "Cronjob-Intervall (Minuten)",
+        "overwriteFields": "Beim Speichern überschreiben",
+        "ean": "EAN überschreiben",
+        "titleField": "Titel überschreiben",
+        "price": "Preis überschreiben",
+        "saveSettings": "Einstellungen speichern"
+      },
+      "notification": {
+        "success": "Erfolgreich gespeichert!",
+        "error": "Speichern fehlgeschlagen!"
+      }
     }
-}
+  }
+  

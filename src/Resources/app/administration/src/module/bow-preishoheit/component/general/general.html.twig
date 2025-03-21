@@ -1,0 +1,26 @@
+<sw-card title="General Information">
+
+    <sw-container columns="3">
+        <sw-card>
+            <h3>Total Jobs</h3>
+            <p>{{ totalJobs }}</p>
+        </sw-card>
+
+        <sw-card>
+            <h3>Open Jobs</h3>
+            <p>{{ openJobs }}</p>
+        </sw-card>
+
+        <sw-card>
+            <h3>Last API check</h3>
+            <p>{{ lastApiCheck }}</p>
+        </sw-card>
+    </sw-container>
+
+    <template #toolbar>
+        <sw-button variant="primary" @click="refreshStatus" :isLoading="isLoading">
+            Refresh Status
+        </sw-button>
+    </template>
+
+</sw-card>

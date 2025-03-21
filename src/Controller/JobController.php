@@ -1,114 +1,45 @@
 <?php declare(strict_types=1);
 
-namespace BOW\Preishoheit\Controller;
+namespace Bow\Preishoheit\Controller;
 
-use BOW\Preishoheit\Service\PreishoheitApi\PreishoheitApiClient;
-use BOW\Preishoheit\Service\JobPersistenceService;
+use Shopware\Core\Framework\Routing\Annotation\RouteScope;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Attribute\Route;
-use Psr\Log\LoggerInterface;
-use Shopware\Core\Framework\Context;
-use BOW\Preishoheit\Exception\PreishoheitApiException;
 
 #[Route(defaults: ['_routeScope' => ['api']])]
 class JobController extends AbstractController
 {
-    private PreishoheitApiClient $apiClient;
-    private LoggerInterface $logger;
-    private JobPersistenceService $jobPersistenceService;
-
-    public function __construct(
-        PreishoheitApiClient $apiClient,
-        LoggerInterface $logger,
-        JobPersistenceService $jobPersistenceService
-    ) {
-        $this->apiClient = $apiClient;
-        $this->logger = $logger;
-        $this->jobPersistenceService = $jobPersistenceService;
+    #[Route('/api/bow-preishoheit/job', methods: ['POST'])]
+    public function createJob(Request $request, JobService $jobService, PreishoheitApiService $apiService): JsonResponse
+    {
+        $data = $request->toArray();
+    
+        $productIds = $data['products'] ?? [];
+    
+        foreach ($productIds as $productId) {
+            $jobId = $jobService->createJob($productId);
+    
+            $apiPayload = [
+                'ean' => $data['ean'],
+                'country' => $data['country'],
+                'platform' => $data['platform'],
+                'category' => $data['category'],
+                'productId' => $productId
+            ];
+    
+            $apiResponse = $apiService->createJob($apiPayload);
+    
+            $jobService->updateJobStatus($jobId, $apiResponse['status']);
+        }
+    
+        return new JsonResponse(['success' => true]);
     }
 
-    #[Route(path: '/api/bow-preishoheit/jobs', name: 'api.bow.preishoheit.jobs', methods: ['GET'])]
-    public function listJobs(): JsonResponse
+    #[Route(path: '/api/bow-preishoheit/job/{id}', name: 'api.bow-preishoheit.job.detail', methods: ['GET'])]
+    public function getJob(string $id): JsonResponse
     {
-        try {
-            $jobs = $this->apiClient->getJobs();
-
-            return new JsonResponse(['success' => true, 'data' => $jobs]);
-        } catch (PreishoheitApiException $e) {
-            $this->logger->error('Error fetching jobs', ['exception' => $e]);
-
-            return new JsonResponse([
-                'success' => false,
-                'message' => $e->getMessage()
-            ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    #[Route(path: '/api/_action/bow-preishoheit/jobs/create', name: 'api.bow.preishoheit.jobs.create', methods: ['POST'])]
-    public function createJob(Request $request, Context $context): JsonResponse
-    {
-        $data = json_decode($request->getContent(), true);
-
-        if (!$data) {
-            return new JsonResponse(['success' => false, 'message' => 'Invalid request payload'], JsonResponse::HTTP_BAD_REQUEST);
-        }
-
-        try {
-            $response = $this->apiClient->createJob(
-                $data['productGroup'],
-                $data['identifiers'],
-                $data['countries'],
-                $data['categories'] ?? []
-            );
-
-            $this->jobPersistenceService->saveJob($response, $context);
-
-            return new JsonResponse([
-                'success' => true,
-                'data' => $response
-            ]);
-        } catch (\Throwable $e) {
-            $this->logger->error('Error creating job', [
-                'message' => $e->getMessage(),
-                'exception' => $e
-            ]);
-
-            return new JsonResponse([
-                'success' => false,
-                'message' => 'Failed to create job',
-                'error' => $e->getMessage()
-            ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    #[Route(path: '/api/_action/bow-preishoheit/jobs/{jobId}', name: 'api.bow.preishoheit.jobs.status', methods: ['GET'])]
-    public function getJobStatus(string $jobId, Context $context): JsonResponse
-    {
-        try {
-            $jobData = $this->apiClient->getJob($jobId);
-
-            if ($jobData['status'] === 'Finished') {
-                $this->jobPersistenceService->persistJobData($jobData['products'], $context);
-            }
-
-            return new JsonResponse([
-                'success' => true,
-                'status' => $jobData['status'],
-                'data' => $jobData['products'] ?? []
-            ]);
-        } catch (\Throwable $e) {
-            $this->logger->error('Error fetching job status', [
-                'jobId' => $jobId,
-                'exception' => $e
-            ]);
-
-            return new JsonResponse([
-                'success' => false,
-                'message' => 'Failed to fetch job status',
-                'error' => $e->getMessage()
-            ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
-        }
+        return new JsonResponse(['jobId' => $id]);
     }
 }

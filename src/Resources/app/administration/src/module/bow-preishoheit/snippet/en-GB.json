@@ -1,8 +1,49 @@
 {
     "bow-preishoheit": {
-        "general": {
-            "mainMenuItemGeneral": "Price Authority",
-            "descriptionTextModule": "Dynamic price adjustments for Shopware products"
-        }
+      "general": {
+        "title": "General",
+        "totalJobs": "Total jobs",
+        "openJobs": "Open jobs",
+        "lastApiCheck": "Last API check",
+        "refreshStatus": "Refresh status"
+      },
+      "jobs": {
+        "title": "Manage Jobs",
+        "createJob": "Create Job",
+        "ean": "EAN",
+        "country": "Country",
+        "platform": "Platform",
+        "category": "Category",
+        "selectProducts": "Select products"
+      },
+      "results": {
+        "title": "Results",
+        "approveAndSave": "Approve & save all changes",
+        "edit": "Edit",
+        "price": "Price",
+        "titleField": "Title",
+        "ean": "EAN"
+      },
+      "mapping": {
+        "title": "Product Mapping",
+        "productSelect": "Select Product",
+        "externalId": "External Product ID",
+        "saveMapping": "Save Mapping",
+        "delete": "Delete"
+      },
+      "settings": {
+        "title": "Settings",
+        "cronInterval": "Cronjob interval (minutes)",
+        "overwriteFields": "Overwrite on saving",
+        "ean": "Overwrite EAN",
+        "titleField": "Overwrite title",
+        "price": "Overwrite price",
+        "saveSettings": "Save settings"
+      },
+      "notification": {
+        "success": "Saved successfully!",
+        "error": "Save failed!"
+      }
     }
-}
+  }
+  

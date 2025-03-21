@@ -6,149 +6,18 @@
         <title lang="de-DE">API-Konfiguration</title>
 
         <input-field type="password">
-            <name>apiKey</name>
+            <name>Preishoheit API Key</name>
             <label>API Key</label>
             <label lang="de-DE">API-Schlüssel</label>
             <required>true</required>
         </input-field>
-    </card>
 
-    <card>
-        <title>Mapping Einstellungen</title>
-        <input-field type="single-select">
-            <name>mappingMethod</name>
-            <label>Mapping-Methode wählen</label>
-            <options>
-                <option>
-                    <id>ean</id>
-                    <name>EAN (empfohlen)</name>
-                </option>
-                <option>
-                    <id>product_number</id>
-                    <name>Produktnummer</name>
-                </option>
-            </options>
-            <defaultValue>ean</defaultValue>
-        </input-field>
-    </card>
-
-    <card>
-        <title>Update Settings</title>
-        <title lang="de-DE">Update-Einstellungen</title>
-
-        <input-field type="single-select">
-            <name>updateInterval</name>
-            <label>Price Update Interval</label>
-            <label lang="de-DE">Preis-Update-Intervall</label>
-            <helpText>Select how often prices should be updated automatically</helpText>
-            <helpText lang="de-DE">Wählen Sie aus, wie oft die Preise automatisch aktualisiert werden sollen</helpText>
-            <options>
-                <option>
-                    <id>300</id>
-                    <name>Every 5 minutes</name>
-                    <name lang="de-DE">Alle 5 Minuten</name>
-                </option>
-                <option>
-                    <id>900</id>
-                    <name>Every 15 minutes</name>
-                    <name lang="de-DE">Alle 15 Minuten</name>
-                </option>
-                <option>
-                    <id>1800</id>
-                    <name>Every 30 minutes</name>
-                    <name lang="de-DE">Alle 30 Minuten</name>
-                </option>
-                <option>
-                    <id>3600</id>
-                    <name>Every hour</name>
-                    <name lang="de-DE">Jede Stunde</name>
-                </option>
-                <option>
-                    <id>43200</id>
-                    <name>Twice daily</name>
-                    <name lang="de-DE">Zweimal täglich</name>
-                </option>
-                <option>
-                    <id>86400</id>
-                    <name>Once daily</name>
-                    <name lang="de-DE">Einmal täglich</name>
-                </option>
-            </options>
-            <defaultValue>900</defaultValue>
-        </input-field>
-    </card>
-
-    <card>
-        <title>Notification Settings</title>
-        <title lang="de-DE">Benachrichtigungseinstellungen</title>
-
-        <input-field type="text">
-            <name>adminEmail</name>
-            <label>Admin Email</label>
-            <label lang="de-DE">Admin E-Mail</label>
-            <helpText>Email address for receiving error notifications</helpText>
-            <helpText lang="de-DE">E-Mail-Adresse für Fehlerbenachrichtigungen</helpText>
+        <input-field>
+            <name>Preishohei Endpunkt</name>
+            <label>API Endpoint</label>
+            <label lang="de-DE">API-Endpunkt</label>
+            <defaultValue>https://pod.preishoheit.de/v2/jobs</defaultValue>
             <required>true</required>
-        </input-field>
-    </card>
-
-    <card>
-        <title>Country Selection</title>
-        <title lang="de-DE">Länderauswahl</title>
-
-        <input-field type="multi-select">
-            <name>countrySelection</name>
-            <label>Countries for Price Updates</label>
-            <label lang="de-DE">Länder für Preisaktualisierungen</label>
-            <helpText>Select the countries relevant for price updates</helpText>
-            <helpText lang="de-DE">Wählen Sie die Länder aus, die für die Preisaktualisierung relevant sind</helpText>
-            <entity>country</entity>
-        </input-field>
-    </card>
-
-    <card>
-        <title>Product Group Settings</title>
-        <title lang="de-DE">Produktgruppeneinstellungen</title>
-
-        <input-field type="single-select">
-            <name>productGroup</name>
-            <label>Select Product Group</label>
-            <label lang="de-DE">Produktgruppe auswählen</label>
-            <options>
-                <option>
-                    <id>amazon</id>
-                    <name>Amazon</name>
-                </option>
-                <option>
-                    <id>google_shopping</id>
-                    <name>Google Shopping</name>
-                </option>
-                <option>
-                    <id>billiger</id>
-                    <name>Billiger.de</name>
-                </option>
-                <option>
-                    <id>geizhals</id>
-                    <name>Geizhals.de</name>
-                </option>
-                <option>
-                    <id>idealoshopping</id>
-                    <name>Idealo Shopping</name>
-                </option>
-                <option>
-                    <id>mediamarkt</id>
-                    <name>MediaMarkt</name>
-                </option>
-                <option>
-                    <id>otto</id>
-                    <name>Otto.de</name>
-                </option>
-                <option>
-                    <id>saturn</id>
-                    <name>Saturn</name>
-                </option>
-            </options>
-            <defaultValue>amazon</defaultValue>
         </input-field>
     </card>
 

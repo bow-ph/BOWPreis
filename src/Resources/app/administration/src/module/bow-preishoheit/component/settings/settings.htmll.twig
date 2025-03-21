@@ -1,0 +1,24 @@
+<sw-card title="Settings for Cronjob and Result Handling">
+
+    <!-- Cronjob Intervall -->
+    <sw-number-field 
+        v-model="settings.cronInterval"
+        label="Cronjob interval (minutes)" 
+        :min="1" 
+        :step="1">
+    </sw-number-field>
+
+    <!-- Felder zur Auswahl der Überschreibung -->
+    <sw-field label="Overwrite on saving results:">
+        <sw-checkbox-field v-model="settings.overwriteEAN" label="EAN"></sw-checkbox-field>
+        <sw-checkbox-field v-model="settings.overwriteTitle" label="Title"></sw-checkbox-field>
+        <sw-checkbox-field v-model="settings.overwritePrice" label="Price"></sw-checkbox-field>
+    </sw-field>
+
+    <template #toolbar>
+        <sw-button variant="primary" @click="onSave" :isLoading="isLoading">
+            Save settings
+        </sw-button>
+    </template>
+
+</sw-card>

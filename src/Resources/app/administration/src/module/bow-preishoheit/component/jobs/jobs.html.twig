@@ -1,0 +1,40 @@
+<sw-card title="Create new Job">
+
+    <sw-text-field v-model="job.ean" label="EAN" required></sw-text-field>
+
+    <sw-select-field 
+        v-model="job.country" 
+        :options="countries"
+        label="Country"
+        required>
+    </sw-select-field>
+
+    <sw-select-field 
+        v-model="job.platform" 
+        :options="platforms"
+        label="Platform"
+        required>
+    </sw-select-field>
+
+    <sw-select-field 
+        v-model="job.category" 
+        :options="categories"
+        label="Category"
+        required>
+    </sw-select-field>
+
+    <sw-entity-multi-select
+        v-model="job.products"
+        entity="product"
+        label="Select products"
+        placeholder="Select products..."
+        required>
+    </sw-entity-multi-select>
+
+    <template #toolbar>
+        <sw-button variant="primary" @click="createJob" :isLoading="isLoading">
+            Create Job
+        </sw-button>
+    </template>
+
+</sw-card>

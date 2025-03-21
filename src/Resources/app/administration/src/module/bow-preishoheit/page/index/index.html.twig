@@ -1,0 +1,27 @@
+<sw-tabs v-model="activeTab">
+    <sw-tabs-item name="general">General</sw-tabs-item>
+    <sw-tabs-item name="jobs">Jobs</sw-tabs-item>
+    <sw-tabs-item name="results">Results</sw-tabs-item>
+    <sw-tabs-item name="mapping">Mapping</sw-tabs-item>
+    <sw-tabs-item name="settings">Settings</sw-tabs-item>
+</sw-tabs>
+
+<div v-if="activeTab === 'general'">
+    <bow-preishoheit-general-tab></bow-preishoheit-general-tab>
+</div>
+
+<div v-if="activeTab === 'jobs'">
+    <bow-preishoheit-jobs-tab></bow-preishoheit-jobs-tab>
+</div>
+
+<div v-if="activeTab === 'results'">
+    <bow-preishoheit-results-tab></bow-preishoheit-results-tab>
+</div>
+
+<div v-if="activeTab === 'mapping'">
+    <bow-preishoheit-mapping-tab></bow-preishoheit-mapping-tab>
+</div>
+
+<div v-if="activeTab === 'settings'">
+    <bow-preishoheit-settings></bow-preishoheit-settings>
+</div>

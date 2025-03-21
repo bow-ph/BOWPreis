@@ -1,54 +1,62 @@
 <?xml version="1.0" ?>
-
 <container xmlns="http://symfony.com/schema/dic/services"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://symfony.com/schema/dic/services https://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
+        <!-- Standard Defaults -->
         <defaults autowire="true" autoconfigure="true" public="false"/>
 
-        <!-- Entity Definitions -->
-        <service id="BOW\Preishoheit\Entity\Product\PreishoheitProductDefinition">
-            <tag name="shopware.entity.definition" entity="bow_preishoheit_product" />
-        </service>
+        <!-- ScheduledTaskHandler automatisch als messenger.message_handler taggen -->
+        <instanceof id="Shopware\Core\Framework\MessageQueue\ScheduledTask\ScheduledTaskHandler">
+            <tag name="messenger.message_handler"/>
+        </instanceof>
 
-        <!-- Repositories -->
-        <service id="bow_preishoheit_product.repository" class="Shopware\Core\Framework\DataAbstractionLayer\EntityRepository">
-            <argument type="service" id="BOW\Preishoheit\Entity\Product\PreishoheitProductDefinition"/>
-            <argument type="service" id="Shopware\Core\Framework\DataAbstractionLayer\Read\EntityReaderInterface"/>
-            <argument type="service" id="Shopware\Core\Framework\DataAbstractionLayer\VersionManager"/>
-            <argument type="service" id="Shopware\Core\Framework\DataAbstractionLayer\Search\EntitySearcherInterface"/>
-            <argument type="service" id="Shopware\Core\Framework\DataAbstractionLayer\Search\EntityAggregatorInterface"/>
-            <argument type="service" id="event_dispatcher"/>
-        </service>
+        <!-- Controller (öffentlich für Routing) -->
+        <service id="Bow\Preishoheit\Controller\" public="true"/>
 
-        <service id="bow_preishoheit_error_log.repository" class="Shopware\Core\Framework\DataAbstractionLayer\EntityRepository">
-            <argument type="service" id="Shopware\Core\Framework\DataAbstractionLayer\Read\EntityReaderInterface"/>
-            <argument type="service" id="Shopware\Core\Framework\DataAbstractionLayer\VersionManager"/>
-            <argument type="service" id="Shopware\Core\Framework\DataAbstractionLayer\Search\EntitySearcherInterface"/>
-            <argument type="service" id="Shopware\Core\Framework\DataAbstractionLayer\Search\EntityAggregatorInterface"/>
-            <argument type="service" id="event_dispatcher"/>
-        </service>
-
-        <!-- API Services -->
-        <service id="BOW\Preishoheit\Service\PreishoheitApi\PreishoheitApiClient" public="true">
+        <!-- Service Definitionen explizit -->
+        <service id="Bow\Preishoheit\Service\PreishoheitApiService">
             <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
             <argument type="service" id="logger"/>
         </service>
 
-        <service id="BOW\Preishoheit\Service\PreishoheitApi\PriceUpdateService" public="true">
-            <argument type="service" id="BOW\Preishoheit\Service\PreishoheitApi\PreishoheitApiClient"/>
-            <argument type="service" id="product.repository"/>
-            <argument type="service" id="bow_preishoheit_error_log.repository"/>
-            <argument type="service" id="logger"/>
-            <argument type="service" id="country.repository"/>
+        <service id="Bow\Preishoheit\Service\JobService">
+            <argument type="service" id="Doctrine\DBAL\Connection"/>
         </service>
 
-        <!-- Job Persistence -->
-        <service id="BOW\Preishoheit\Service\Job\JobPersistenceService">
-            <argument type="service" id="bow_preishoheit_product.repository"/>
+        <service id="Bow\Preishoheit\Service\ResultMappingService">
+            <argument type="service" id="Doctrine\DBAL\Connection"/>
+            <argument type="service" id="service_container"/>
         </service>
 
-        <!-- NullTokenizer -->
-        <service id="bow_preishoheit.search.null_tokenizer" class="BOW\Preishoheit\Search\NullTokenizer" decorates="Shopware\Core\Framework\DataAbstractionLayer\Search\Term\Tokenizer" public="false" decoration-inner-name="bow_preishoheit.search.null_tokenizer.inner"/>
+        <service id="Bow\Preishoheit\Service\MappingService">
+            <argument type="service" id="Doctrine\DBAL\Connection"/>
+        </service>
+
+        <!-- Scheduled Tasks -->
+        <service id="Bow\Preishoheit\ScheduledTask\CheckPreishoheitJobStatusTaskHandler">
+            <argument type="service" id="Bow\Preishoheit\Service\JobService"/>
+            <argument type="service" id="Bow\Preishoheit\Service\PreishoheitApiService"/>
+            <argument type="service" id="Bow\Preishoheit\Service\ResultMappingService"/>
+            <tag name="messenger.message_handler"/>
+        </service>
+
+        <!-- DAL Entity Definitions -->
+        <service id="Bow\Preishoheit\Entity\Job\JobDefinition">
+            <tag name="shopware.entity.definition" entity="bow_preishoheit_job"/>
+        </service>
+
+        <service id="Bow\Preishoheit\Entity\JobResult\JobResultDefinition">
+            <tag name="shopware.entity.definition" entity="bow_preishoheit_job_result"/>
+        </service>
+
+        <service id="Bow\Preishoheit\Entity\ProductMapping\ProductMappingDefinition">
+            <tag name="shopware.entity.definition" entity="bow_preishoheit_product_mapping"/>
+        </service>
+        <!-- Entity Collections -->
+        <service id="Bow\Preishoheit\Entity\Job\JobCollection"/>
+        <service id="Bow\Preishoheit\Entity\JobResult\JobResultCollection"/>
+        <service id="Bow\Preishoheit\Entity\ProductMapping\ProductMappingCollection"/>
+
     </services>
 </container>

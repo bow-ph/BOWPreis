@@ -1,0 +1,26 @@
+<sw-card title="API Job Results">
+
+    <sw-data-grid :dataSource="results" :columns="columns" showSelection>
+        <template #actions="{ item }">
+            <sw-button @click="editResult(item)">Edit</sw-button>
+        </template>
+    </sw-data-grid>
+
+    <!-- Modal für Bearbeitung -->
+    <sw-modal v-if="editingResult" @close="editingResult = null">
+        <sw-text-field v-model="editingResult.price" label="Price"></sw-text-field>
+        <sw-text-field v-model="editingResult.title" label="Title"></sw-text-field>
+        <sw-text-field v-model="editingResult.ean" label="EAN"></sw-text-field>
+
+        <template #footer>
+            <sw-button variant="primary" @click="editingResult = null">Done</sw-button>
+        </template>
+    </sw-modal>
+
+    <template #toolbar>
+        <sw-button variant="primary" @click="saveAllChanges" :isLoading="isSaving">
+            Approve & Save all changes
+        </sw-button>
+    </template>
+
+</sw-card>

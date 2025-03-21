@@ -1,0 +1,26 @@
+<sw-card title="Product Mapping">
+
+    <sw-entity-single-select
+        v-model="mapping.productId"
+        entity="product"
+        label="Select Shopware Product">
+    </sw-entity-single-select>
+
+    <sw-text-field 
+        v-model="mapping.externalId"
+        label="External Product ID (Preishoheit)">
+    </sw-text-field>
+
+    <template #toolbar>
+        <sw-button variant="primary" @click="createMapping" :isLoading="isLoading">
+            Save Mapping
+        </sw-button>
+    </template>
+
+    <sw-data-grid :dataSource="mappings" :columns="columns" class="mt-4">
+        <template #actions="{ item }">
+            <sw-button @click="deleteMapping(item)">Delete</sw-button>
+        </template>
+    </sw-data-grid>
+
+</sw-card>

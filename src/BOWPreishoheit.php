@@ -1,21 +1,19 @@
 <?php declare(strict_types=1);
 
-namespace BOW\Preishoheit;
+namespace Bow\Preishoheit;
 
-use BOW\Preishoheit\DependencyInjection\TokenizerFixCompilerPass;
+use Bow\Preishoheit\ScheduledTask\CheckPreishoheitJobStatusTask;
+use Shopware\Core\Framework\MessageQueue\ScheduledTask\ScheduledTaskDefinition;
 use Shopware\Core\Framework\Plugin;
 use Shopware\Core\Framework\Plugin\Context\InstallContext;
 use Shopware\Core\Framework\Plugin\Context\UninstallContext;
+use Shopware\Core\Framework\Plugin\Context\ActivateContext;
+use Shopware\Core\Framework\Plugin\Context\DeactivateContext;
+use Shopware\Core\System\SystemConfig\SystemConfigService;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class BOWPreishoheit extends Plugin
 {
-    public function build(ContainerBuilder $container): void
-    {
-        parent::build($container);
-        $container->addCompilerPass(new TokenizerFixCompilerPass());
-    }
-
     public function install(InstallContext $installContext): void
     {
         parent::install($installContext);
@@ -29,6 +27,34 @@ class BOWPreishoheit extends Plugin
             return;
         }
 
-        // Clean up code can go here
+        // Cleanup-Logik hier ergänzen falls notwendig
+    }
+
+    public function activate(ActivateContext $activateContext): void
+    {
+        parent::activate($activateContext);
+    }
+
+    public function deactivate(DeactivateContext $deactivateContext): void
+    {
+        parent::deactivate($deactivateContext);
+    }
+
+    /**
+     * Cronjob Interval dynamisch setzen über Definition
+     */
+    public function build(ContainerBuilder $container): void
+    {
+        parent::build($container);
+
+        $container->register(CheckPreishoheitJobStatusTask::class, ScheduledTaskDefinition::class)
+            ->addTag('shopware.scheduled.task')
+            ->addMethodCall('setDefaultInterval', [$this->getCronInterval()]);
+    }
+
+    private function getCronInterval(): int
+    {
+        // Default 5 Minuten
+        return 300;
     }
 }
