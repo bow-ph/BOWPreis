@@ -1,60 +1,70 @@
 <?php declare(strict_types=1);
 
-namespace Bow\Preishoheit;
+namespace Bow\Preishoheit\Service;
 
-use Bow\Preishoheit\ScheduledTask\CheckPreishoheitJobStatusTask;
-use Shopware\Core\Framework\MessageQueue\ScheduledTask\ScheduledTaskDefinition;
-use Shopware\Core\Framework\Plugin;
-use Shopware\Core\Framework\Plugin\Context\InstallContext;
-use Shopware\Core\Framework\Plugin\Context\UninstallContext;
-use Shopware\Core\Framework\Plugin\Context\ActivateContext;
-use Shopware\Core\Framework\Plugin\Context\DeactivateContext;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
 use Shopware\Core\System\SystemConfig\SystemConfigService;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Psr\Log\LoggerInterface;
 
-class BowPreishoheit extends Plugin
+class PreishoheitApiService
 {
-    public function install(InstallContext $installContext): void
+    private Client $client;
+    private string $apiKey;
+    private LoggerInterface $logger;
+
+    public function __construct(SystemConfigService $configService, LoggerInterface $logger)
     {
-        parent::install($installContext);
+        $endpoint = rtrim($configService->get('BowPreishoheit.config.apiEndpoint'), '/');
+        $this->apiKey = $configService->get('BowPreishoheit.config.apiKey');
+        
+        // Base-URI auf "v2/jobs" festgelegt
+        $this->client = new Client(['base_uri' => $endpoint . '/v2/jobs/']);
+        $this->logger = $logger;
     }
 
-    public function uninstall(UninstallContext $uninstallContext): void
+    public function createJob(array $payload): array
     {
-        parent::uninstall($uninstallContext);
+        try {
+            $response = $this->client->post('', [
+                'query' => ['api_key' => $this->apiKey],
+                'json' => $payload
+            ]);
 
-        if ($uninstallContext->keepUserData()) {
-            return;
+            return json_decode($response->getBody()->getContents(), true);
+        } catch (RequestException $e) {
+            $message = $e->getResponse() 
+                ? $e->getResponse()->getBody()->getContents() 
+                : $e->getMessage();
+
+            $this->logger->error('Preishoheit API (createJob) Error', [
+                'error' => $message,
+                'payload' => $payload
+            ]);
+
+            throw new \RuntimeException("Preishoheit API (createJob) failed: {$message}");
         }
-
-        // Cleanup-Logik hier ergänzen falls notwendig
     }
 
-    public function activate(ActivateContext $activateContext): void
+    public function checkJobStatus(string $jobId): array
     {
-        parent::activate($activateContext);
-    }
+        try {
+            $response = $this->client->get("{$jobId}/status", [
+                'query' => ['api_key' => $this->apiKey]
+            ]);
 
-    public function deactivate(DeactivateContext $deactivateContext): void
-    {
-        parent::deactivate($deactivateContext);
-    }
+            return json_decode($response->getBody()->getContents(), true);
+        } catch (RequestException $e) {
+            $message = $e->getResponse() 
+                ? $e->getResponse()->getBody()->getContents() 
+                : $e->getMessage();
 
-    /**
-     * Cronjob Interval dynamisch setzen über Definition
-     */
-    public function build(ContainerBuilder $container): void
-    {
-        parent::build($container);
+            $this->logger->error('Preishoheit API (checkJobStatus) Error', [
+                'error' => $message,
+                'jobId' => $jobId
+            ]);
 
-        $container->register(CheckPreishoheitJobStatusTask::class, ScheduledTaskDefinition::class)
-            ->addTag('shopware.scheduled.task')
-            ->addMethodCall('setDefaultInterval', [$this->getCronInterval()]);
-    }
-
-    private function getCronInterval(): int
-    {
-        // Default 5 Minuten
-        return 300;
+            throw new \RuntimeException("Preishoheit API (checkJobStatus) failed: {$message}");
+        }
     }
 }

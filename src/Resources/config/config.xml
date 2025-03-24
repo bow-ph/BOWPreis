@@ -1,22 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/shopware/platform/master/src/Core/System/SystemConfig/Schema/config.xsd">
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/shopware/platform/trunk/src/Core/System/SystemConfig/Schema/config.xsd">
 
     <card>
-        <title>API Configuration</title>
         <title lang="de-DE">API-Konfiguration</title>
+        <title lang="en-GB">API Configuration</title>
 
         <input-field type="password">
-            <name>Preishoheit API Key</name>
-            <label>API Key</label>
+            <name>BowPreishoheit.config.apiKey</name>
             <label lang="de-DE">API-Schlüssel</label>
+            <label lang="en-GB">API Key</label>
+            <defaultValue>GKYJQMVnFtg4Evr3R54T6JDaCATwL9WCkEWjELhY</defaultValue>
             <required>true</required>
         </input-field>
 
         <input-field>
-            <name>Preishohei Endpunkt</name>
-            <label>API Endpoint</label>
+            <name>BowPreishoheit.config.apiEndpoint</name>
             <label lang="de-DE">API-Endpunkt</label>
-            <defaultValue>https://pod.preishoheit.de/v2/jobs</defaultValue>
+            <label lang="en-GB">API Endpoint</label>
+            <defaultValue>https://pod.preishoheit.de</defaultValue>
             <required>true</required>
         </input-field>
     </card>
